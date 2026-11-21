@@ -44,8 +44,9 @@ for K in 'HKLM\Software\Blizzard Entertainment\Starcraft' 'HKLM\Software\Wow6432
   wine reg add "$K" /v InstallPath /t REG_SZ /d "$W" /f >/dev/null
   wine reg add "$K" /v Program /t REG_SZ /d "$W\\StarCraft.exe" /f >/dev/null
 done
-pgrep Xvfb >/dev/null || (Xvfb :57 -screen 0 1280x1024x24 >/dev/null 2>&1 &); sleep 2
-"$HERE/scmd_start.sh" "$H/first_run.log" >/dev/null      # creates the Default profile
-pkill -f "ScmDraft 2.exe" || true; sleep 2
+export DISPLAY=${DISPLAY:-:57}; xdpyinfo -display "$DISPLAY" >/dev/null 2>&1 || (Xvfb "$DISPLAY" -screen 0 1280x1024x24 -nolisten tcp >/dev/null 2>&1 &); sleep 2   # setup only; openmap.sh starts its own display
+SE="scmd_setup_$$.exe"; cp "$H/scmd/app/ScmDraft 2.exe" "$H/scmd/app/$SE"
+SCMD_EXE="$SE" "$HERE/scmd_start.sh" "$H/first_run.log" >/dev/null      # creates the Default profile
+pkill -f "$SE" || true; sleep 2; rm -f "$H/scmd/app/$SE"   # only this setup run's copy, never other ScmDraft runs
 wine reg add 'HKCU\Software\Stormcoast Fortress\ScmDraft 2.0\Settings\Default' /v GameDataVersion /t REG_BINARY /d 02000000 /f >/dev/null
 echo "harness ready in $H"

@@ -25,6 +25,11 @@ synthetic, unencrypted fonts. Map loading code is not touched. The patched binar
     HARNESS=... ./openmap.sh path/to/map.scx      # prints the ScmDraft log; last line OK/FAIL
     HARNESS=... python3 ../check_scmdraft_open.py --real path/to/map.scx
 
+Each `openmap.sh` run is isolated: it starts its own Xvfb on a free display (`SCMD_DISPLAY=:N` uses an existing
+one instead), runs a uniquely named copy of the exe, writes its own log (`KEEP_LOG=1` keeps it) and on exit kills only
+that copy's processes and its own Xvfb. Runs on one harness queue behind a lock file instead of starving each other in
+the shared wine prefix. Nothing else on the machine (other ScmDraft runs, other X displays) is touched.
+
 Success marker: `(ENGINE) Loaded map:` in the log and a window titled with the map path.
 Typical failure: `Could not locate information in the tileset for a particular (Type N)` followed by
 `Could not load a map passed via command line` (DD2 references an unnamed cv5 doodad slot).

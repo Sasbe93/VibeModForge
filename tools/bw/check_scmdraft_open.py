@@ -58,7 +58,7 @@ def static(path):
     return R
 def real(path,h):
     env=dict(os.environ,HARNESS=h)
-    try: out=subprocess.run([os.path.join(ROOT,'tools','bw','scmdraft_harness','openmap.sh'),path],capture_output=True,text=True,env=env,timeout=240).stdout
+    try: out=subprocess.run([os.path.join(ROOT,'tools','bw','scmdraft_harness','openmap.sh'),path],capture_output=True,text=True,env=env,timeout=900).stdout   # timeout includes queueing behind another run (harness lock)
     except subprocess.TimeoutExpired: return ['FAIL scmdraft_open (real ScmDraft 2): timed out']
     ok=out.strip().endswith('SCMDRAFT_OPEN OK')
     why=[l.split('Warning::')[-1][:110] for l in out.splitlines() if 'Could not' in l and 'sprite' not in l][:3]
