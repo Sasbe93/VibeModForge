@@ -191,7 +191,7 @@ Apply unless the Design_Note records a deviation with a reason (campaign: "Campa
 
 ### Objectives and balance
 - Objective vs. conquest balance: fulfilling the objectives must be clearly easier than destroying all enemy bases. Make the bases strong and fortified (layered static defence, defender groups, rebuilding, reinforcement waves) unless conquest is itself the objective. In the Design_Note, estimate the effort for both paths (enemy HP, defence, travel distance) and require objective effort <= about 75% of conquest effort. When in doubt, make the bases stronger rather than the objectives easier.
-- Typically 1-2 main objectives plus optional quests with a tangible reward that has an in-world source (see "Rewards make sense in the story"), but vary the structure (see fixed rules, quest structure). Sidequests should still be a real challenge.
+- Typically 1-2 main objectives plus optional quests of varied types (see "Side objectives vary"; destroy-for-resources is the rare case) whose reward has an in-world source (see "Rewards make sense in the story"); vary the structure (see fixed rules, quest structure). Sidequests should still be a real challenge.
 - Main objectives vary: hold a position for a time, escort, rescue, recover an artifact, stealth with a small group, stop a ritual/portal, capture points, hunt a leader, evacuate/flee, survive. "Destroy the main base" only when the story calls for it; never the default.
 - The difficulty curve is fair: mission 1 is easy, and difficulty rises per chapter. Offer difficulty levels that scale enemy strength.
 - Pacing: a calm build-up phase, waves that grow, and the climax at the end. (Waves carry no warning text by default, see attack announcements.)
@@ -297,12 +297,14 @@ For Brood War: the same question applies to changed units (unit/weapon/tech data
 ## Rewards make sense in the story (fixed rule, same rule for WC3)
 Never hand out flat minerals, gas or units for an unrelated deed (400 minerals for building a Nydus Canal, a squad
 appearing because three enemies died). A reward needs an in-world source the player sees:
-- a guarded cache or loot (mineral cluster / gas tank power-ups at the spot, a container the player breaks open),
-- a grateful ally who pays or joins (Give Units of a rescuable or allied player's units and buildings),
-- a captured base, mine or depot (the resources stay where they are and the player takes them over),
-- a rescued unit (rescuable player, standard BW rescue),
+- a rescued unit or squad (rescuable player, standard BW rescue, or Give Units when the player reaches it),
+- a grateful ally who joins or helps (Give Units of a rescuable or allied player's units and buildings, an alliance),
+- unlocked tech (the facility the player captured or protected),
+- a captured base or building (it stays where it is and the player takes it over),
+- information (a revealed map area, the enemy's attack route, a hidden path),
 - seized convoy cargo (the convoy is visible before it is stopped),
-- unlocked tech (the facility the player captured or protected).
+- only rarely a cache of resources (mineral cluster / gas tank power-ups at the spot, a container the player breaks
+  open); at most one resource reward per mission (see "Side objectives vary" below).
 Write one Design_Note line per reward:
 `REWARD_WHY: <objective> :: <reward> :: <in-world source the player sees>`
 Predelivery check 41 (`tools/bw/check_story_delivery.py`) FAILs a non-start trigger that adds minerals/gas to a human
@@ -311,6 +313,46 @@ REWARD_WHY line (the amount for resources, a unit name or group word for units).
 are rejected. Non-quest income that the story explains (a timed supply drop) carries a Comment action
 `INCOME_OK: <reason>` in that trigger. Worked example: the rescued squad in `tools/bw/example_mission.py` hands over
 its depot and bunker.
+
+## Side objectives vary (fixed rule, StarCraft)
+"Destroy a building on the side and get resources" is the default an agent reaches for, and players notice it fast.
+Side objectives are optional and varied; a mission without one is fine.
+- Pick from: rescue or free a unit that then joins, capture or protect a place or building, reach or hold a place,
+  escort, gain an ally, a secret (hidden path, hidden base), a choice with a consequence. Destroy is one type among
+  these, not the default.
+- At most one destroy side objective per mission, and never in two neighbouring missions.
+- At most one resource reward per mission. Prefer units, tech, a base, an ally or information; resources only when the
+  story has a visible cache.
+- Design note, one line per optional objective:
+  `SIDE_OBJECTIVE: <name> :: <rescue|capture|protect|reach|hold|escort|ally|secret|collect|choice|destroy|other> :: <units|tech|base|ally|info|none|resources>`;
+  a deliberate repeat needs `SIDE_OBJECTIVE_REPEAT_OK: <reason>`.
+- Predelivery check 50 side_objective_variety (`tools/bw/check_side_objective_variety.py`) reads these lines and the
+  map (optional objectives in the Set Mission Objectives texts, triggers that add resources) and compares with the
+  previous mission M<n-1> (its design note, or its map objectives). It FAILs optional objectives without
+  SIDE_OBJECTIVE lines, more destroy-type optional objectives in the map than declared, more than one destroy side
+  objective, more than one declared resource reward, or a destroy side objective here and in the previous mission.
+
+## Destroy targets survive morphing (fixed rule, StarCraft)
+A Zerg building that morphs changes its unit type in place: the engine moves the unit count from the old type to the
+new one and records no death (OpenBW `bwgame.h`, `morph_unit`: unit counts -1 for the old type, reinitialize the type,
++1 for the new type; no kill). Consequences for triggers:
+- `Bring/Command exactly 0 Hatchery` becomes true when the Hatchery becomes a Lair: the objective is "done" though
+  nothing died.
+- `Bring/Command at least 1 Hatchery` becomes false: waves gated on "the hatchery stands" stop.
+- `Deaths of Hatchery` never counts the target once it morphed; it dies as a Lair or Hive.
+Chains: Hatchery -> Lair -> Hive, Creep Colony -> Sunken or Spore Colony, Spire -> Greater Spire. Terran buildings that
+can lift off (Command Center, Barracks, Factory, Starport, Engineering Bay, Science Facility) can leave a location
+without dying: use Command (anywhere) or Deaths, not "Bring exactly 0 at a location". A Queen-infested Command Center
+changes owner to the Zerg player, so for the Terran owner it is gone.
+- Generator (sclib): `m.target_gone(p, HATCH, loc)` returns the conditions "exactly 0 of every chain type" for one
+  trigger; `m.target_stands(p, HATCH, loc)` and `m.target_killed(p, HATCH)` return alternatives, one per chain type;
+  `m.T_each(players, conds, alts, acts, switch=k)` writes one trigger per alternative and runs the actions once.
+  Worked example: the hatchery victory and the wave triggers in `tools/bw/example_mission.py`.
+- Predelivery check 49 destroy_target_morph_chain (`tools/bw/check_morph_chain.py`) FAILs a human-owned trigger with an
+  "exactly 0" condition on a chain type without the later chain types in the same trigger, or an "at least" or Deaths
+  condition without sibling triggers for the later chain types; the same in computer-owned triggers is a WARN, and so
+  is "exactly 0" of a lift-off building at a location.
+- Fixtures: `python3 tools/bw/selftest_side_and_morph.py` (each check fails on a bad case and passes on a good one).
 
 ## Voice delivery notes (fixed rule, same rule for WC3)
 Every voiced line carries delivery notes in VO markup v1 (`docs/voice-delivery-markup.md`): `[emotion: ...]` first,

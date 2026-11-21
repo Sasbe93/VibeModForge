@@ -13,12 +13,15 @@ Captain Varn holds Outpost Nine with a handful of marines. The brood on the nort
 squad under Sergeant Okafor is stranded in the eastern ravine with its field depot and a bunker.
 
 ## Objectives
-- Required: Destroy the Hatchery on the ridge.
+- Required: Destroy the Hatchery on the ridge (it counts as destroyed only when no Hatchery, Lair or Hive stands there: the Zerg may morph it).
 - Defeat: the outpost loses all buildings (shown in the defeat text).
 - Optional (announced by Okafor about two minutes in, after the opening talk): reach the survey squad in the eastern ravine.
 
 ## Rewards
 REWARD_WHY: Reach the survey squad :: the squad, its supply depot and its bunker join you :: the squad's camp with depot and bunker standing in the eastern ravine
+
+## Side objectives
+SIDE_OBJECTIVE: Reach the survey squad :: rescue :: units
 
 ## Mission type
 MISSION_TYPE: destroy-targets :: none :: 1
@@ -35,7 +38,7 @@ SCENE_VIEW: victory call :: Ridge Hall :: own units present
 ## Map
 - South-west: the player's outpost, mineral line backed by water, bunker toward the road.
 - North-east: the ridge (high dirt) with the Zerg main, two normal-size ramps toward the south-west.
-- East: a Zerg expansion on low ground (second target, optional).
+- East: a Zerg expansion on low ground (a second Zerg base that feeds the waves; not an objective).
 - South-east: the ravine camp of the survey squad (rescuable, far from enemy units).
 - Centre: a pond, grass fields and rocky patches; the old road (mud) meanders from the outpost to the ridge.
 - Map edge: ragged dirt/high-dirt/water border; no straight frame.

@@ -29,6 +29,13 @@ BUILDSIZE={HATCH:(4,3),LAIR:(4,3),HIVE:(4,3),POOL:(3,2),HYDEN:(3,2),EXTRACTOR:(4
 COMSAT_,NUKESILO_,CTOWER_,COVERT_,PHYSICS_,MSHOP_=107,108,115,117,118,120
 ADDON_PARENT={COMSAT_:CC,NUKESILO_:CC,CTOWER_:STARPORT,COVERT_:116,PHYSICS_:116,MSHOP_:FACTORY}
 BUILDSIZE.update({a:(2,2) for a in ADDON_PARENT})
+# Morph chains: a building that morphs becomes a NEW unit type (the engine changes the unit's type in place; unit
+# counts move from the old type to the new one and no death is recorded). A destroy objective on the first type alone
+# therefore fires when the target morphs, and a Deaths condition on it never fires once the target has morphed.
+# Value = the type itself plus every type it can become.
+MORPH_CHAIN={HATCH:(HATCH,LAIR,HIVE),LAIR:(LAIR,HIVE),CREEP:(CREEP,SUNKEN,SPORE),141:(141,137)}   # 141 Spire -> 137 Greater Spire
+# (A Queen-infested Command Center becomes an Infested CC owned by the Zerg player: for the Terran owner it is gone.)
+LIFTABLE={CC,BARRACKS,FACTORY,STARPORT,EBAY,116}   # Terran buildings that can lift off and leave a location
 BUILDSIZE.update({116:(4,3),123:(3,2),REFINERY:(4,2),157:(4,2),EXTRACTOR:(4,2),
                   155:(3,2),159:(3,2),163:(3,2),164:(3,2),165:(3,2),166:(3,2),167:(4,3),169:(3,2),170:(3,2),171:(3,2),172:(2,2)})
 GASB={REFINERY,EXTRACTOR,157}   # pre-placed gas buildings must carry the geyser's gas amount
@@ -521,6 +528,28 @@ class Map:
         li=s.loc(name or f'AI Town P{p+1} {x},{y}',x0,y0,x1,y1)
         s.T([p],[s.ALWAYS()],[s.act(16,loc=li,num=struct.unpack('<I',script.encode())[0],flags=0x04)])
         return li
+    def target_gone(s,p,uid,loc=None):
+        """conditions (all must hold) that a destroy target of player p is really gone, robust against morphing:
+        'p brings exactly 0' of EVERY type in its morph chain at loc (Command exactly 0 when loc is None).
+        A Terran building that can lift off would 'leave' a location without dying: for those, loc must be None
+        (Command counts the player's buildings anywhere) or use target_killed(). Check: destroy_target_morph_chain."""
+        assert not (uid in LIFTABLE and loc is not None), f'unit {uid} can lift off and leave the location: use loc=None or target_killed()'
+        return [s.cond(3,loc=loc,player=p,qty=0,unit=t,cmp=10) if loc is not None else s.cond(2,player=p,qty=0,unit=t,cmp=10) for t in MORPH_CHAIN.get(uid,(uid,))]
+    def target_stands(s,p,uid,loc=None):
+        """alternatives (one condition each) meaning 'the target or what it morphed into still stands'; a trigger
+        needs one copy per alternative (BW conditions are AND only): use T_each()."""
+        return [s.cond(3,loc=loc,player=p,qty=1,unit=t,cmp=0) if loc is not None else s.cond(2,player=p,qty=1,unit=t,cmp=0) for t in MORPH_CHAIN.get(uid,(uid,))]
+    def target_killed(s,p,uid):
+        """alternatives 'p has suffered at least 1 death of a type in the chain' (Deaths ignore lift-off; a morph is
+        no death, so every chain type needs its own alternative). Use T_each(); assumes the target is p's only unit
+        of these types (or reset the death counters first)."""
+        return [s.cond(15,player=p,qty=1,unit=t,cmp=0) for t in MORPH_CHAIN.get(uid,(uid,))]
+    def T_each(s,players,conds,alts,acts,switch=None):
+        """one trigger per alternative condition (OR over alts). With switch=k each copy also requires switch k clear and
+        sets it, so the actions run once even if two alternatives become true."""
+        for c in alts:
+            extra=[s.SW(switch,False)] if switch is not None else []
+            s.T(players,list(conds)+[c]+extra,list(acts)+([s.setsw(switch)] if switch is not None else []))
     def ally(s,p,status): return s.act(57,player=p,unit=status,flags=0x04)  # 0 enemy 1 ally 2 allied victory; save() adds the shared-vision script (_ally_vision)
     # briefing actions
     def b_portrait(s,unit,slot): return s.act(5,unit=unit,player=slot,flags=0x14)

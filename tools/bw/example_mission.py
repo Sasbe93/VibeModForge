@@ -180,13 +180,14 @@ m.T([P1], [m.ET(121), m.cond(3, loc=L('Ravine Camp'), player=P1, qty=1, unit=MEN
 m.T([P1], [m.ET(121), m.SW(5, False), m.cond(2, player=P8, qty=0, unit=MEN, cmp=10)],
     [m.obj(objtext(True, False, ' - failed')), m.text('\x06Optional objective failed:\x01 the survey squad was lost.')])
 # small waves from the enemy base, only while its hatchery stands (the base visibly feeds the pressure)
-HAS = m.cond(3, loc=L('Ridge Hall'), player=P2, qty=1, unit=HATCH, cmp=0)
+# The town AI morphs the hatchery into a Lair (later a Hive): every condition on the target covers the whole morph chain
+# (sclib MORPH_CHAIN; target_stands/target_gone; check destroy_target_morph_chain).
 for i, t in enumerate(range(240, 1500, 160)):
     n = 2 + min(2, i//2)
     acts = [m.create(P2, ZERGLING, n, L('Ridge Gate'))] + ([m.create(P2, HYDRA, 2, L('Ridge Gate'))] if i >= 2 else []) + [m.order(P2, ANYUNIT, L('Ridge Gate'), L('Outpost Front'))]
-    m.T([P2], [m.ET(t), HAS], acts)
+    m.T_each([P2], [m.ET(t)], m.target_stands(P2, HATCH, L('Ridge Hall')), acts, switch=120+i)   # one copy per chain type, runs once
 # victory / defeat
-m.T([P1], [m.cond(3, loc=L('Ridge Hall'), player=P2, qty=0, unit=HATCH, cmp=10), m.cond(3, loc=L('Ridge Hall'), player=P2, qty=0, unit=LAIR, cmp=10)],
+m.T([P1], m.target_gone(P2, HATCH, L('Ridge Hall')),
     [m.obj(objtext(False, True))]
     + CAST.say([(VARN, "[emotion: triumphant; pace: slow] The hatchery is *down*. (0.3) No more raids on this road. Outpost Nine, stand easy.")], L('Ridge Hall'))
     + [m.act(1, flags=0x04)])

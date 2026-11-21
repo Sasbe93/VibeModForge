@@ -79,6 +79,13 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    start location, runs its town AI from mission start (Always) in its own trigger, at a location centred on its town
    hall (Blizzard: 4x3 'Main Town' location on the hall; Area Town scripts for second bases), so its workers mine from
    the first second; exemption 'AI_IDLE_OK: P<n> :: <hall x,y | all> :: reason'
+49 destroy_target_morph_chain (check_morph_chain.py): a condition on a building that can morph (Hatchery -> Lair -> Hive,
+   Creep Colony -> Sunken/Spore, Spire -> Greater Spire) covers the whole chain: a morph changes the type in place with
+   no death, so 'exactly 0 Hatchery' fires when it becomes a Lair and 'Deaths of Hatchery' never fires after it morphed.
+   FAIL in human-owned triggers, WARN in computer triggers; WARN for 'exactly 0' of a lift-off building at a location
+50 side_objective_variety (check_side_objective_variety.py): design note 'SIDE_OBJECTIVE: <name> :: <type> :: <reward>'
+   for every optional objective; at most one destroy side objective (never in two neighbouring missions) and at most
+   one resource reward per mission, unless 'SIDE_OBJECTIVE_REPEAT_OK: <reason>'
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -619,6 +626,10 @@ def run_safe(path):
     R+=_guard(R,'47 mission type variety',lambda: check_mission_type_variety.run(path),[])
     import check_computer_ai
     R+=_guard(R,'48 computer ai',lambda: check_computer_ai.run(path),[])
+    import check_morph_chain
+    R+=_guard(R,'49 destroy target morph chain',lambda: check_morph_chain.run(path),[])
+    import check_side_objective_variety
+    R+=_guard(R,'50 side objective variety',lambda: check_side_objective_variety.run(path),[])
     return R
 if __name__=='__main__':
     rc=0
