@@ -58,6 +58,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    of their own; that slot has the same alliances, vision and switch conditions as its faction, and victory/defeat
    triggers read it too. Design note 'HERO_SLOT: <hero> :: P<h> :: faction P<f>'; exemption 'HERO_COLOR_SHARED:
    <hero> :: reason' (check_hero_own_color.py)
+44 start_setup_variety (check_start_setup.py): the player's start assets match 'START_SETUP: <type> :: reason' in the
+   design note, at most 2 towers without 'START_DEFENSE_WHY', at most 2 unmorphed Creep Colonies, no ready newly
+   unlocked building and at most 3 of a newly unlocked unit without 'START_GIFT_WHY', and the start differs from the
+   previous missions M<n-1>/M<n-2> next to the map (overlap < 0.70, no third established start in a row)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -592,6 +596,8 @@ def run_safe(path):
     R+=_guard(R,'42 hero own color',lambda: check_hero_own_color.run(path),[])
     import check_mineral_line_shape
     R+=_guard(R,'43 mineral line shape',lambda: check_mineral_line_shape.run(path),[])
+    import check_start_setup
+    R+=_guard(R,'44 start setup variety',lambda: check_start_setup.run_auto(path),[])
     return R
 if __name__=='__main__':
     rc=0

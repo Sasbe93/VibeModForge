@@ -20,6 +20,9 @@ squad under Sergeant Okafor is stranded in the eastern ravine with its field dep
 ## Rewards
 REWARD_WHY: Reach the survey squad :: the squad, its supply depot and its bunker join you :: the squad's camp with depot and bunker standing in the eastern ravine
 
+## Start setup
+START_SETUP: build-up :: Outpost Nine is a small roadside post: a Command Center, five SCVs, one Barracks and a single bunker toward the road; the player builds everything else.
+
 ## Map
 - South-west: the player's outpost, mineral line backed by water, bunker toward the road.
 - North-east: the ridge (high dirt) with the Zerg main, two normal-size ramps toward the south-west.

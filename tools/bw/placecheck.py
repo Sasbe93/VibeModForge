@@ -3,8 +3,8 @@
 creep for Zerg, pylon power for Protoss, clear margins around town halls, every unit/building/location reachable from
 the player start. Data: CV5 tile flags (tileset files, external/README.md) + placement sizes (sclib.BUILDSIZE).
 Usage (repository root): python3 tools/bw/placecheck.py MAP.scx TILESET_INDEX     (0 badlands ... 7 twilight)
-Library: check(path,ts), check_data(...), autofix(m) for build scripts (moves misplaced non-hall buildings/units,
-adds Creep Colonies/Pylons where needed)."""
+Library: check(path,ts), check_data(...), autofix(m) for build scripts (moves misplaced non-hall buildings/units, moves the
+player's off-creep buildings onto creep or stops with a clear message, adds Creep Colonies for computer players and Pylons)."""
 import struct,os,sys
 sys.path.insert(0,os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','lib','bw'))
 from sclib import *
@@ -150,7 +150,16 @@ if __name__=='__main__':
     print(st,collections.Counter(e[0] for e in errs))
     for e in errs[:60]: print(e)
 
-def autofix(m,log=print):
+def _is_player_slot(m,o):
+    """the human player's slot (OWNR 6) or the allied nest/rescue slot whose buildings become the player's"""
+    own=getattr(m,'ownr',None)
+    if own is None or 6 not in list(own)[:8]: own=None     # OWNR not set yet: slot 0 is the player
+    return (own is not None and o<len(own) and own[o]==6) or (own is None and o==0) or (NESTP>=0 and o==NESTP)
+def autofix(m,log=print,player_creep_colonies=False):
+    # PLAYER_START_CREEP_FIX: for the human player's start, a building off creep is MOVED onto existing creep (or the
+    # build fails with a clear message); no Creep Colony is added any more. Extra colonies are a placement artefact:
+    # Blizzard campaign starts never have more than 2 unmorphed Creep Colonies (check_start_setup.py).
+    # Computer players still get a colony where needed. player_creep_colonies=True restores the old behaviour.
     """relocate misplaced non-hall buildings / units, add Creep Colonies and Pylons where needed. Halls+resources are handled by terrain pads."""
     import collections
     def run(): return check_data(m.W,m.H,m.mtxm,b''.join(m.units),b''.join(getattr(m,'dd2',[])),m.ts,b''.join(m.mrgn))[0]
@@ -162,7 +171,7 @@ def autofix(m,log=print):
         px=min(max(px,16),m.W*32-16); py=min(max(py,16),m.H*32-16)
         b=bytearray(m.units[i]); struct.pack_into('<HH',b,4,px,py); m.units[i]=bytes(b)
     def score(es): return len(es)
-    moved=added=0
+    moved=added=0; player_offcreep=[]
     errs=run(); base=score(errs)
     for rnd in range(6):
         bad=[e for e in errs if e[1] not in HALLS and e[1] not in (MINERAL,GEYSER)]
@@ -173,8 +182,9 @@ def autofix(m,log=print):
             if i is None or i in done: continue
             done.add(i)
             u=m.units[i]; px,py,uid=struct.unpack_from('<HHH',u,4); own=u[16]
+            pslot=_is_player_slot(m,own)
             if own==NESTP: own=0   # never give an allied nest slot extra buildings
-            if e[0]=='no_creep' or e[0]=='no_power':
+            if (e[0]=='no_creep' and (player_creep_colonies or not pslot)) or e[0]=='no_power':
                 # first try inserting a provider next to it
                 prov=CREEP if e[0]=='no_creep' else PYLON
                 w,h=B[uid]; best=None
@@ -201,7 +211,9 @@ def autofix(m,log=print):
                             errs=es; ok=True; moved+=1; break
                     if ok: break
                 if ok: break
-            if not ok: setpos(i,px,py)
+            if not ok:
+                setpos(i,px,py)
+                if e[0]=='no_creep' and pslot and not player_creep_colonies: player_offcreep.append((uid,px//32,py//32))
     # deterministic last resort: drop expendable enemy filler (static defence, creep, pylons) that still collides
     DROP={144,146,124,125,162,156,176,177,178}; dropped=0
     for _ in range(40):
@@ -213,5 +225,11 @@ def autofix(m,log=print):
         m.units.pop(i); dropped+=1; errs=run()
     if dropped: log(f'  autofix: dropped {dropped} colliding enemy filler buildings')
     c=collections.Counter(e[0] for e in errs)
+    left=sorted({x for x in player_offcreep if any(e[0]=='no_creep' and e[1]==x[0] and (e[2],e[3])==(x[1],x[2]) for e in errs)})
+    if left:
+        raise SystemExit('PLACEMENT FAILED: player start buildings off creep and no creep spot found nearby: '
+            +', '.join(f'unit {u} at ({x},{y})' for u,x,y in left)
+            +'. Shrink the start layout (fewer or closer buildings around the hall) instead of adding Creep Colonies; '
+             'see START_SETUP in the BW campaign design rules.')
     log(f'  autofix: moved {moved}, added {added} creep/pylon, violations {base} -> {len(errs)} {dict(c)}')
     return errs

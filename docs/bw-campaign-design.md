@@ -190,7 +190,13 @@ Apply unless the Design_Note records a deviation with a reason (campaign: "Campa
 - The difficulty curve is fair: mission 1 is easy, and difficulty rises per chapter. Offer difficulty levels that scale enemy strength.
 - Pacing: a calm build-up phase, waves that grow, and the climax at the end. (Waves carry no warning text by default, see attack announcements.)
 - Big waves come from real producing enemy bases. Destroying a base visibly reduces the pressure.
-- Give the player enough starting supply plus headroom, unless the story deliberately says otherwise. Start each mission with a small ready-made base.
+- **Start setups vary and the player builds (fixed rule).** What the player owns at mission start follows the story and changes from mission to mission, as in the Blizzard campaigns (57 released missions: 32 % build-up, 28 % no base or hero squad, 23 % small base, 18 % established base). Default: a small core to build up from (a hall, 2-6 workers, at most one tech building, a small squad); the player builds the rest. A larger base only with a story reason (held for a long time, a captured fortress, a base under siege).
+  - No static defence at start by default; more than 2 towers only for a defence, survival or fortress mission, with a reason. Never more than 2 unmorphed Creep Colonies (a building off creep means a smaller layout, not extra colonies; `placecheck.autofix` moves player buildings onto creep or stops with a clear message instead of adding colonies) and never more than 8 workers.
+  - New tech is earned: a newly unlocked tech building is built by the player, not pre-placed; a newly unlocked unit appears at most as a sample of 1-3 to introduce it. SHOWCASE situations come from the map, not from a handed-over army.
+  - Starting supply means enough Overlords/depots and minerals for the first builds, not a pre-placed army.
+  - Never reuse the previous mission's start block; consecutive missions differ in type or composition, and never three established starts in a row.
+  - Design note: `START_SETUP: <no-base|build-up|small-base|established> :: <story reason>`; `START_DEFENSE_WHY: <what> :: <reason>` for more than 2 towers; `START_GIFT_WHY: <unit or building> :: <reason>` for a ready new building or more than 3 of a new unit.
+  - Check: `tools/bw/check_start_setup.py` (`start_setup_variety`, predelivery check 44; compares with the two previous missions `M<n-1>`/`M<n-2>` in the same folder when present). Single map: `python3 tools/bw/check_start_setup.py MAP.scx --prev PREV1.scx PREV2.scx`; whole campaign: `--campaign M1.scx M2.scx ...`.
 - Tech progression: each later mission of a campaign unlocks MORE tech than the one before (new units, buildings, upgrade levels or techs), gradually as in the Blizzard campaigns. Same tech only as justified mission design, `TECH_SAME_OK :: reason` in the Design_Note / <M>_build_info.json / <map>.tech_ok.txt (e.g. hero squad without base). Placed or trigger-given units are not tech. A mission after the full race tree is exempt automatically. Check 31 of predelivery_check.py compares PUNI/UNIx, PUPx/UPGx, PTEx/TECx with the previous mission M<n-1>/ML<n-1> in the same folder.
 - Air units must be plausible for the plot. Never use them in indoor or installation missions; installation missions are usually branching, maze-like and without buildings.
 - Mark important areas in the world itself (effects, warning text with sound, all-clear notice), not only on the minimap.
@@ -223,7 +229,7 @@ Per-mission decisions, each recorded in the mission's Design_Note under "Mission
 - A gas building without a hall (captured or abandoned outpost) -> also listed in `<map>.gas_ok.json`.
 - A deliberate attack warning in one mission -> `ANNOUNCE_OK` reason.
 - Conquest as the objective itself (then the objective-vs-conquest balance does not apply).
-- Less starting supply or no starting base, when the story says so; an installation mission (maze-like, no buildings, no air).
+- An established base at start (4+ tech buildings) when the story says so (`START_SETUP: established :: reason`); an installation mission (maze-like, no buildings, no air).
 - A one-off special mechanic in this mission (still introduced by a transmission or scene, see fixed rules).
 - Intro cinematic concept: not the template "enemy base, then own base". Each intro follows the mission's story (heroes talking in the landscape, arrival by ship or march, flashback, a raid already under way, staying with the enemy, or almost no intro); justify the choice in the Design_Note under mission design.
 - Side quest discovered on arrival, only with a reason (`ARRIVAL_DISCOVERY_OK`).
