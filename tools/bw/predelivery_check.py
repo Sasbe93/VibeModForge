@@ -74,6 +74,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    <target count>' matches the triggers (objectives text, countdown, escort) and differs from the previous 2 missions
    (not the same type + pressure, not the same type + target count) unless 'MISSION_TYPE_REPEAT_OK: <reason>';
    WARN for neighbouring chapters with the same pattern in the campaign-outline table
+48 computer_ai_started + ai_workers_mining (check_computer_ai.py): every computer player with a pre-placed base has a
+   start location, runs its town AI from mission start (Always) in its own trigger, at a location centred on its town
+   hall (Blizzard: 4x3 'Main Town' location on the hall; Area Town scripts for second bases), so its workers mine from
+   the first second; exemption 'AI_IDLE_OK: P<n> :: <hall x,y | all> :: reason'
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -616,6 +620,8 @@ def run_safe(path):
     R+=_guard(R,'46 escort route challenge',lambda: check_escort_route.run(path),[])
     import check_mission_type_variety
     R+=_guard(R,'47 mission type variety',lambda: check_mission_type_variety.run(path),[])
+    import check_computer_ai
+    R+=_guard(R,'48 computer ai',lambda: check_computer_ai.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

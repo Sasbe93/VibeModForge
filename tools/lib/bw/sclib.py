@@ -483,6 +483,26 @@ class Map:
         if tier and not keep and script[1:]=='MCu': script=script[0]+tier
         n=struct.unpack('<I',script.encode())[0]
         return s.act(16,loc=loc,num=n,flags=0x04) if loc else s.act(15,num=n,flags=0x04)
+    TOWN_HALLS=(106,130,131,132,133,154)
+    def town_ai(s,p,script,hall,area=None,name=None,start_loc=True):
+        """Start computer player p's town AI the way Blizzard's campaign maps do (t1014; M6 Sluice Gates had idle SCVs).
+        hall = top-left tile of the pre-placed town hall (as passed to unit()); script = 4-letter code (e.g. 'THIx').
+        Main town (area=None): a location on exactly the hall's footprint (Blizzard: 4x3 'Main Town' locations), so the
+        AI town is centred on the hall and takes its workers, minerals and buildings. Second base: area=(x0,y0,x1,y1)
+        around it with an Area Town script ('TARx'/'ZARx'/'PARx'). Adds the start location on the hall (every official
+        computer base has one) and a trigger owned by p with Always, so the workers mine from the first second.
+        Returns the location index."""
+        w,h=4,3   # every town hall (CC, Hatchery/Lair/Hive, Nexus, Infested CC) is 4x3 tiles
+        x,y=hall
+        if area is None: x0,y0,x1,y1=x,y,x+w,y+h
+        else:
+            x0,y0,x1,y1=area; assert x0<=x+w/2<=x1 and y0<=y+h/2<=y1, f'town_ai: area {area} does not contain the hall {hall}'
+            assert script[1:3]=='AR', f'town_ai: a large area location needs an Area Town script, not {script}'
+        if start_loc and not any(struct.unpack_from('<H',u,8)[0]==STARTLOC and u[16]==p for u in s.units):
+            s.unit(STARTLOC,int(x*32+w*16),int(y*32+h*16),p,pixel=True)
+        li=s.loc(name or f'AI Town P{p+1} {x},{y}',x0,y0,x1,y1)
+        s.T([p],[s.ALWAYS()],[s.act(16,loc=li,num=struct.unpack('<I',script.encode())[0],flags=0x04)])
+        return li
     def ally(s,p,status): return s.act(57,player=p,unit=status,flags=0x04)  # 0 enemy 1 ally 2 allied victory; save() adds the shared-vision script (_ally_vision)
     # briefing actions
     def b_portrait(s,unit,slot): return s.act(5,unit=unit,player=slot,flags=0x14)
@@ -644,6 +664,14 @@ class Map:
         assert len(pupx)==2318 and len(ptex)==1672
         chk=b''.join(k.encode()+struct.pack('<I',len(v))+v for k,v in sec)
         tmp=path+'.chk'; open(tmp,'wb').write(chk)
+        try:   # computer_ai_started / ai_workers_mining (t1014): warn at build time, predelivery check 48 FAILs
+            import sys as _sys; _here=os.path.dirname(os.path.abspath(__file__))
+            for _p in (_here, os.path.join(_here,'..','..','bw')):
+                if os.path.exists(os.path.join(_p,'check_computer_ai.py')) and _p not in _sys.path: _sys.path.insert(0,_p)
+            import check_computer_ai as _cca
+            for _l in _cca.run(tmp):
+                if _l.startswith('FAIL'): print('WARNING (fix before delivery; use Map.town_ai) '+_l)
+        except Exception as _e: print(f'WARNING computer_ai check skipped: {_e!r}')
         if os.path.exists(path): os.remove(path)
         m=mpqapi.MPQ.create(path,3,64+len(s.wavfiles)*2)
         m.add_file('staredit\\scenario.chk',tmp)
