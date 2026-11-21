@@ -10,7 +10,8 @@ replace terrain, cast, story and objectives with your own (keep the structure an
 What it demonstrates
   terrain     organic ISOM painting (blobs, meandering roads, ragged map edge), a raised ridge with seam-aware normal-size
               ramps, water and cliffs BEHIND every mineral line, ground-texture variety (dirt, grass, mud, rocky ground)
-  bases       Blizzard-style staggered mineral lines, geyser gaps, a full enemy base on the ridge plus an expansion
+  bases       Blizzard mineral formations (columns and a corner line, minform.py), geyser gaps, a full enemy base
+              on the ridge plus an expansion
   dressing    battlefield doodads (never on bases, ramps, lanes or locations), hard seams removed automatically
   story       a briefing with speaking portraits and voiced lines; voiced in-mission transmissions (edge-tts + VO markup)
   objectives  main + optional objective, announced by a character, with done/failed versions of every line
@@ -41,9 +42,17 @@ m.blob(100, 24, 15, HDIRT, 0.3)                 # the ridge: enemy main on high 
 m.blob(103, 22, 6, HGRASS, 0.4)
 m.path([(3, 56), (2, 66), (3, 76), (1, 84)], 2.4, WATER)                  # water behind the player's minerals
 m.path([(119, 8), (118, 20), (119, 32)], 2.4, WATER)                      # behind the ridge minerals
-m.path([(121, 46), (120, 57), (121, 68)], 2.4, WATER)                     # behind the enemy expansion minerals
+# (the water behind the enemy expansion comes from paint_back below)
 m.path([(24, 72), (48, 64), (70, 58), (88, 50), (92, 42)], 1.2, MUD)      # old road from the outpost to the ridge
 m.path([(48, 64), (66, 74), (92, 80)], 1.0, MUD)                          # side road to the ravine camp
+# mineral formations differ between bases (check 43): the player base gets a column, the expansion a corner line; plan
+# them before the terrain is built and paint water behind them (missionkit.mineral_plan + paint_back, tools/lib/bw/minform.py)
+HX, HY = 16, 66
+PPLAN = K.mineral_plan(HX, HY, 'left', 8, form='column')
+K.paint_back(m, PPLAN, WATER)
+XX, XY = 103, 56
+XPLAN = K.mineral_plan(XX, XY, 'downright', 7, form='corner')
+K.paint_back(m, XPLAN, WATER)
 m.edges(DIRT, skip=[(8, 70, 10), (116, 22, 10), (112, 58, 8)], mix=[HDIRT, WATER])
 m.build_terrain()
 ti = K.TerrainInfo(m)
@@ -58,9 +67,8 @@ m.forces = [0, 1, 3, 3, 3, 3, 3, 0]; m.forcenames = ['Outpost', 'Brood', '', '']
 g = K.Grid(m)
 
 # ---------------- player base: SW outpost ----------------
-HX, HY = 15, 66
 m.unit(STARTLOC, HX*32+64, HY*32+48, P1, pixel=True); g = K.Grid(m)
-pg = K.res_base(m, g, ti, HX, HY, 'left', 8, [1500, 1200, 1500, 1800], 5000, P1, CC)
+pg = K.res_base(m, g, ti, HX, HY, 'left', 8, [1500, 1200, 1500, 1800], 5000, P1, CC, plan=PPLAN)
 for b, cx, cy in [(SUPPLY, HX+8, HY-5), (SUPPLY, HX+8, HY+7), (BARRACKS, HX+12, HY-1)]: K.put(m, g, b, cx, cy, P1, 0, 5)
 K.put(m, g, 125, HX+18, HY-4, P1, 0, 4)                              # Bunker (id 125) toward the road
 for x in range(HX-3, HX):
@@ -71,7 +79,7 @@ K.scatter(m, g, MARINE, 8, HX+15, HY+2, P1, 2.0); K.scatter(m, g, 34, 2, HX+13, 
 
 # ---------------- enemy: Zerg main on the ridge + expansion ----------------
 EX, EY = 97, 19
-eg = K.res_base(m, g, ti, EX, EY, 'right', 8, [3000, 2500, 3500, 4000], 12000, P2, HATCH)
+eg = K.res_base(m, g, ti, EX, EY, ['right', 'upright', 'downright'], 8, [3000, 2500, 3500, 4000], 12000, P2, HATCH)
 CREEPS = [(EX+2, EY+1.5, 9.5, 6.5)]
 def zput(uid, cx, cy, rmax=6, src=False):
     sp = K.near(g, uid, cx, cy, 0, rmax, cond=lambda x0, y0: K_in(uid, x0, y0)) or K.near(g, uid, cx, cy, 0, rmax)
@@ -94,8 +102,7 @@ for x in range(EX+4, EX+7):
 K.scatter(m, g, ZERGLING, 8, EX-9, EY+5, P2, 2.0); K.scatter(m, g, HYDRA, 4, EX-6, EY+3, P2, 1.5)
 for i in range(3): m.unit(OVERLORD, EX-4+i*3, EY-6, P2)
 m.loc('Ridge Town', EX-18, EY-12, EX+10, EY+16); m.loc('Ridge Hall', EX-1, EY-1, EX+5, EY+4)
-XX, XY = 103, 56
-xg = K.res_base(m, g, ti, XX, XY, 'right', 7, [2500, 3000, 3500], 10000, P2, HATCH)
+xg = K.res_base(m, g, ti, XX, XY, 'downright', 7, [2500, 3000, 3500], 10000, P2, HATCH, plan=XPLAN)
 CREEPS.append((XX+2, XY+1.5, 9.5, 6.5))
 for cx, cy in [(XX-5, XY+3), (XX-4, XY-3)]: zput(SUNKEN, cx, cy, 4, src=True)
 dr = 0

@@ -23,7 +23,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
 15 Modify Unit Hit Points <100% only on units created in the same trigger (else it heals damaged units)
 16 effect-only players (no units, no AI): every unit they get is made invincible and killed (Kill Unit) in the same trigger, no orders, no alliance/AI
 17 effect units: max 1 per location per trigger, count 1, air units
-18 mineral lines are staggered (Blizzard arc), not straight flush rows
+18 mineral lines are staggered (Blizzard arc), not straight flush rows (weak: 2 depths pass; check 43 is the real one)
+43 mineral_line_shape (check_mineral_line_shape.py): no more than 3 fields flush in a straight line, at least n/3 fields
+   staggered off the line, nearest field 3 tiles from the hall, and campaign maps with 3+ bases do not use one shape
+   for every base (columns, two-deep rows, corners; generator: tools/lib/bw/minform.py via missionkit.res_base)
 19 no attack announcements in Display Text/Transmission unless <map>.announce_ok.txt (or build info/design note) has 'ANNOUNCE_OK: <reason>'
 21 town hall to geyser gap 3..5 tiles, nearest minerals 2..4 tiles (hall_gap.py; refinery touching the CC = FAIL)
 22 rescue scene: rescuable units within 8 tiles of enemy units FAIL unless the enemy is set hostile (Set Alliance Status) to them by trigger
@@ -587,6 +590,8 @@ def run_safe(path):
     R+=_guard(R,'36-41 story delivery',lambda: check_story_delivery.run(path),[])
     import check_hero_own_color
     R+=_guard(R,'42 hero own color',lambda: check_hero_own_color.run(path),[])
+    import check_mineral_line_shape
+    R+=_guard(R,'43 mineral line shape',lambda: check_mineral_line_shape.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

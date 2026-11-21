@@ -4,7 +4,8 @@ Used by tools/bw/example_mission.py. Everything here works for any mission and a
   TerrainInfo     tile flags from the tileset (walkable, buildable, height level)
   Grid            placement grid: free, flat, buildable footprints with a walkable ring; unit spots on the main ground
   near()          deterministic spiral search for a building spot
-  res_base()      Blizzard-style mineral line snug against the blocker behind it, geyser 3-4 tiles from the hall
+  res_base()      Blizzard mineral formation (column / 2-deep row / corner L, minform.py), varied per base, blocker behind it
+  mineral_plan()  pick the formation before the terrain is built; paint_back() paints water/cliff behind it
   scatter()       a loose group of ground units on free tiles
   free_loc()      a location on free walkable ground (reserved so nothing else is placed there)
   auto_ramps()    seam-aware ramp doodads from a plateau top down to low ground (normal size >= 8x5)
@@ -159,61 +160,118 @@ def free_loc(m, g, name, x, y, size=3, rmax=10):
                     return x0, y0
     raise SystemExit('no free location spot for ' + name)
 
-def res_base(m, g, ti, hx, hy, side, n, amounts, gas, owner=None, hall=None, geyser=True):
-    """mineral line of n fields on the `side` ('left'/'right') of a 4x3 hall at top-left (hx,hy):
-    every field sits snug against an unwalkable tile behind it (cliff/water), staggered like a Blizzard arc with free sight
-    from every field to the hall; geyser above or below with a 3-5 tile gap, backed by unwalkable ground where possible. Build the blocker behind the line into the terrain first."""
+def _abs(hx, hy, p): return (hx+p[0], hy+p[1])
+
+def mineral_plan(hx, hy, side='auto', n=8, form=None, variant=None, seed=None, used=()):
+    """choose a Blizzard mineral formation (minform) for a hall at top-left (hx,hy) BEFORE the terrain is built.
+    Returns dict(form, face, variant, fields, geyser_cands, back) in absolute tiles; paint `back` unwalkable
+    (paint_back) so the formation has water/cliff behind it, then call res_base(..., plan=plan)."""
+    import minform as F
+    c = F.candidates(side, n, seed if seed is not None else hx*1000+hy+len(used), used)
+    c = [x for x in c if (form is None or x[0] == form) and (variant is None or x[2] == variant)]
+    assert c, f'no {form or ""} {variant or ""} formation with {n} fields on side {side}'
+    fo, fa, va = c[0]; f, g = F.formation(fo, fa, n, va)
+    gy = next(q for q in g if not F.problems(f, q))
+    return dict(form=fo, face=fa, variant=va, hall=(hx, hy), fields=[_abs(hx, hy, p) for p in f],
+                geyser_cands=[_abs(hx, hy, q) for q in g], back=[_abs(hx, hy, t) for t in F.back_tiles(f, gy)])
+
+def paint_back(m, plan, brush, depth=(8.0, 5.0), r=1.4, noise=0.3, geyser=True):
+    """paint the blocker behind a planned mineral line (and its first legal geyser slot): blobs `depth` tiles behind
+    each field centre, so the ISOM shore/cliff transition ends right behind the fields. depth = (tiles behind a field
+    that faces left/right, tiles behind one that faces up/down): ISOM transitions are wider horizontally (measured on
+    Badlands water: 8 / 6 put the shore 0-1 tiles behind the back fields). Call before m.build_terrain()."""
+    import minform as F
+    hx, hy = plan['hall']; pts = []
+    items = [((x-hx, y-hy), 'field') for x, y in plan['fields']]
+    if geyser and plan['geyser_cands']:
+        gx, gy = plan['geyser_cands'][0]; items.append(((gx-hx, gy-hy), 'geyser'))
+    for p, k in items:
+        bx, by = F.back_dir(p, k); cx = hx+p[0]+(1 if k == 'field' else 2); cy = hy+p[1]+(0.5 if k == 'field' else 1)
+        k_ = 0.75 if bx and by else 1.0; ex, ey = (2.5, 0.0) if k == "geyser" else (0, 0)     # geyser is 4x2
+        q = (round(cx+bx*(depth[0]+ex)*k_, 1), round(cy+by*(depth[1]+ey)*k_, 1))
+        if q not in pts: pts.append(q)
+    for x, y in pts: m.blob(x, y, r, brush, noise)
+    return pts
+
+def res_base(m, g, ti, hx, hy, side, n, amounts, gas, owner=None, hall=None, geyser=True, form=None, variant=None,
+             plan=None, reach=3):
+    """Blizzard mineral formation (tools/lib/bw/minform.py) for a 4x3 hall at top-left (hx,hy).
+    side: 'left'/'right' (column), 'up'/'down' (row, two rows deep), 'upleft'/'upright'/'downleft'/'downright' (corner L),
+    a list of those, or 'auto'. form/variant pin a shape; plan = mineral_plan(...) result used for the terrain.
+    Rules (t1009, measured on pro ladder and Empire Wars campaign maps): nearest field 3 empty tiles from the hall, back
+    fields 4, real 2-deep stagger, never more than 3 fields flush in a straight line, geyser 3-5 tiles on a free side.
+    Every field and the geyser need unwalkable ground (water, cliff, map edge) or another field within `reach` tiles
+    straight behind them (resource backs, predelivery resback). Shapes already used in this map are tried last, so the
+    bases of one map differ (m._minforms). Build the blocker behind the line into the terrain first (paint_back)."""
+    import minform as F
     hl = ti.lvl(hx+1, hy+1)
     assert g.ok(sclib.CC, hx, hy, hall=True), f'hall spot blocked at {hx},{hy}'
-    def mine_ok(x, y): return all(ti.buildable(xx, y) and ti.lvl(xx, y) == hl and (xx, y) not in g.occ for xx in (x, x+1))
-    got = {}
-    for y in sorted(range(hy-4, hy+6), key=lambda y: abs(y-hy-1)):
-        cand = range(hx-8, hx-4) if side == 'left' else range(hx+10, hx+6, -1)
-        for x in cand:
-            behind = x-1 if side == 'left' else x+2
-            if mine_ok(x, y) and not ti.walk(behind, y): got[y] = x; break
-    rows = sorted(got, key=lambda y: abs(y-hy-1))[:n]
-    assert len(rows) == n, f'only {len(got)} mineral rows with a blocker behind them at hall {hx},{hy}: move the hall or the blocker'
-    tow = 1 if side == 'left' else -1
-    ys = sorted(rows)
-    def clear(xs):   # every field sees the hall: the line from its centre to the nearest hall point crosses no other field
-        P = [(x*32+32, y*32+16) for x, y in zip(xs, ys)]
-        for i, (ux, uy) in enumerate(P):
-            px = min(max(ux, hx*32), hx*32+128); py = min(max(uy, hy*32), hy*32+96)
-            L = max(1, int(math.hypot(px-ux, py-uy)/4))
-            for j, (vx, vy) in enumerate(P):
-                if i != j and any(vx-34 < ux+(px-ux)*k/L < vx+34 and vy-18 < uy+(py-uy)*k/L < vy+18 for k in range(L+1)): return False
-        return True
-    best = None
-    for mask in range(1 << n):   # staggered (not flush) and every field visible; prefer the Blizzard arc (shifted ends)
-        off = [(mask >> i) & 1 for i in range(n)]
-        xs = [got[y]+tow*o for y, o in zip(ys, off)]
-        if len(set(off)) < 2 or not all(mine_ok(x, y) for x, y in zip(xs, ys)) or not clear(xs): continue
-        score = off[0]+off[-1]+sum(1 for a, b in zip(off, off[1:]) if a != b)
-        if best is None or score > best[0]: best = (score, xs)
-    assert best, f'no staggered mineral line with free sight to the hall at {hx},{hy}: move the hall one tile'
-    for i, (x, y) in enumerate(zip(best[1], ys)):
-        m.unit(MINERAL, x, y, 11, amounts[i % len(amounts)])
-    gpos = None
-    if geyser:
-        hcx, hcy = hx+2, hy+1.5
-        def backed(gx, gy):      # unwalkable ground within 3 tiles behind the geyser (away from the hall)
-            cx, cy = gx+2, gy+1; dx, dy = cx-hcx, cy-hcy; d = math.hypot(dx, dy) or 1; dx, dy = dx/d, dy/d
-            return any(not ti.walk(int(cx+dx*s), int(cy+dy*s)) for s in (2, 2.5, 3, 3.5, 4, 4.5, 5))
-        sx = -1 if side == 'left' else 1
-        cands = [(hx+dx*sx, hy+dy) for dx in (2, 1, 3, 0, 4) for dy in (-5, 6, -6, 7)]
-        ok = [c for c in cands if g.resok(GEYSER, *c)]
-        gpos = next((c for c in ok if backed(*c)), ok[0] if ok else None)
-        assert gpos, f'no geyser slot at hall {hx},{hy}'
-        m.unit(GEYSER, gpos[0], gpos[1], 11, gas)
+    used = getattr(m, '_minforms', [])
+    if plan: cands = [(plan['form'], plan['face'], plan['variant'])]
+    else:
+        cands = F.candidates(side, n, hx*1000+hy+len(used), used)
+        cands = [c for c in cands if (form is None or c[0] == form) and (variant is None or c[2] == variant)]
+    def tile_ok(x, y): return ti.buildable(x, y) and ti.lvl(x, y) == hl and (x, y) not in g.occ and (x, y) not in g.block
+    def blocked(x, y, own): return not ti.walk(x, y) or (x, y) in own
+    def backed(p, kind, own):
+        # like predelivery resback: straight away from the hall, or along the dominant axis
+        w = 2 if kind == 'field' else 4; h = 1 if kind == 'field' else 2
+        cx = p[0]+w/2; cy = p[1]+h/2; vx = cx-2; vy = cy-1.5; L = math.hypot(vx, vy) or 1
+        for bx, by in (F.back_dir(p, kind), (vx/L, vy/L)):
+            ex = abs(w/2/bx) if bx else 1e9; ey = abs(h/2/by) if by else 1e9; e = min(ex, ey)
+            for k in range(1, reach*4+1):
+                s_ = e+k/4
+                for o in (-0.35, 0, 0.35):
+                    x = hx+cx+bx*s_-by*o*w; y = hy+cy+by*s_+bx*o*h
+                    if blocked(int(math.floor(x)), int(math.floor(y)), own): return True
+        return False
+    import itertools
+    best = None; why = []
+    def field_ok(p, own): return all(tile_ok(hx+p[0]+i, hy+p[1]) for i in (0, 1)) and backed(p, 'field', own)
+    for fo, fa, va in cands:
+        f0, gs = F.formation(fo, fa, n, va)
+        own0 = set().union(*[{(hx+x, hy+y), (hx+x+1, hy+y)} for x, y in f0])
+        bad = [i for i, p in enumerate(f0) if not field_ok(p, own0)]
+        if len(bad) > 4: why.append(f'{fo}/{fa}/{va}: {len(bad)} fields off base ground or without a blocker behind'); continue
+        # flexible template: a field that does not fit may step one tile toward / away from its blocker, as long as the
+        # line stays a Blizzard line (nearest gap 3, max 3 flush, free sight, n/3 staggered)
+        alts = []
+        for i in bad:
+            bx, by = F.back_dir(f0[i]); p = f0[i]
+            alts.append([(p[0]+bx, p[1]+by), (p[0]-bx, p[1]-by), (p[0]+2*bx, p[1]+2*by)])
+        found = None
+        for combo in itertools.product(*alts) if bad else [()]:
+            f = list(f0)
+            for i, q in zip(bad, combo): f[i] = q
+            own = set().union(*[{(hx+x, hy+y), (hx+x+1, hy+y)} for x, y in f])
+            if any(not field_ok(f[i], own) for i in bad): continue
+            if F.problems(f) or F.staggered_count(fo, f) < math.ceil(n/3): continue
+            gpos = None
+            if geyser:
+                okg = [q for q in gs if not F.problems(f, q) and g.resok(GEYSER, hx+q[0], hy+q[1])
+                       and not any((hx+q[0]+i, hy+q[1]+j) in g.block for i in range(4) for j in range(2))]
+                gpos = next((q for q in okg if backed(q, 'geyser', own)), None)
+                if gpos is None: continue
+            found = (f, gpos); break
+        if not found:
+            why.append(f'{fo}/{fa}/{va}: ' + (f'{len(bad)} field(s) do not fit even when moved one tile' if bad else 'no legal geyser slot with a blocker behind'))
+            continue
+        best = (fo, fa, va) + found; break
+    assert best, f'no mineral formation fits hall {hx},{hy} (side {side}): ' + '; '.join(why[:6]) + \
+        ' -> paint the blocker behind the line first (mineral_plan + paint_back) or move the hall'
+    fo, fa, va, f, gpos = best
+    m._minforms = used + [(fo, fa, va)]
+    for i, (x, y) in enumerate(f): m.unit(MINERAL, hx+x, hy+y, 11, amounts[i % len(amounts)])
+    if gpos: gpos = (hx+gpos[0], hy+gpos[1]); m.unit(GEYSER, gpos[0], gpos[1], 11, gas)
     m.reserve = getattr(m, 'reserve', [])+[(hx-1, hy-1, hx+5, hy+4)]
-    for raw in m.units[-(n+(1 if geyser else 0)):]: g.add_raw(raw)
+    for raw in m.units[-(n+(1 if gpos else 0)):]: g.add_raw(raw)
     for yy in range(hy-1, hy+4):
         for xx in range(hx-1, hx+5): g.block.add((xx, yy))
     if hall:
         for yy in range(hy-1, hy+4):
             for xx in range(hx-1, hx+5): g.block.discard((xx, yy))
         m.unit(hall, hx, hy, owner); g.add_raw(m.units[-1])
+    print(f'res_base hall {hx},{hy}: {fo} {fa} {va}, {n} fields, geyser {gpos}')
     return gpos
 
 # ---------- ramps ----------

@@ -69,8 +69,39 @@ Four levels:
 - sclib asserts at build time: briefing text (b_trans/b_text/b_obj) only allowlisted codes; in-game text (text/trans) no dark codes (\x05,\x0e,\x10,\x15,\x18,\x1c).
 - Check 21 (contrast part) in predelivery_check.py: strings referenced by MBRF actions are checked against the briefing ALLOWLIST (only whitelisted codes pass); other strings against the in-game dark list. The old check used one in-game blacklist for all strings and even listed \x0f/\x1f as allowed, so a wrongly coloured briefing name passed.
 
+### Mineral lines (Blizzard formations), mandatory check 43
+Measured on 12 pro ladder maps (38 halls) and the 38 Empire Wars campaign maps (174 halls):
+- **Distance:** the nearest field is always 3 empty tiles from the town hall (left/right for a column, above/below for
+  a row), the back fields 4. A field at the end of a line may come one tile closer where it sits diagonally to the hall
+  (the gap stays 3).
+- **Columns** (line left or right of the hall): one field per tile row, staggered one tile in and out over the whole
+  line; the ends curve toward the hall. Never a straight wall with only the top and bottom field bent.
+- **Rows** (line above or below the hall): mineral fields are 2x1 tiles, so a row is two rows deep: a back row and a
+  front row with gaps, offset by one tile, so workers reach the back fields.
+- **Corners** (L around a hall corner): a short column plus a short row.
+- **Never more than 3 fields flush in one straight line**; at least a third of the fields off the line's main depth.
+- **Geyser** 3 tiles from the hall on a free side (column: above or below; row: left or right; corner: the open side).
+- **Variety:** campaign maps mix shapes between bases (23 of 27 Empire Wars maps with several bases). Pro ladder maps
+  mostly repeat the column; ranked maps may do the same.
+- **Blocker behind:** every field and geyser has water, cliff or another field within 3 tiles behind it.
+- **Generator:** `tools/lib/bw/minform.py` holds the formations (column: blizzard / pairs / bulge, row: blizzard /
+  zigzag, corner: long_column / long_row, each mirrored and with the geyser on either end). In a build:
+  `plan = missionkit.mineral_plan(hx, hy, side, n)` before the terrain, `missionkit.paint_back(m, plan, WATER)` to
+  paint the blocker, then `missionkit.res_base(..., plan=plan)` after `build_terrain()`. Without a plan `res_base`
+  tries every formation for the given side(s) (`'left'`, `'up'`, `'downright'`, a list, or `'auto'`), shapes already
+  used in the map last, and lets a field that does not fit the terrain step one tile as long as the line stays valid.
+- **Check 43** (`tools/bw/check_mineral_line_shape.py`, in `predelivery_check.py`): FAIL when a line of 5+ fields has
+  more than 3 fields flush in a straight line, fewer than n/3 fields staggered (n/4 for hall-less expansions), the
+  nearest field not 3-4 tiles from the hall, a field more than 6 tiles away (lines up to 10 fields), or when all 3+
+  bases of a campaign map use the same shape. Map-edge lines are exempt from the straight/stagger rules; maps named
+  *Ranked* only get a WARN for the same shape; a deliberate exception needs `MINERAL_SHAPES_OK: <reason>` in the design
+  note. On the reference maps the line rules pass 162 of 164 pro ladder lines (the two others: stacked fields on an
+  Odyssey RE start location) and 155 of 199 Empire Wars campaign lines (fan maps; the misses are mostly 4 flush fields
+  in long 10-18 field lines). The same-shape rule would hit 5 of 12 pro ladder maps (hence only WARN for ranked maps)
+  and 1 of 38 Empire Wars maps.
+
 ### Town hall to resource gap (Blizzard layout), mandatory check 21
-- Geyser or gas building: **3 to 5 empty tiles** between its footprint and the town hall. Nearest mineral fields: 2 to 4 tiles. A refinery, extractor or assimilator touching or almost touching the main is wrong.
+- Geyser or gas building: **3 to 5 empty tiles** between its footprint and the town hall. Nearest mineral fields: 3 tiles (check 43; check 21 still accepts 2 to 4). A refinery, extractor or assimilator touching or almost touching the main is wrong.
 - Root cause in 2026-10: `sclib.base()` put the lower geyser at `hy+4` (1-tile gap), up/down at `hx±6` (2-tile gap). Fixed to `hy+6` and `hx±7`. The old `expo()` helpers picked the *nearest* slot that passed resback, including `y+4`. Candidates are now `y-5`/`y+6`. LY3's "step toward the hall" fix shrank gaps to 2. Never move a geyser closer than a 3-tile gap to satisfy another check.
 - Check: `tools/bw/hall_gap.py`, wired into `predelivery_check.py` as check 21 (FAIL).
 - Resource backs: prove each geyser slot (`gy_at`) against the FINAL built map (autofix changes the walk map), with all other units present, not just hall+geyser. Mineral field footprint = tiles c..c+1. Keep ramps clear of mineral rows.

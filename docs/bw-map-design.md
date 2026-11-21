@@ -32,8 +32,9 @@ set them up; never fall back to rectangle plateaus or untextured ground. Worked 
   of units (`missionkit.dress` + `seams` removes hard seams). Doodads must tell something (ruins at an old outpost,
   bones near a Zerg nest).
 - **Base layout:** town hall spot first, then the mineral line on the side with water or cliff behind it (every field
-  backed by unwalkable ground within 3 tiles), staggered, minerals 2-4 tiles and the geyser 3-5 tiles from the hall,
-  every field visible from the hall (`missionkit.res_base` does all of this). Production buildings toward the exit,
+  backed by unwalkable ground within 3 tiles), nearest fields 3 tiles and the geyser 3-5 tiles from the hall, every
+  field visible from the hall (`missionkit.mineral_plan` + `paint_back` + `res_base` do all of this). Mineral line
+  shapes: see "Mineral lines" in docs/bw-campaign-design.md. Production buildings toward the exit,
   defence toward the approach; enemy bases on creep or with pylon power; keep a 1-tile walking lane around buildings.
 - **Ramps and approaches:** normal-size ramps (>= 8x5) only, at least two ways into a big enemy plateau; the attack
   path of scripted waves stays readable (waves come from a visible source, e.g. the enemy gate).
