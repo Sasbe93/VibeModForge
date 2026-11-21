@@ -4,7 +4,8 @@ Parses the FINAL .scx (not the build script) and exits 1 on any FAIL. Checks:
  1 every human player gets a deliberate Set Resources (minerals AND gas, Set To) at mission start
  2 pre-placed gas buildings carry gas (>0)
  3 no Create Unit (+ no Map Revealer created after Pause Game) (except Map Revealer) at mission start / during the opening; opening camera targets contain pre-placed units
- 4 Terran addons attached to a parent (addon top-left = parent top-left + (4,1))
+ 4 addon_attached: every pre-placed Terran add-on is LINKED to its parent in the UNIT section (relation bit 0x200 + serial
+   both ways, right parent type, centre offset (96,16) px); position alone leaves it detached in the game (check_addon_attached.py)
  5 enemy (computer) mineral patches >= 2500, geysers >= 10000 (near their town halls)
  6 every unit ID (placed and trigger-created) is a real BW unit (data/bw/bw_unit_ids.json)
  7 tech tree (check_tech.check_sections)
@@ -205,14 +206,10 @@ def run(path,R=None):
             if x[26]==5: seen=True     # Pause Game
             if seen and x[26]==44 and struct.unpack_from('<H',x,24)[0]==101: late.append(locname(struct.unpack_from('<I',x,0)[0]))
     res(not late,f'revealers are created before Pause Game (fog does not update while paused: the spot looks empty, units seem to appear after the talk) {late or ""}')
-    # 4 addons
-    loose=[]
-    for u in units:
-        if u['id'] in ADDONS:
-            ax,ay=u['x']//32-1,u['y']//32-1   # addons are 2x2
-            par=[v for v in units if v['id']==ADDONS[u['id']] and v['owner']==u['owner'] and (v['x']//32-2,v['y']//32-1)==(ax-4,ay-1)]
-            if not par: loose.append((IDS[u['id']],ax,ay))
-    res(not loose,f'addons attached {loose or ""}')
+    # 4 addons: linked to the parent in the UNIT section, not just standing next to it (check_addon_attached.py)
+    import check_addon_attached
+    af,_ai=check_addon_attached.check(U)
+    res(not af,f'addon_attached: pre-placed add-ons are linked to their parent (both ways, offset (96,16), right parent type) {af[:6] or ""}')
     # 5 enemy resources
     comp={p for p in range(8) if ownr[p]==5}
     halls=[u for u in units if u['id'] in HALLS and u['owner'] in comp]

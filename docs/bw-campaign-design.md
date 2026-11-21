@@ -63,6 +63,12 @@ Four levels:
 - Generator: `sclib.tech_sections` auto-adds core techs of every listed unit (`_with_core`). Campaign: sclib DEFAULT_RESEARCHED was off by one (Dark Swarm not free) - fixed.
 - Mandatory predelivery check 24 (`tools/bw/core_tech.py`). The tech-tree check missed it because it skips techs that are disabled.
 
+### Terran add-ons are linked, not just placed
+- A pre-placed add-on only attaches in the game when the UNIT section links it to its parent: relation bit 9 (0x200) on both records and each record's last u32 = the other unit's serial. Standing in the right spot is not enough; an unlinked add-on stands detached.
+- Position: add-on centre = parent centre + (96,16) px (top-left tile = parent top-left + (4,1)). Parents: ComSat/Nuclear Silo -> Command Center, Machine Shop -> Factory, Control Tower -> Starport, Physics Lab/Covert Ops -> Science Facility.
+- Use `Map.addon(uid, parent_x, parent_y, owner)` after placing the parent; it writes both links. Trigger `Create Unit` cannot attach add-ons, so attached add-ons are always pre-placed.
+- `tools/bw/check_addon_attached.py` (predelivery check 4 `addon_attached`, also run by `sclib.validate`) fails on any unlinked or misplaced add-on. Only Neutral (P12) add-ons may stand loose.
+
 ### Text contrast
 - Briefing text uses a DIFFERENT palette (glue/tfont) than in-game text. Briefing-bright codes, ALLOWLIST: \x02 periwinkle, \x03 lime green, \x04 yellow-green, \x06 white, \x07 red (\x01 = default periwinkle). Everything else renders black or unpredictable in the briefing: \x05 grey, \x08, \x0e-\x11, \x15-\x1c, and \x1d-\x1f are not listed as working there either. Sources: staredit.net wiki "Color" and "String", topics 6880, 17573, 17796 (consistent; not verified in our own Remastered screenshot except \x0f = dark).
 - The same code changes meaning: in-game \x03 yellow, \x04 white, \x06 red, \x07 green, \x02 periwinkle. Speaker names are shared between briefing and in-game lines, so they may use ONLY `sclib.NAME_COLOURS` = \x04, \x03, \x07, \x06, \x02 (bright in both). Never \x08 or player colours, \x0e, \x0f, \x1f for names.

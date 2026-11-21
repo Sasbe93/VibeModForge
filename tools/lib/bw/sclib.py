@@ -24,7 +24,8 @@ HEROES={101,10,16,17,19,20,21,22,23,25,27,28,29,48,49,51,52,53,54,75,76,77,78,79
 BUILDSIZE={HATCH:(4,3),LAIR:(4,3),HIVE:(4,3),POOL:(3,2),HYDEN:(3,2),EXTRACTOR:(4,2),CREEP:(2,2),SUNKEN:(2,2),SPORE:(2,2),EVO:(3,2),
  CC:(4,3),BARRACKS:(4,3),FACTORY:(4,3),SUPPLY:(3,2),BUNKER:(3,2),TURRET:(2,2),ACADEMY:(3,2),STARPORT:(4,3),EBAY:(3,2),
  NEXUS:(4,3),GATEWAY:(4,3),PYLON:(2,2),CANNON:(2,2),MINERAL:(2,1),GEYSER:(4,2),CRYSTAL:(4,3),TEMPLE:(7,4),XEL_TEMPLE:(13,6),STASIS:(4,3)}
-# Terran addons (2x2) and remaining buildings. An addon sits at parent top-left + (4,1) tiles (= parent centre + (96,16) px).
+# Terran addons (2x2) and remaining buildings. An addon sits at parent top-left + (4,1) tiles (= parent centre + (96,16) px)
+# AND must be linked to its parent in the UNIT section (use Map.addon(); see check_addon_attached.py).
 COMSAT_,NUKESILO_,CTOWER_,COVERT_,PHYSICS_,MSHOP_=107,108,115,117,118,120
 ADDON_PARENT={COMSAT_:CC,NUKESILO_:CC,CTOWER_:STARPORT,COVERT_:116,PHYSICS_:116,MSHOP_:FACTORY}
 BUILDSIZE.update({a:(2,2) for a in ADDON_PARENT})
@@ -186,10 +187,27 @@ class Map:
         else: px,py=int(x*32+16),int(y*32+16)
         if uid in GASB and res==0: res=5000   # fix: a pre-placed Refinery/Extractor/Assimilator keeps its gas (was 0)
         valid=0x10 if uid in (MINERAL,GEYSER) else 0x1F if uid!=STARTLOC else 0
-        s.units.append(struct.pack('<IHHHHHHBBBBIHHII',len(s.units)+1,px,py,uid,0,0x1F if flags else 0,valid,owner,hp,100,100,res,0,flags,0,0))
+        # unique class instance (serial): len(s.units)+1 repeated a serial after gas_building() popped a geyser,
+        # and add-on links point at serials, so they must be unique
+        ser=max([getattr(s,'_ser',0)]+[struct.unpack_from('<I',r,0)[0] for r in s.units[-1:]])+1; s._ser=ser
+        s.units.append(struct.pack('<IHHHHHHBBBBIHHII',ser,px,py,uid,0,0x1F if flags else 0,valid,owner,hp,100,100,res,0,flags,0,0))
+        return ser
     def addon(s,uid,px_,py_,owner):
-        """attach addon `uid` to the parent building whose top-left tile is (px_,py_): addon top-left = parent + (4,1)"""
-        s.unit(uid,px_+4,py_+1,owner)
+        """attach addon `uid` to the pre-placed parent building whose top-left tile is (px_,py_).
+        Position alone does NOT attach an add-on in the game: StarEdit/ScmDraft maps link both units in the UNIT
+        section - relation field bit 9 (0x200) on BOTH records, and each record's last u32 = the other unit's serial.
+        Verified on all 328 add-ons in 17 third-party campaign maps: addon centre = parent centre + (96,16) px, i.e.
+        addon top-left tile = parent top-left + (4,1). Trigger 'Create Unit' cannot attach add-ons: pre-place them."""
+        assert uid in ADDON_PARENT, f'unit {uid} is not a Terran add-on'
+        pid=ADDON_PARENT[uid]; pc=(px_*32+64,py_*32+48)
+        pi=[i for i,r in enumerate(s.units) if struct.unpack_from('<H',r,8)[0]==pid and r[16]==owner and struct.unpack_from('<HH',r,4)==pc]
+        assert pi, f'addon {uid}: no parent {pid} of player {owner} with top-left tile ({px_},{py_}); place the parent first'
+        pr=bytearray(s.units[pi[0]])
+        assert struct.unpack_from('<I',pr,32)[0]==0, f'parent at ({px_},{py_}) already has an add-on'
+        ser=s.unit(uid,px_+4,py_+1,owner); pser=struct.unpack_from('<I',pr,0)[0]
+        ar=bytearray(s.units[-1]); struct.pack_into('<H',ar,10,0x200); struct.pack_into('<I',ar,32,pser); s.units[-1]=bytes(ar)
+        struct.pack_into('<H',pr,10,0x200); struct.pack_into('<I',pr,32,ser); s.units[pi[0]]=bytes(pr)
+        return ser
     def gas_building(s,uid,owner,gx,gy,amount=5000):
         """pre-placed gas building on the geyser at top-left tile (gx,gy); the geyser unit is replaced and its gas kept"""
         gp=(gx*32+64,gy*32+32); keep=amount
@@ -690,6 +708,12 @@ def validate(path):
     for r in req: assert r in s, r
     W,H=struct.unpack('<HH',s['DIM ']); assert len(s['MTXM'])==W*H*2 and len(s['ISOM'])==(W//2+1)*(H+1)*8
     assert len(s['TRIG'])%2400==0 and len(s['MBRF'])%2400==0 and len(s['UNIT'])%36==0
+    # addon_attached: pre-placed add-ons must be linked to their parent, else they stand detached in the game
+    import sys as _sys; _here=os.path.dirname(os.path.abspath(__file__))
+    for _p in (_here, os.path.join(_here,'..','..','bw')):
+        if os.path.exists(os.path.join(_p,'check_addon_attached.py')) and _p not in _sys.path: _sys.path.insert(0,_p)
+    import check_addon_attached as _caa
+    _af,_=_caa.check(s['UNIT']); assert not _af, 'addon_attached: '+'; '.join(_af[:4])
     st=s['STR ']; c=struct.unpack_from('<H',st)[0]; offs=struct.unpack_from(f'<{c}H',st,2)
     strs=[st[o:].split(b'\0')[0].decode('utf-8') for o in offs]
     wavs=[w for w in struct.unpack('<512I',s['WAV ']) if w]
