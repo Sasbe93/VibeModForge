@@ -41,6 +41,12 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    tech available/researched PTEx/TECx) for the human player(s). Placed or trigger-given units are not tech.
    Exception: 'TECH_SAME_OK :: <reason>' in the Design_Note/build info/<map>.tech_ok.txt (e.g. hero-only mission).
 12 a started countdown timer has a Countdown = 0 trigger with a real effect (directly or via a switch it sets)
+34 scmdraft_open: the map opens in ScmDraft 2 -- every DD2 doodad is a named tileset doodad (an unnamed cv5 slot aborts
+   the whole load); plus a real ScmDraft 2 run under wine when the harness is installed (check_scmdraft_open.py,
+   scmdraft_harness/README.md). SCMDRAFT_REAL=0 skips only the real run.
+35 ally_shared_vision: every player allied with a human shares vision both ways (FORC shared-vision flag, or Run AI
+   Script 'Turn ON Shared Vision for Player N' in the same trigger as Set Alliance Status, owner = receiver); vision
+   off again when the alliance ends. Exemption: 'ALLY_NO_VISION_OK: P<n> :: reason' in the design note (check_ally_vision.py)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -553,6 +559,13 @@ def run(path,R=None):
     _o=_sp.run([sys.executable,os.path.join(os.path.dirname(os.path.abspath(__file__)),'check_voice_delivery.py'),path],capture_output=True,text=True).stdout
     _vf=[_l.strip()[5:] for _l in _o.splitlines() if _l.strip().startswith('FAIL')]
     R+=['FAIL voice_delivery: '+_l for _l in _vf] or ['OK   voice delivery notes (%s)'%(_o.strip().splitlines() or ['?'])[-1].split('RESULT')[-1].strip()]
+    # 34 the map opens in ScmDraft 2 (named DD2 doodads; real ScmDraft run when the wine harness is installed)
+    import check_scmdraft_open
+    R+=check_scmdraft_open.run(path)
+    # 35 allied players share vision both ways (FORC shared-vision flag / Run AI Script next to Set Alliance Status)
+    import check_ally_vision
+    try: R+=check_ally_vision.run(path)
+    except Exception as e: R.append(f'FAIL ally_shared_vision check crashed: {e!r}')
     return R
 def run_safe(path):
     """all checks; never aborts: a crash inside run() is reported as FAIL and checks 36-40 still run"""

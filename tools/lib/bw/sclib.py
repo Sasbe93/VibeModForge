@@ -466,7 +466,7 @@ class Map:
         if tier and not keep and script[1:]=='MCu': script=script[0]+tier
         n=struct.unpack('<I',script.encode())[0]
         return s.act(16,loc=loc,num=n,flags=0x04) if loc else s.act(15,num=n,flags=0x04)
-    def ally(s,p,status): return s.act(57,player=p,unit=status,flags=0x04)  # 0 enemy 1 ally 2 allied victory
+    def ally(s,p,status): return s.act(57,player=p,unit=status,flags=0x04)  # 0 enemy 1 ally 2 allied victory; save() adds the shared-vision script (_ally_vision)
     # briefing actions
     def b_portrait(s,unit,slot): return s.act(5,unit=unit,player=slot,flags=0x14)
     def b_obj(s,t): return s.act(4,s=s.S(check_colours(t,True)),flags=0x04)
@@ -497,7 +497,43 @@ class Map:
         for t in s.trigs:
             c,a,pl=s._trig_parts(t)
             if p in pl and all(x[15]==22 or (x[15]==12 and struct.unpack_from('<I',x,8)[0]<=2 and x[14] in (0,1,10)) for x in c): yield a
+    # Allies share vision both ways. Verified (staredit.net Scenario.chk wiki, eudplib trigger tables):
+    # action 57 = Set Alliance Status(player, 0 enemy/1 ally/2 allied victory); action 15 = Run AI Script with the
+    # 4-char script id in the number field; 'Turn ON/OFF Shared Vision for Player N' = '+Vi<N-1>' / '-Vi<N-1>'.
+    # The TRIGGER OWNER receives the vision of player N (staredit.net FAQ). FORC force flag bit 3 = shared vision.
+    ally_no_vision=()   # per map: players (0-based) exempt, matching 'ALLY_NO_VISION_OK: P<n> :: reason' in the design note
+    @staticmethod
+    def vision_ai(target,on=True): return Map.act(15,num=struct.unpack('<I',(('+' if on else '-')+'Vi'+str(target)).encode())[0],flags=0x04)
+    def _ally_targets(s,t):
+        if 0<=t<8: return [t]
+        if t==17: return list(range(8))                      # All Players (13 = Current Player -> itself)
+        if 18<=t<=21: return [p for p in range(8) if s.forces[p]==t-18]
+        return []
+    def _ally_vision(s):
+        """same trigger as every Set Alliance Status: owner gets (ally) or loses (enemy) the target's vision."""
+        ex=set(getattr(s,'ally_no_vision',()) or ())
+        for i,t in enumerate(s.trigs):
+            c,a,pl=s._trig_parts(t)
+            if not any(x[26]==57 for x in a): continue
+            have={struct.unpack_from('<I',x,20)[0] for x in a if x[26] in (15,16)}
+            own={o for q in pl for o in (s._ally_targets(q) if q>=8 else [q])}
+            out=[]
+            for x in a:
+                out.append(x)
+                if x[26]!=57: continue
+                tgt=struct.unpack_from('<I',x,16)[0]; st=struct.unpack_from('<H',x,24)[0]
+                for tp in s._ally_targets(tgt):
+                    if tp in ex or tp in own: continue      # never '-Vi' an owner's own vision
+                    v=s.vision_ai(tp,st>=1); n=struct.unpack_from('<I',v,20)[0]
+                    if n not in have: out.append(v); have.add(n)
+            assert len(out)<=64, f'trig{i}: no room for the shared-vision actions next to Set Alliance Status'
+            players=[q for q in pl]
+            s.trigs[i]=s._pack(players,c,out)
+        for f in range(4):
+            mem=[p for p in range(8) if s.forces[p]==f and s.ownr[p] in (5,6)]
+            if s.forceflags[f]&2 and len(mem)>1 and not (set(mem)&ex): s.forceflags[f]|=8
     def _presave(s):
+        s._ally_vision()
         for p,(mn,gs) in (s.startres or {}).items():
             s.trigs.insert(0,s._pack([p],[s.ALWAYS()],[s.act(26,player=p,num=mn,mod=7,unit=0,flags=0x04),s.act(26,player=p,num=gs,mod=7,unit=1,flags=0x04)]))
         for p in range(8):
@@ -565,6 +601,8 @@ class Map:
         assert off+len(data)<65536, 'STR too big'
         STR=struct.pack('<H',n)+struct.pack(f'<{n}H',*offs)+data
         wav=struct.pack('<512I',*(s.wavs+[0]*(512-len(s.wavs))))
+        _named=named_doodad_ids(s.ts); _bad=sorted({struct.unpack_from('<H',d)[0] for d in getattr(s,'dd2',[])}-_named)
+        assert not _bad, f'DD2 holds unnamed tileset doodad ids {_bad[:10]}: ScmDraft 2 would refuse to open the map'
         ownr=bytes(s.ownr); side=bytes(s.side)
         pupx,ptex,puni,ptec=tech_sections(getattr(s,'tech',None))
         sec=[('VER ',struct.pack('<H',205)),('TYPE',b'RAWB'),('IVE2',struct.pack('<H',11)),('VCOD',_vcod()),('IOWN',ownr),('OWNR',ownr),
@@ -684,12 +722,31 @@ def _pure_groups(ts,terrain):
     d=open(tmp+'.bin','rb').read()[:16*16*2]
     return {v>>4 for v in struct.unpack('<256H',d)}
 
+def doodad_is_real(cv5,g,did,w,h):
+    """True if cv5 doodad group g (id did) is a real, editor-listed doodad.
+    cv5 also holds empty doodad slots: group-name string 0 and only blank megatiles. ScmDraft builds its doodad
+    table only from named groups, so a DD2 entry pointing at an empty slot makes the whole map fail to open
+    ("Could not locate information in the tileset for a particular (Type N)"). Such slots also draw nothing."""
+    n=len(cv5)//52
+    if struct.unpack_from('<H',cv5,g*52+8)[0]==0: return False          # no doodad group name -> not in ScmDraft/StarEdit palette
+    rows=[r for r in range(g,min(n,g+h)) if struct.unpack_from('<H',cv5,r*52)[0]==1 and struct.unpack_from('<H',cv5,r*52+12)[0]==did]
+    return any(struct.unpack_from('<H',cv5,r*52+20+2*c)[0] for r in rows for c in range(min(w,16)))
+
+def named_doodad_ids(ts):
+    """doodad ids ScmDraft can load for tileset ts (see doodad_is_real)."""
+    d=open(f'{TOOLS}/tileset/{TSNAMES[ts]}.cv5','rb').read(); ids=set()
+    for g in range(len(d)//52):
+        t,f,ov,scr,sname,u,did,w,h=struct.unpack_from('<9H',d,g*52)
+        if t==1 and sname!=0: ids.add(did)
+    return ids
+
 def doodad_catalog(ts):
     d=open(f'{TOOLS}/tileset/{TSNAMES[ts]}.cv5','rb').read(); n=len(d)//52; cat={}
     for g in range(n):
         t,f,ov,scr,sname,u,did,w,h=struct.unpack_from('<9H',d,g*52)
         if t==1 and did not in cat and 0<w<=8 and 0<h<=8 and g+h<=n:
             if f & 0x3000: continue  # skip doodads that need sprite/unit overlays
+            if not doodad_is_real(d,g,did,w,h): continue
             cat[did]=dict(g=g,w=w,h=h,high=bool(f&0x400),mid=bool(f&0x200),flags=f)
     return cat,d
 
@@ -722,6 +779,7 @@ def place_doodads(m,count,terrains,forbid=(),high=False,seed=5,maxw=8):
             for col in range(w):
                 mega=struct.unpack_from('<H',cv5,(c['g']+r)*52+20+col*2)[0]
                 if mega: new[(y+r)*m.W+x+col]=(c['g']+r)*16+col
+        if not new: continue   # nothing visible to place
         if _doodad_edge(m.ts,cv5,mt,m.W,m.H,new,x,y,w,h)>DOODAD_EDGE_MAX or _doodad_edge.peak>DOODAD_EDGE_PEAK: continue
         for k,v in new.items(): mt[k]=v
         for r in range(h):
@@ -803,7 +861,7 @@ def doodad_catalog_all(ts):
     d=open(f'{TOOLS}/tileset/{TSNAMES[ts]}.cv5','rb').read(); n=len(d)//52; cat={}
     for g in range(n):
         t,f,ov,scr,sname,u,did,w,h=struct.unpack_from('<9H',d,g*52)
-        if t==1 and did not in cat and w>0 and h>0: cat[did]=dict(g=g,w=w,h=h,flags=f,s=sname)
+        if t==1 and did not in cat and w>0 and h>0 and doodad_is_real(d,g,did,w,h): cat[did]=dict(g=g,w=w,h=h,flags=f,s=sname)
     return cat,d
 
 # ---------- tech tree (Blizzard-campaign style restrictions) ----------

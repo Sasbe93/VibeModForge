@@ -119,8 +119,17 @@ Four levels:
 - Never place a Refinery, Extractor or Assimilator without its own owner's town hall nearby (about 12 tiles). Only exception: mission design with a reason (e.g. a captured or abandoned outpost), listed in <map>.gas_ok.json.
 - Enforced by predelivery_check.py check 25 (FAIL; exemptions in <map>.gas_ok.json {"sites":[{"pos":[tx,ty],"reason":"..."}]}). Note: checks only PRE-PLACED gas buildings; an AI expansion can build its own Hatchery+Extractor, and if the player kills the Hatchery the Extractor stays - that is engine behaviour, not a placement error. If unwanted, give the free expansion no geyser or limit the AI script.
 
+### Allies share vision
+- Every player allied with a human player shares vision with them both ways: a force with the Allies flag also gets the Shared vision flag; an alliance set by trigger gets Run AI Script 'Turn ON Shared Vision for Player N' in the same trigger. The trigger owner receives player N's vision, so each side runs it in its own alliance trigger. When the alliance ends, the same trigger turns the vision off again.
+- sclib adds this automatically on save next to every `m.ally()` and sets the force flag; exempt a player with `m.ally_no_vision=(p,)` plus `ALLY_NO_VISION_OK: P<n> :: reason` in the design note.
+- Enforced by predelivery_check.py check 35 `ally_shared_vision` (FAIL; `tools/bw/check_ally_vision.py`).
+
+### Opens in ScmDraft 2
+- A delivered map must open in ScmDraft 2. Check 34 `scmdraft_open` (`tools/bw/check_scmdraft_open.py`, FAIL): every DD2 doodad must be a named tileset doodad (cv5 group name != 0; ScmDraft aborts the whole load on one unknown id), and fixed-size CHK sections must have their exact size (e.g. UNIS 4048 bytes; a 4000-byte UNIS plays in StarCraft but ScmDraft refuses it).
+- With the wine harness installed (`tools/bw/scmdraft_harness/README.md`) the check also opens the map in the real ScmDraft 2 and requires '(ENGINE) Loaded map'. The static part alone is a proxy; say which one ran.
+
 ### Delivery
-- Run `tools/bw/predelivery_check.py` (all checks incl. 19-25), the placement check and the trigger simulation. Say honestly what was not tested in-game.
+- Run `tools/bw/predelivery_check.py` (all checks incl. 19-25, 34, 35), the placement check and the trigger simulation. Say honestly what was not tested in-game.
 - Render a preview PNG per mission, with the hero colour shown correctly. Send a top-down minimap PNG with every map.
 
 ---
