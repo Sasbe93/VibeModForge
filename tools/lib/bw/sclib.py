@@ -508,6 +508,11 @@ class Map:
     # 4-char script id in the number field; 'Turn ON/OFF Shared Vision for Player N' = '+Vi<N-1>' / '-Vi<N-1>'.
     # The TRIGGER OWNER receives the vision of player N (staredit.net FAQ). FORC force flag bit 3 = shared vision.
     ally_no_vision=()   # per map: players (0-based) exempt, matching 'ALLY_NO_VISION_OK: P<n> :: reason' in the design note
+    # When the alliance with a player begins (design note 'ALLIANCE_STARTS: P<n> :: start' or ':: switch <k> :: <event>'):
+    # {player: k} for alliances that begin at an event. Vision is then added ONLY next to an Ally/Allied-victory action in
+    # a trigger conditioned on switch k being set; a truce 'Ally' set at mission start (or anywhere without switch k)
+    # gets no vision. Players not listed: vision goes with every Ally action (alliance from the start).
+    alliance_switch={}
     @staticmethod
     def vision_ai(target,on=True): return Map.act(15,num=struct.unpack('<I',(('+' if on else '-')+'Vi'+str(target)).encode())[0],flags=0x04)
     def _ally_targets(s,t):
@@ -516,20 +521,27 @@ class Map:
         if 18<=t<=21: return [p for p in range(8) if s.forces[p]==t-18]
         return []
     def _ally_vision(s):
-        """same trigger as every Set Alliance Status: owner gets (ally) or loses (enemy) the target's vision."""
-        ex=set(getattr(s,'ally_no_vision',()) or ())
+        """same trigger as the Set Alliance Status that starts the alliance: owner gets (ally) or loses (enemy) the
+        target's vision. Exempt players (ally_no_vision) get no vision in EITHER direction. Event alliances
+        (alliance_switch) get vision only in triggers that require their switch (never with a start-of-mission truce)."""
+        ex=set(getattr(s,'ally_no_vision',()) or ()); asw=dict(getattr(s,'alliance_switch',{}) or {})
         for i,t in enumerate(s.trigs):
             c,a,pl=s._trig_parts(t)
             if not any(x[26]==57 for x in a): continue
             have={struct.unpack_from('<I',x,20)[0] for x in a if x[26] in (15,16)}
             own={o for q in pl for o in (s._ally_targets(q) if q>=8 else [q])}
+            sws={x[16] for x in c if x[15]==11 and x[14]==2}     # switches this trigger requires to be set
             out=[]
             for x in a:
                 out.append(x)
                 if x[26]!=57: continue
                 tgt=struct.unpack_from('<I',x,16)[0]; st=struct.unpack_from('<H',x,24)[0]
                 for tp in s._ally_targets(tgt):
-                    if tp in ex or tp in own: continue      # never '-Vi' an owner's own vision
+                    if tp in own: continue                      # never '-Vi' an owner's own vision
+                    if tp in ex or own&ex: continue             # exemption covers both directions
+                    if st>=1:
+                        need={asw[q] for q in own|{tp} if q in asw}
+                        if need and not need<=sws: continue     # ally before the event (truce): no vision
                     v=s.vision_ai(tp,st>=1); n=struct.unpack_from('<I',v,20)[0]
                     if n not in have: out.append(v); have.add(n)
             assert len(out)<=64, f'trig{i}: no room for the shared-vision actions next to Set Alliance Status'
@@ -537,7 +549,7 @@ class Map:
             s.trigs[i]=s._pack(players,c,out)
         for f in range(4):
             mem=[p for p in range(8) if s.forces[p]==f and s.ownr[p] in (5,6)]
-            if s.forceflags[f]&2 and len(mem)>1 and not (set(mem)&ex): s.forceflags[f]|=8
+            if s.forceflags[f]&2 and len(mem)>1 and not (set(mem)&ex) and not (set(mem)&set(asw)): s.forceflags[f]|=8
     def _presave(s):
         s._ally_vision()
         for p,(mn,gs) in (s.startres or {}).items():

@@ -51,6 +51,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    sits in a trigger that sets that alliance; if an alliance changes mid-mission, the design note says when it begins
    ('ALLIANCE_STARTS: P<n> :: start' or ':: switch <k> :: <event>') and no vision for that pair is turned on before it.
    Exemption: 'ALLY_NO_VISION_OK: P<n> :: reason' (allied without vision) in the design note (check_ally_vision.py)
+42 hero_own_color: important computer heroes (general, commander, antagonist) have their own player slot and a colour
+   of their own; that slot has the same alliances, vision and switch conditions as its faction, and victory/defeat
+   triggers read it too. Design note 'HERO_SLOT: <hero> :: P<h> :: faction P<f>'; exemption 'HERO_COLOR_SHARED:
+   <hero> :: reason' (check_hero_own_color.py)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -581,6 +585,8 @@ def run_safe(path):
         R.append(f'FAIL predelivery check crashed at {where}: {type(e).__name__}: {e} -- the checks after this point did not run; fix the map or the check'[:500])
     import check_story_delivery
     R+=_guard(R,'36-41 story delivery',lambda: check_story_delivery.run(path),[])
+    import check_hero_own_color
+    R+=_guard(R,'42 hero own color',lambda: check_hero_own_color.run(path),[])
     return R
 if __name__=='__main__':
     rc=0
