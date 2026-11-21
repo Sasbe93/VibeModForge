@@ -9,6 +9,11 @@ Parses the FINAL .scx (not the build script) and exits 1 on any FAIL. Checks:
  6 every unit ID (placed and trigger-created) is a real BW unit (data/bw/bw_unit_ids.json)
  7 tech tree (check_tech.check_sections)
  8 dialogue: silence between two spoken lines <= 1 s (briefing + in-mission, incl. trigger-pass latency)
+36-40 story delivery and campaign map shape (check_story_delivery.py): briefing present (NO_BRIEFING_OK), voiced dialogue
+   and no character lines as plain text (NO_VOICE_OK), no escaped colour-code residue (u0003, \\x03, <03>),
+   check_map_design_bw.py and the cliff-shape rule (bw_cliff_outlines) for campaign maps too.
+Robustness: a crashing sub-check is a FAIL with its error and the remaining checks still run; maps without optional
+   sections (UNIS, MBRF, WAV, PUPx ...) are checked with game defaults instead of crashing.
  9 terrain: tile doodads must blend into the ground (no hard rectangles)
 10 structures named in dialogue/objectives exist pre-placed (unless the text asks the player to build/bring/land one)
 11 no leaderboards for objective progress (cannot be removed in BW); counters paced under hyper triggers; every objective line gets a done/removed version
@@ -96,9 +101,20 @@ def tech_progression(path):
     ok=tech_same_ok(path)
     return (f'OK   (TECH_SAME_OK) {info} [{ok}]' if ok else 'FAIL no new tech: '+info)
 def secs(path):
-    chk=bytes(mpqapi.MPQ.open(path).extract_file('staredit\\scenario.chk')); return check_tech.parse_chk(chk)
-def run(path):
-    S=secs(path); M=mpqapi.MPQ.open(path); R=[]
+    chk=bytes(mpqapi.MPQ.open(path).extract_file('staredit\\scenario.chk')); S=check_tech.parse_chk(chk)
+    # optional sections: editors and other writers may omit them; use the game's defaults instead of crashing
+    for k,v in (('MBRF',b''),('TRIG',b''),('WAV ',b'\0'*2048),('MRGN',b''),('STR ',b'\0\0'),('FORC',b'\0'*20)):
+        S.setdefault(k,v)
+    if 'UNIS' not in S and len(S.get('UNIx',b''))==4168:
+        x=S['UNIx']; S['UNIS']=x[:3648]+x[3648:3848]+x[3908:4108]
+    return S
+def _guard(R,label,fn,default=None):
+    """run one sub-check; a crash becomes a FAIL line with its error instead of aborting the whole run"""
+    try: return fn()
+    except Exception as e:
+        R.append(f'FAIL {label} check crashed: {type(e).__name__}: {e}'[:400]); return default
+def run(path,R=None):
+    S=secs(path); M=mpqapi.MPQ.open(path); R=[] if R is None else R
     def res(ok,msg): R.append(('OK  ' if ok else 'FAIL')+' '+msg)
     STR=S['STR ']
     def st(j):
@@ -217,7 +233,7 @@ def run(path):
     res(not BADWAV,f"all dialogue sound files readable from the MPQ {BADWAV or ''}")
     R.append('     gaps: '+' '.join(f'{k[0]}{v}' for k,v in lines))
     # 9 terrain
-    sb=seams.doodad_seams(S); res(not sb,f'terrain doodads blend in (no hard rectangles) {sb[:8] or ""}'+(f' ... {len(sb)} total' if len(sb)>8 else ''))
+    sb=_guard(R,'26 doodad seams',lambda: seams.doodad_seams(S),[]); res(not sb,f'terrain doodads blend in (no hard rectangles) {sb[:8] or ""}'+(f' ... {len(sb)} total' if len(sb)>8 else ''))
     # 10 referenced structures exist
     texts=[st(struct.unpack_from('<I',x,4)[0]) for c,a,_ in trigs for x in a if x[26] in (7,9,12)]
     texts+=[st(struct.unpack_from('<I',B,t+320+i*32+4)[0]) for t in range(0,len(B),2400) for i in range(64) if B[t+320+i*32+26] in (3,4,8)]
@@ -374,17 +390,17 @@ def run(path):
     res(not p22,f'rescue scene: captives/rescue units not idle beside enemies (set enemy hostile by trigger so they fight) {p22[:6] or ""}'+(f' ...{len(p22)} total' if len(p22)>6 else ''))
     # 23 armed units deal damage: UNIx/UNIS weapon damage by weapon id
     import unit_damage
-    _df,_di=unit_damage.check(path)
+    _df,_di=_guard(R,'23 unit damage',lambda: unit_damage.check(path),([],[]))
     for _x in _di:
         if not _x.startswith('note'): R.append('OK   customised weapon '+_x)
     res(not _df,f'armed units have >0 damage, UNIS/UNIx consistent {_df or ""}')
     # 21 town-hall <-> resource gap (Blizzard layout): geyser 3..5 empty tiles, nearest minerals 2..4 (hall_gap.py)
     import hall_gap
-    _hb,_ho=hall_gap.check(units)
+    _hb,_ho=_guard(R,'21 hall gap',lambda: hall_gap.check(units),([],[]))
     res(not _hb,f'town hall resource gaps (geyser 3..5 tiles, minerals 2..4) {_hb or ""}')
     # 20 base elevation trope: bases not on high ground by default (approve via <map>.highground_ok.json)
     import base_elevation
-    _st,_r,_out=base_elevation.check(S,units,path)
+    _st,_r,_out=_guard(R,'20 base elevation',lambda: base_elevation.check(S,units,path),('OK',0,['OK   base elevation: not checked (crash above)']))
     R.extend(l for l in _out[:-1]); R.append(_out[-1] if _st!='WARN' else 'OK   (WARN) '+_out[-1][5:])
     started=any(x[26]==14 and x[27] in (7,8) for c,a2,_ in trigs for x in a2)
     zero=[a2 for c,a2,_ in trigs if any(x[15]==1 and struct.unpack_from('<I',x,8)[0]==0 and x[14] in (1,10) for x in c)]
@@ -434,7 +450,7 @@ def run(path):
                 bad.append(f'{"BRIEFING " if br else ""}str{j} \\x{c:02x}'+(f' speaker "{spk.group(1)}"' if spk else '')+f': "{vis[:40]}"')
     res(not bad,f'text contrast (briefing allowlist \\x01-04,06,07; in-game no dark codes; {len(bsids)} briefing strings) {bad[:12] or ""}{" ...%d total"%len(bad) if len(bad)>12 else ""}')
     # 26 hard seams at tile doodads
-    sp=seams.doodad_peaks(S,15.0); res(not sp,f'tile doodads / rock-cliff blocks blend (no border edge step >15) {sp[:8] or ""}'+(f' ... {len(sp)} total' if len(sp)>8 else ''))
+    sp=_guard(R,'26 doodad peaks',lambda: seams.doodad_peaks(S,15.0),[]); res(not sp,f'tile doodads / rock-cliff blocks blend (no border edge step >15) {sp[:8] or ""}'+(f' ... {len(sp)} total' if len(sp)>8 else ''))
     # 27 rescue hero at start must have a mobile human-player unit within 2 tiles
     _HERO={10,16,17,19,20,21,22,23,25,27,28,29,52,54,61,63,64,65,66,68,74,75,76,77,78,79,80,81,86,87,88,98,99,100,101,102}
     _cust={i for i in range(228) if S.get('UNIx',b'\1'*228)[i]==0}
@@ -448,7 +464,7 @@ def run(path):
     res(not rb,f'rescue heroes at start have a player unit within 2 tiles {rb or ""}')
     # 24 core abilities of available units
     import core_tech
-    _ct=core_tech.check(S)
+    _ct=_guard(R,'24 core abilities',lambda: core_tech.check(S),[])
     res(not _ct,f'core abilities of available units enabled/researchable {_ct or ""}')
     # 25 gas building without town hall
     gok=[]; gf=os.path.splitext(path)[0]+'.gas_ok.json'
@@ -538,10 +554,21 @@ def run(path):
     _vf=[_l.strip()[5:] for _l in _o.splitlines() if _l.strip().startswith('FAIL')]
     R+=['FAIL voice_delivery: '+_l for _l in _vf] or ['OK   voice delivery notes (%s)'%(_o.strip().splitlines() or ['?'])[-1].split('RESULT')[-1].strip()]
     return R
+def run_safe(path):
+    """all checks; never aborts: a crash inside run() is reported as FAIL and checks 36-40 still run"""
+    import traceback
+    R=[]
+    try: run(path,R)
+    except Exception as e:
+        tb=traceback.extract_tb(e.__traceback__); where=next((f'{os.path.basename(f.filename)}:{f.lineno}' for f in reversed(tb)),'?')
+        R.append(f'FAIL predelivery check crashed at {where}: {type(e).__name__}: {e} -- the checks after this point did not run; fix the map or the check'[:500])
+    import check_story_delivery
+    R+=_guard(R,'36-40 story delivery',lambda: check_story_delivery.run(path),[])
+    return R
 if __name__=='__main__':
     rc=0
     for p in sys.argv[1:]:
         print('###',p)
-        for l in run(p):
+        for l in run_safe(p):
             print(l); rc|=l.startswith('FAIL')
     sys.exit(rc)

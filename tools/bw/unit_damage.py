@@ -9,13 +9,19 @@ def read(path):
     import eudplib as e
     with contextlib.redirect_stdout(io.StringIO()): e.LoadMap(path)
     from eudplib.core.mapdata import mapdata as md
-    c=md.GetChkTokenized(); return {k:c.getsection(k) for k in ['UNIT','PUNI','UNIS','UNIx','OWNR']}
+    c=md.GetChkTokenized(); out={}
+    for k in ['UNIT','PUNI','UNIS','UNIx','OWNR']:
+        try: out[k]=c.getsection(k)
+        except KeyError: pass          # optional section (e.g. UNIS in Brood War-only maps): use defaults below
+    if 'UNIS' not in out and len(out.get('UNIx',b''))==4168:
+        x=out['UNIx']; out['UNIS']=x[:3648]+x[3648:3848]+x[3908:4108]
+    return out
 def parse(sec,nw):
     use=sec[:228]; o=228+228*4+228*2+228+228*2*4
     return use,struct.unpack_from(f'<{nw}H',sec,o),struct.unpack_from(f'<{nw}H',sec,o+2*nw)
 def check(path):
     S=read(path); fails=[]; info=[]
-    U=S['UNIx']
+    U=S.get('UNIx',b'')
     if len(U)!=4168: return [f'UNIx has {len(U)} bytes, must be 4168'],[]
     use,dmg,bon=parse(U,130)
     if S.get('UNIS') and len(S['UNIS'])!=4048: fails.append(f"UNIS has {len(S['UNIS'])} bytes, must be 4048 (UNIx must be 4168)")
