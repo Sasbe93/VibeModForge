@@ -222,7 +222,13 @@ The test covers: every ability (casts, effects, targets, autocast), requirements
 
 For Brood War: the same question applies to changed units (unit/weapon/tech data in the map); option B is a small BW test map that places each changed unit against targets.
 
-## Voice delivery notes (fixed rule, ; same rule for WC3)
+## Briefing and voiced dialogue (fixed rule)
+- Every campaign mission has a briefing (MBRF): objectives (`m.b_obj`), speaking portraits (`m.b_portrait`) and voiced lines (`m.b_trans`, built with `m.B(...)`), ending with `m.b_end()`. Predelivery check 36 FAILs an empty briefing. Exception only as mission design: `NO_BRIEFING_OK: <reason>` in the Design_Note.
+- Every story line (briefing and in-mission) is voiced: `snd=m.voice(key,text,script=...,speaker=...,profile=...,**CAST[who])` renders a WAV with TTS and embeds it; in-mission lines use `m.trans(text,portrait_unit,loc,snd)` (Transmission), not Display Text. Display Text is for status lines (counters, "OBJECTIVES UPDATED"), never for a character speaking. Predelivery check 37 FAILs a campaign mission with 0 voiced lines or with speaker lines ("Name: text") shown as plain text. Exception only as mission design: `NO_VOICE_OK: <reason>` in the Design_Note.
+- Voice engine: edge-tts (online Microsoft service; `pip install edge-tts`, plus ffmpeg). Output rights and alternatives: DEPENDENCIES.md "Voiced dialogue for Brood War". If the engine is not available, stop and tell the user; never ship a text-only mission silently.
+- Worked example: `tools/bw/example_mission.py`.
+
+## Voice delivery notes (fixed rule, same rule for WC3)
 Every voiced line carries delivery notes in VO markup v1 (`docs/voice-delivery-markup.md`): `[emotion: ...]` first,
 `*stress*`, short pauses `(0.3)`/`(beat)`/`...`/` - ` (0.1-0.6 s, inside the line only; the <= 1 s gap between lines
 and immediate interruptions stay), `[pace: ...]`, stage directions such as `[whisper]`. Pass it as
