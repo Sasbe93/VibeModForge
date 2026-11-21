@@ -164,7 +164,13 @@ class Map:
             for p in s.paint:
                 f.write('%d %d %d %d\n'%p)
         cv5=f'{TOOLS}/tileset/{TSNAMES[s.ts]}.cv5'
+        if not os.path.exists(f'{TOOLS}/isomtool') or not os.path.exists(cv5):
+            raise SystemExit(f'build_terrain needs the ISOM terrain tool {TOOLS}/isomtool and the tileset file {cv5}. '
+                             'Build isomtool and install the tileset files first (docs/bw-terrain-setup.md). '
+                             'There is no fallback terrain: do not ship rectangle plateaus.')
         r=subprocess.run([f'{TOOLS}/isomtool',cv5,str(s.ts),tmp+'.txt',tmp+'.bin'],capture_output=True,text=True)
+        if r.returncode!=0 or not os.path.exists(tmp+'.bin'):
+            raise SystemExit(f'isomtool failed (exit {r.returncode}): {r.stderr.strip()[-400:]} (docs/bw-terrain-setup.md)')
         d=open(tmp+'.bin','rb').read()
         s.mtxm=d[:s.W*s.H*2]
         isom=bytearray(d[s.W*s.H*2:])
