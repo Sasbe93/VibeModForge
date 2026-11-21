@@ -70,6 +70,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    third of the map width, passes 2+ threat encounters (enemy armed units/towers near the path, ambush triggers), every
    encounter is reachable by the player's ground units without breaking an enemy base; design note 'ESCORT_ROUTE:
    <escortee> :: <length tiles/time> :: <threats with locations> :: <what the player must do>'
+47 mission_type_variety (check_mission_type_variety.py): design note 'MISSION_TYPE: <objective type> :: <pressure> ::
+   <target count>' matches the triggers (objectives text, countdown, escort) and differs from the previous 2 missions
+   (not the same type + pressure, not the same type + target count) unless 'MISSION_TYPE_REPEAT_OK: <reason>';
+   WARN for neighbouring chapters with the same pattern in the campaign-outline table
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -610,6 +614,8 @@ def run_safe(path):
     R+=_guard(R,'45 scene location visible',lambda: check_scene_view.run(path),[])
     import check_escort_route
     R+=_guard(R,'46 escort route challenge',lambda: check_escort_route.run(path),[])
+    import check_mission_type_variety
+    R+=_guard(R,'47 mission type variety',lambda: check_mission_type_variety.run(path),[])
     return R
 if __name__=='__main__':
     rc=0
