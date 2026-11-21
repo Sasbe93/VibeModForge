@@ -48,7 +48,7 @@ RESC='SIDE_OBJECTIVE: Reach the survey squad :: rescue :: units\n'
 BURN='SIDE_OBJECTIVE: Burn the hatchery :: destroy :: resources\n'
 expect('side objectives, destroy here and in the previous mission',side_case(BURN,RESC+BURN),True)
 expect('side objectives, two destroy side objectives in one mission',side_case(RESC,RESC+BURN+'SIDE_OBJECTIVE: Kill the brood mother :: destroy :: tech\n'),True)
-expect('side objectives, two resource rewards',side_case(RESC,RESC+'SIDE_OBJECTIVE: Hold the refinery :: hold :: resources\nSIDE_OBJECTIVE: Find the cache :: secret :: minerals\n'),True)
+expect('side objectives, two resource rewards that follow from their objectives are fine',side_case(RESC,RESC+'SIDE_OBJECTIVE: Hold the refinery :: hold :: resources\nSIDE_OBJECTIVE: Seize the ore convoy :: capture :: resources\n'),False)
 expect('side objectives, map has an optional objective but the note none',side_case(RESC,'(no side objective lines)\n'),True)
 expect('side objectives, rescue after a destroy in the previous mission',side_case(BURN,RESC),False)
 expect('side objectives, repeat with SIDE_OBJECTIVE_REPEAT_OK',side_case(BURN,RESC+BURN+'SIDE_OBJECTIVE_REPEAT_OK: the second strike finishes the first\n'),False)

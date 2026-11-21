@@ -84,8 +84,8 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    no death, so 'exactly 0 Hatchery' fires when it becomes a Lair and 'Deaths of Hatchery' never fires after it morphed.
    FAIL in human-owned triggers, WARN in computer triggers; WARN for 'exactly 0' of a lift-off building at a location
 50 side_objective_variety (check_side_objective_variety.py): design note 'SIDE_OBJECTIVE: <name> :: <type> :: <reward>'
-   for every optional objective; at most one destroy side objective (never in two neighbouring missions) and at most
-   one resource reward per mission, unless 'SIDE_OBJECTIVE_REPEAT_OK: <reason>'
+   for every optional objective; at most one destroy side objective per mission and never in two neighbouring
+   missions, unless 'SIDE_OBJECTIVE_REPEAT_OK: <reason>' (the reward follows from the objective: REWARD_WHY, check 41)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""side_objective_variety: side objectives are varied and rarely 'destroy a building, get resources'.
+"""side_objective_variety: side objectives are varied, not 'destroy a building' every time.
    python3 tools/bw/check_side_objective_variety.py MAP.scx [--prev PREV(.scx|.md)]      (exit 1 on FAIL)
 Without --prev the previous mission M<n-1> next to the map is used (same search as check_start_setup).
 
@@ -9,15 +9,13 @@ Design note: one line per optional objective
   reward types: units, tech, base, ally, info, none, resources
   exemption: 'SIDE_OBJECTIVE_REPEAT_OK: <reason>'
 The map is read too: optional objectives in the Set Mission Objectives texts (lines with 'Optional'), classified by
-their wording ('destroy/kill/break ...' = destroy), and resource rewards (non-start triggers that add minerals or gas
-to a human player).
+their wording ('destroy/kill/break ...' = destroy); triggers that add resources are counted for information only.
 Rules (FAIL unless SIDE_OBJECTIVE_REPEAT_OK):
   1 the map has optional objectives but the design note has no SIDE_OBJECTIVE line
   2 the map has more destroy-type optional objectives than the note declares
   3 more than one destroy side objective in the mission
-  4 more than one resource reward declared in the mission (more than one trigger that adds resources: WARN)
-  5 a destroy side objective in this mission AND in the previous mission
-WARN: a destroy side objective that pays resources (allowed once, but prefer units, tech, a base, an ally or info)."""
+  4 a destroy side objective in this mission AND in the previous mission
+The reward itself is not judged here: it follows from the objective and is explained by REWARD_WHY (check 41)."""
 import sys,os,re,struct,glob
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from check_ally_vision import sections,note_files
@@ -51,7 +49,7 @@ def note(paths):
             if m: rep=m.group(1).strip()
     return so,rep
 def infer(path):
-    """optional objective texts and the number of resource reward triggers"""
+    """optional objective texts and the number of triggers that add resources (information only)"""
     from eudplib.bindings._rust import mpqapi
     S=sections(bytes(mpqapi.MPQ.open(path).extract_file('staredit\\scenario.chk')))
     ownr=S['OWNR']; hum={p for p in range(8) if ownr[p]==6}
@@ -97,17 +95,13 @@ def run(path,prev=None):
     if d_map>d_decl: F.append(f'the map has {d_map} destroy-type optional objective(s), the design note declares {d_decl}')
     nd=max(d_decl,d_map)
     if nd>1 and not rep: F.append(f'{nd} destroy side objectives in one mission (max 1): use rescue, capture, protect, reach/hold, escort, ally, secret, or none')
-    nr=sum(1 for _,_,r in so if r=='resources')
-    if nr>1 and not rep: F.append(f'{nr} resource rewards declared in one mission (max 1; prefer units, tech, a base, an ally or info)')
-    if res>1 and not rep: W.append(f'{res} triggers add resources to the player after the start: one resource reward per mission at most (income mechanics: say so in the design note)')
     seen=[]
     for p in prev:
         o,src=mission_of(p); pd=[x for x in o if x[1]=='destroy']
         seen.append(f"{os.path.basename(p)}: {', '.join(t for _,t,_ in o) or 'none'} ({src})")
         if nd and pd and not rep: F.append(f"a destroy side objective here and in the previous mission {os.path.basename(p)} ({pd[0][0][:40]}): vary the side objectives")
-    if any(t=='destroy' and r=='resources' for _,t,r in so): W.append("a destroy side objective pays resources: allowed once, but prefer units, tech, a base, an ally or info")
     info=', '.join(f'{t}/{r}' for _,t,r in so) or ('none' if not opt else 'undeclared')
-    out=[('FAIL' if F else 'OK  ')+f" side_objective_variety: side objectives {info}; map: {len(opt)} optional, {res} resource reward trigger(s)"+(f"; previous: {'; '.join(seen)}" if seen else '')+(f'; repeat ok: {rep}' if rep else '')+''.join('\n     - '+f for f in F)]
+    out=[('FAIL' if F else 'OK  ')+f" side_objective_variety: side objectives {info}; map: {len(opt)} optional, {res} trigger(s) adding resources"+(f"; previous: {'; '.join(seen)}" if seen else '')+(f'; repeat ok: {rep}' if rep else '')+''.join('\n     - '+f for f in F)]
     if W: out.append('WARN side_objective_variety:'+''.join('\n     - '+w for w in W))
     return out
 if __name__=='__main__':
