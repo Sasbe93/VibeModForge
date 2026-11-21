@@ -161,8 +161,8 @@ def free_loc(m, g, name, x, y, size=3, rmax=10):
 
 def res_base(m, g, ti, hx, hy, side, n, amounts, gas, owner=None, hall=None, geyser=True):
     """mineral line of n fields on the `side` ('left'/'right') of a 4x3 hall at top-left (hx,hy):
-    every field sits snug against an unwalkable tile behind it (cliff/water), the two end fields curve toward the hall
-    (Blizzard arc); geyser above or below with a 3-4 tile gap. Build the blocker behind the line into the terrain first."""
+    every field sits snug against an unwalkable tile behind it (cliff/water), staggered like a Blizzard arc with free sight
+    from every field to the hall; geyser above or below with a 3-5 tile gap, backed by unwalkable ground where possible. Build the blocker behind the line into the terrain first."""
     hl = ti.lvl(hx+1, hy+1)
     assert g.ok(sclib.CC, hx, hy, hall=True), f'hall spot blocked at {hx},{hy}'
     def mine_ok(x, y): return all(ti.buildable(xx, y) and ti.lvl(xx, y) == hl and (xx, y) not in g.occ for xx in (x, x+1))
@@ -175,14 +175,35 @@ def res_base(m, g, ti, hx, hy, side, n, amounts, gas, owner=None, hall=None, gey
     rows = sorted(got, key=lambda y: abs(y-hy-1))[:n]
     assert len(rows) == n, f'only {len(got)} mineral rows with a blocker behind them at hall {hx},{hy}: move the hall or the blocker'
     tow = 1 if side == 'left' else -1
-    for i, y in enumerate(sorted(rows)):
-        x = got[y]+(tow if i in (0, n-1) else 0)
-        if not mine_ok(x, y): x = got[y]
+    ys = sorted(rows)
+    def clear(xs):   # every field sees the hall: the line from its centre to the nearest hall point crosses no other field
+        P = [(x*32+32, y*32+16) for x, y in zip(xs, ys)]
+        for i, (ux, uy) in enumerate(P):
+            px = min(max(ux, hx*32), hx*32+128); py = min(max(uy, hy*32), hy*32+96)
+            L = max(1, int(math.hypot(px-ux, py-uy)/4))
+            for j, (vx, vy) in enumerate(P):
+                if i != j and any(vx-34 < ux+(px-ux)*k/L < vx+34 and vy-18 < uy+(py-uy)*k/L < vy+18 for k in range(L+1)): return False
+        return True
+    best = None
+    for mask in range(1 << n):   # staggered (not flush) and every field visible; prefer the Blizzard arc (shifted ends)
+        off = [(mask >> i) & 1 for i in range(n)]
+        xs = [got[y]+tow*o for y, o in zip(ys, off)]
+        if len(set(off)) < 2 or not all(mine_ok(x, y) for x, y in zip(xs, ys)) or not clear(xs): continue
+        score = off[0]+off[-1]+sum(1 for a, b in zip(off, off[1:]) if a != b)
+        if best is None or score > best[0]: best = (score, xs)
+    assert best, f'no staggered mineral line with free sight to the hall at {hx},{hy}: move the hall one tile'
+    for i, (x, y) in enumerate(zip(best[1], ys)):
         m.unit(MINERAL, x, y, 11, amounts[i % len(amounts)])
     gpos = None
     if geyser:
-        for gx, gy in [(hx, hy-5), (hx, hy+6), (hx+1, hy-5), (hx-1, hy-5), (hx, hy-6), (hx+1, hy+6), (hx-1, hy+6)]:
-            if g.resok(GEYSER, gx, gy): gpos = (gx, gy); break
+        hcx, hcy = hx+2, hy+1.5
+        def backed(gx, gy):      # unwalkable ground within 3 tiles behind the geyser (away from the hall)
+            cx, cy = gx+2, gy+1; dx, dy = cx-hcx, cy-hcy; d = math.hypot(dx, dy) or 1; dx, dy = dx/d, dy/d
+            return any(not ti.walk(int(cx+dx*s), int(cy+dy*s)) for s in (2, 2.5, 3, 3.5, 4, 4.5, 5))
+        sx = -1 if side == 'left' else 1
+        cands = [(hx+dx*sx, hy+dy) for dx in (2, 1, 3, 0, 4) for dy in (-5, 6, -6, 7)]
+        ok = [c for c in cands if g.resok(GEYSER, *c)]
+        gpos = next((c for c in ok if backed(*c)), ok[0] if ok else None)
         assert gpos, f'no geyser slot at hall {hx},{hy}'
         m.unit(GEYSER, gpos[0], gpos[1], 11, gas)
     m.reserve = getattr(m, 'reserve', [])+[(hx-1, hy-1, hx+5, hy+4)]
