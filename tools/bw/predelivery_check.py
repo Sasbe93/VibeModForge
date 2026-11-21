@@ -47,7 +47,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    scmdraft_harness/README.md). SCMDRAFT_REAL=0 skips only the real run.
 35 ally_shared_vision: every player allied with a human shares vision both ways (FORC shared-vision flag, or Run AI
    Script 'Turn ON Shared Vision for Player N' in the same trigger as Set Alliance Status, owner = receiver); vision
-   off again when the alliance ends. Exemption: 'ALLY_NO_VISION_OK: P<n> :: reason' in the design note (check_ally_vision.py)
+   off again when the alliance ends. Vision must start exactly when the alliance starts: every 'Turn ON Shared Vision'
+   sits in a trigger that sets that alliance; if an alliance changes mid-mission, the design note says when it begins
+   ('ALLIANCE_STARTS: P<n> :: start' or ':: switch <k> :: <event>') and no vision for that pair is turned on before it.
+   Exemption: 'ALLY_NO_VISION_OK: P<n> :: reason' (allied without vision) in the design note (check_ally_vision.py)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
