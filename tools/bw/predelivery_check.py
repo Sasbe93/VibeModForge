@@ -41,7 +41,7 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    tech available/researched PTEx/TECx) for the human player(s). Placed or trigger-given units are not tech.
    Exception: 'TECH_SAME_OK :: <reason>' in the Design_Note/build info/<map>.tech_ok.txt (e.g. hero-only mission).
 12 a started countdown timer has a Countdown = 0 trigger with a real effect (directly or via a switch it sets)
-34 scmdraft_open: the map opens in ScmDraft 2 -- every DD2 doodad is a named tileset doodad (an unnamed cv5 slot aborts
+34 scmdraft_open: the map opens in ScmDraft 2 -- dd2_named_doodads: every DD2 doodad is a named tileset doodad (an unnamed cv5 slot aborts
    the whole load); plus a real ScmDraft 2 run under wine when the harness is installed (check_scmdraft_open.py,
    scmdraft_harness/README.md). SCMDRAFT_REAL=0 skips only the real run.
 35 ally_shared_vision: every player allied with a human shares vision both ways (FORC shared-vision flag, or Run AI

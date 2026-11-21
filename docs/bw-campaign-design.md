@@ -125,7 +125,7 @@ Four levels:
 - Enforced by predelivery_check.py check 35 `ally_shared_vision` (FAIL; `tools/bw/check_ally_vision.py`).
 
 ### Opens in ScmDraft 2
-- A delivered map must open in ScmDraft 2. Check 34 `scmdraft_open` (`tools/bw/check_scmdraft_open.py`, FAIL): every DD2 doodad must be a named tileset doodad (cv5 group name != 0; ScmDraft aborts the whole load on one unknown id), and fixed-size CHK sections must have their exact size (e.g. UNIS 4048 bytes; a 4000-byte UNIS plays in StarCraft but ScmDraft refuses it).
+- A delivered map must open in ScmDraft 2. Check 34 `scmdraft_open` (`tools/bw/check_scmdraft_open.py`, FAIL; static lines `chk_required_sections`, `chk_section_sizes`, `dd2_named_doodads`): every DD2 doodad must be a named tileset doodad (cv5 group name != 0; ScmDraft aborts the whole load on one unknown id), and fixed-size CHK sections must have their exact size (e.g. UNIS 4048 bytes; a 4000-byte UNIS plays in StarCraft but ScmDraft refuses it).
 - With the wine harness installed (`tools/bw/scmdraft_harness/README.md`) the check also opens the map in the real ScmDraft 2 and requires '(ENGINE) Loaded map'. The static part alone is a proxy; say which one ran.
 
 ### Delivery

@@ -2,7 +2,8 @@
 """Does the map open in ScmDraft 2?   python3 tools/bw/check_scmdraft_open.py [--real] MAP.scx [...]
 Exits 1 on any FAIL. Run from the repo root.
 
-Static part (always):
+Static part (always; each line is named after what it verifies):
+  chk_required_sections, chk_section_sizes, dd2_named_doodads (the root cause of the M7 load failure):
   - the MPQ opens and holds staredit\\scenario.chk; the sections ScmDraft reads are present
   - every DD2 doodad id exists in the tileset's NAMED doodad groups (cv5 group-name != 0). ScmDraft builds its
     doodad table only from named groups; one unknown id aborts the whole load with
@@ -39,20 +40,20 @@ def static(path):
     try: chk=bytes(mpqapi.MPQ.open(path).extract_file('staredit\\scenario.chk'))
     except Exception as e: return [f'FAIL scmdraft_open: MPQ/scenario.chk unreadable ({e!r})']
     S=sections(chk); miss=[n.strip() for n in NEED if n not in S]+([] if ('STR ' in S or 'STRx' in S) else ['STR/STRx'])
-    R.append(('FAIL' if miss else 'OK  ')+f' scmdraft_open: CHK sections present {miss or ""}')
+    R.append(('FAIL' if miss else 'OK  ')+f' chk_required_sections: CHK sections ScmDraft reads are present {miss or ""}')
     wrong=[f'{n.strip()}={len(S[n])} (needs {"/".join(map(str,v))})' for n,v in SIZE.items() if n in S and len(S[n]) not in v]
     wrong+=[f'{n.strip()}={len(S[n])} (not a multiple of {k})' for n,k in MULT.items() if n in S and len(S[n])%k]
     if 'FORC' in S and len(S['FORC'])>20: wrong.append(f'FORC={len(S["FORC"])} (max 20)')
-    R.append(('FAIL' if wrong else 'OK  ')+f' scmdraft_open: CHK section sizes valid {wrong or ""}')
+    R.append(('FAIL' if wrong else 'OK  ')+f' chk_section_sizes: fixed-size CHK sections have their exact size {wrong or ""}')
     ts=struct.unpack('<H',S['ERA '][:2])[0]&7 if 'ERA ' in S else 0
     dd=S.get('DD2 ',b''); bad={}
-    if len(dd)%8: R.append(f'FAIL scmdraft_open: DD2 size {len(dd)} is not a multiple of 8')
+    if len(dd)%8: R.append(f'FAIL dd2_named_doodads: DD2 size {len(dd)} is not a multiple of 8')
     named=sclib.named_doodad_ids(ts)
     for i in range(0,len(dd)-len(dd)%8,8):
         did=struct.unpack_from('<H',dd,i)[0]
         if did not in named: bad[did]=bad.get(did,0)+1
     n=len(dd)//8
-    R.append(('FAIL' if bad else 'OK  ')+f' scmdraft_open: DD2 doodads are named tileset doodads ({sclib.TSNAMES[ts]}, {n} doodads)'
+    R.append(('FAIL' if bad else 'OK  ')+f' dd2_named_doodads: every DD2 doodad id is a named doodad of the tileset ({sclib.TSNAMES[ts]}, {n} doodads)'
              +(f' -- {sum(bad.values())} entries with unknown ids {sorted(bad)[:12]}: ScmDraft refuses to load the map' if bad else ''))
     return R
 def real(path,h):
