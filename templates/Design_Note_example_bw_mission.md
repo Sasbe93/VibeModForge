@@ -23,6 +23,12 @@ REWARD_WHY: Reach the survey squad :: the squad, its supply depot and its bunker
 ## Start setup
 START_SETUP: build-up :: Outpost Nine is a small roadside post: a Command Center, five SCVs, one Barracks and a single bunker toward the road; the player builds everything else.
 
+## Scene views
+SCENE_VIEW: opening orders :: Outpost :: own units present
+SCENE_VIEW: Okafor's radio call :: Ravine Camp :: revealer
+SCENE_VIEW: the squad rejoins :: Ravine Camp :: own units present
+SCENE_VIEW: victory call :: Ridge Hall :: own units present
+
 ## Map
 - South-west: the player's outpost, mineral line backed by water, bunker toward the road.
 - North-east: the ridge (high dirt) with the Zerg main, two normal-size ramps toward the south-west.

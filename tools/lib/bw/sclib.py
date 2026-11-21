@@ -453,6 +453,17 @@ class Map:
             assert why, 'permanent reveal needs a mission design reason'
             return a+[s.act(47,s=s.S('REVEAL_PERMANENT_OK: '+why),flags=0x04)]
         return a+[s.wait(s.REVEAL_MS if hold_ms is None else hold_ms),s.act(25,loc=loc,player=p,unit=101,mod=0,flags=0x04)]
+    def scene_reveal(s,loc,p=0,remove_after=True,why=''):
+        """vision for a dialogue scene at a location the human may not see (check scene_location_visible): put these
+        actions BEFORE the scene's first line. Creates a Map Revealer for player p at loc and centres the camera there.
+        T() moves the revealer ahead of the cinematic pause and removes it after the scene (REVEAL_MS later).
+        remove_after=False keeps the vision and needs a reason (Comment REVEAL_PERMANENT_OK: <why>).
+        Design note: 'SCENE_VIEW: <scene> :: <location name> :: revealer'."""
+        a=[s.create(p,101,1,loc),s.act(10,loc=loc,flags=0x04)]
+        if not remove_after:
+            assert why, 'scene_reveal(remove_after=False) needs a mission design reason'
+            a.append(s.act(47,s=s.S('REVEAL_PERMANENT_OK: '+why),flags=0x04))
+        return a
     def create(s,p,u,n,loc,clash=False):
         # enemy wave scaling per mission (difficulty curve); P1 creates and visible-clash spawns are untouched
         k=getattr(s,'wavescale',1.0)

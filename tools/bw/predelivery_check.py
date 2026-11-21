@@ -62,6 +62,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    design note, at most 2 towers without 'START_DEFENSE_WHY', at most 2 unmorphed Creep Colonies, no ready newly
    unlocked building and at most 3 of a newly unlocked unit without 'START_GIFT_WHY', and the start differs from the
    previous missions M<n-1>/M<n-2> next to the map (overlap < 0.70, no third established start in a row)
+45 scene_location_visible (check_scene_view.py): a dialogue scene that centres the camera on a location (or a
+   Transmission at a location) has vision there from its first line: own units, ally shared vision already active, or a
+   Map Revealer created before the line (sclib scene_reveal). Design note 'SCENE_VIEW: <scene> :: <location> ::
+   <alliance-vision | revealer | own units present>'
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -598,6 +602,8 @@ def run_safe(path):
     R+=_guard(R,'43 mineral line shape',lambda: check_mineral_line_shape.run(path),[])
     import check_start_setup
     R+=_guard(R,'44 start setup variety',lambda: check_start_setup.run_auto(path),[])
+    import check_scene_view
+    R+=_guard(R,'45 scene location visible',lambda: check_scene_view.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

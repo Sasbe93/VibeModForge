@@ -166,7 +166,8 @@ m.T([P1], [m.ALWAYS()],
 m.T([P2], [m.ALWAYS()], [m.ai('ZMEx', loc=L('Ridge Town'), keep=True), m.ai('ZMEx', loc=L('Fen Town'), keep=True)])
 # optional objective, announced by a character ~2 minutes in (>= 60 s after the opening talk)
 m.T([P1], [m.ET(120)],
-    CAST.say([(OKA, "[emotion: dry] Captain, Okafor again. The ravine is *quiet*... for now. (0.3) We still have our depot and a bunker down here."),
+    m.scene_reveal(L('Ravine Camp'), P1)      # the camp is outside the player's sight: reveal it for the talk, removed after
+    + CAST.say([(OKA, "[emotion: dry] Captain, Okafor again. The ravine is *quiet*... for now. (0.3) We still have our depot and a bunker down here."),
               (VARN, "[emotion: calm] Send anyone east along the side road, and the squad is ours again.")], L('Ravine Camp'))
     + [m.ping(L('Ravine Camp')), m.obj(objtext(True)), m.text('\x07OBJECTIVES UPDATED\x01 - press F10 to review.')])
 # reward: reaching the camp -> the squad joins (engine rescue) and hands over its depot and bunker (Give Units)
