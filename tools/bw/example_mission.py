@@ -163,7 +163,8 @@ m.T([P1], [m.ALWAYS()],
     CAST.say([(VARN, "[emotion: resolute] Outpost Nine, the ridge is north-east, up the old road. (0.3) Two ramps lead *up*."),
               (VARN, "[emotion: weary] Keep the bunker manned. The brood probes our front every few minutes.")], L('Outpost'))
     + [m.ping(L('Ridge Hall')), m.obj(objtext(False))])
-m.T([P2], [m.ALWAYS()], [m.ai('ZMEx', loc=L('Ridge Town'), keep=True), m.ai('ZMEx', loc=L('Fen Town'), keep=True)])
+# computer towns as in Blizzard's maps: main town script on the hall (+ start location), Area Town script for the second base
+m.town_ai(P2, 'ZMEx', (EX, EY)); m.town_ai(P2, 'ZARx', (XX, XY), area=(XX-12, XY-9, XX+9, XY+10))
 # optional objective, announced by a character ~2 minutes in (>= 60 s after the opening talk)
 m.T([P1], [m.ET(120)],
     m.scene_reveal(L('Ravine Camp'), P1)      # the camp is outside the player's sight: reveal it for the talk, removed after

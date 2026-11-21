@@ -15,7 +15,10 @@ R=14; RIM=3
 LIM=dict(main=(3.0,3),nat=(25.0,17),exp=(35.0,41))   # (max density %, max interior doodad tiles)
 def zones(path):
     s=sections(path);W,H,wk,lvl=walkgrid(s);G,F=T.tileflags(s)
-    st=[];[st.append((u['x']/32,u['y']/32)) for u in units(s) if u['id']==SLOC and all(math.hypot(u['x']/32-a,u['y']/32-b)>4 for a,b in st)]
+    # mains = start locations of human slots; a campaign computer's start location (its base) is not a player main.
+    # Ranked maps (all slots human) are unchanged; with no human start location every start location counts.
+    ow=s.get('OWNR',b''); sl=[u for u in units(s) if u['id']==SLOC]; hs=[u for u in sl if u['o']<len(ow) and ow[u['o']]==6]
+    st=[];[st.append((u['x']/32,u['y']/32)) for u in (hs or sl) if all(math.hypot(u['x']/32-a,u['y']/32-b)>4 for a,b in st)]
     seeds=[(near_walk(W,H,wk,int(x),int(y)),'main') for x,y in st]
     for (hx,hy),_ in T.hall_spots(s,W,H,wk):
         if min(math.hypot(hx-a,hy-b) for a,b in st)>10: seeds.append((near_walk(W,H,wk,int(hx),int(hy)),'exp'))
