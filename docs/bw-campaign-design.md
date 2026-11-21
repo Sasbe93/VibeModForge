@@ -18,8 +18,8 @@ Four levels:
 
 ---
 ## 1. Fixed rules (fixed rules)
-- **Showcase:** every unit, hero or ability NEW in a chapter gets situations in that map where it can fulfil its role and use its abilities well (healer -> wounded allies, siege -> structures/walls, anti-air -> air enemies, detector -> invisible units, caster -> targets worth casting on, mobility -> terrain to cross). Document per new unit in the Design_Note: `SHOWCASE <id> :: <role> :: <abilities> :: <concrete map situation: place, phase, what the enemy brings>` (new ids via `NEW_IDS:` or race json minus `PREV_IDS:`). Check: `check_showcase.py` (warcraft3/tools; FAIL missing/thin line, WARN situation lacks fitting targets).
-- **Characters:** every named speaking character gets in the Design_Note `## Characters` one entry (`### Name`) with `Trait:` (distinct trait), `Goal:` (personal goal beyond the mission objective), `Weakness:` (flaw / inner conflict), `Voice:` (recognisable speech voice: rhythm, vocabulary), `Quirk:` optional, `Tone:` (temperament: serious, funny, cynical, cold, warm ...; the cast must mix tones) and `Moments:` (where this mission reveals something about them). Optional but encouraged: `Relationships:` (relationships and friction with the other characters; how they treat underlings vs superiors), `Secret:` (private secret or backstory hint, revealed slowly), `Arc:` (small arc across chapters), `Speech:` (vocabulary, sentence length, rhythm), plus a contradiction in each character and one surprising moment each. Trait catalog: attitude to others (spiteful, arrogant, warm, caring, distrustful, jealous, blindly loyal, servile-up/harsh-down, flattering, parental, aloof, chummy); worldview (confident, naive, cynical, fatalistic, superstitious, fanatic, idealistic, pragmatic, hardened, fearful, curious, nostalgic); drive (ambitious, greedy, vengeful, duty-obsessed, glory-seeking, lazy, content, guilt-driven, approval-seeking, controlling); temperament (hot-tempered, stoic, nervous, impulsive, deliberate, melancholic, exuberant, dry-humored, grumpy, calm); intellect/demeanor (know-it-all, cunning, simple, well-read, boastful, modest, vain, pedantic, chaotic, taciturn, chatty); moral grey (cowardly but honest, cruel but just, lies out of pity, keeps promises at any cost, betrays out of conviction). Every mission contains reveal moments: banter, a disagreement, a personal stake, a choice. Characters develop across chapters (a tic changes at a turning point, a relationship shifts). Main characters need >= 3 lines that are not just orders/objectives. Check: `check_characters.py` (tools/wc3, linked in tools/bw; FAIL missing section/fields/entry or single shared Tone, WARN < 3 non-functional lines). Techniques that worked:
+- **Showcase:** every unit, hero or ability NEW in a chapter gets situations in that map where it can fulfil its role and use its abilities well (healer -> wounded allies, siege -> structures/walls, anti-air -> air enemies, detector -> invisible units, caster -> targets worth casting on, mobility -> terrain to cross). Document per new unit in the Design_Note: `SHOWCASE <id> :: <role> :: <abilities> :: <concrete map situation: place, phase, what the enemy brings>` (new ids via `NEW_IDS:` or race json minus `PREV_IDS:`). Check: `tools/bw/check_showcase.py` (wrapper around `tools/wc3/check_showcase.py`; FAIL missing/thin line, WARN situation lacks fitting targets).
+- **Characters:** every named speaking character gets in the Design_Note `## Characters` one entry (`### Name`) with `Trait:` (distinct trait), `Goal:` (personal goal beyond the mission objective), `Weakness:` (flaw / inner conflict), `Voice:` (recognisable speech voice: rhythm, vocabulary), `Quirk:` optional, `Tone:` (temperament: serious, funny, cynical, cold, warm ...; the cast must mix tones) and `Moments:` (where this mission reveals something about them). Optional but encouraged: `Relationships:` (relationships and friction with the other characters; how they treat underlings vs superiors), `Secret:` (private secret or backstory hint, revealed slowly), `Arc:` (small arc across chapters), `Speech:` (vocabulary, sentence length, rhythm), plus a contradiction in each character and one surprising moment each. Trait catalog: attitude to others (spiteful, arrogant, warm, caring, distrustful, jealous, blindly loyal, servile-up/harsh-down, flattering, parental, aloof, chummy); worldview (confident, naive, cynical, fatalistic, superstitious, fanatic, idealistic, pragmatic, hardened, fearful, curious, nostalgic); drive (ambitious, greedy, vengeful, duty-obsessed, glory-seeking, lazy, content, guilt-driven, approval-seeking, controlling); temperament (hot-tempered, stoic, nervous, impulsive, deliberate, melancholic, exuberant, dry-humored, grumpy, calm); intellect/demeanor (know-it-all, cunning, simple, well-read, boastful, modest, vain, pedantic, chaotic, taciturn, chatty); moral grey (cowardly but honest, cruel but just, lies out of pity, keeps promises at any cost, betrays out of conviction). Every mission contains reveal moments: banter, a disagreement, a personal stake, a choice. Characters develop across chapters (a tic changes at a turning point, a relationship shifts). Main characters need >= 3 lines that are not just orders/objectives. Check: `tools/bw/check_characters.py` (WC3: `tools/wc3/check_characters.py`; FAIL missing section/fields/entry or single shared Tone, WARN < 3 non-functional lines). Techniques that worked:
   - **Audible tic tied to the story:** a character repeats a small verbal habit under pressure and breaks it only at a turning point; another keeps a running count of followers and corrects it when one dies; a cheerful system voice keeps its routine phrase while things go wrong.
   - **Comic relief with a heart:** a side character keeps a clumsy record of events, mixes up names, and adds dry remarks that also comment on the hero's choices.
   - **Questions that expose the mentor/antagonist:** a companion asks short, innocent questions that reveal the mentor's hidden weakness; small doubts accumulate into a theme.
@@ -47,7 +47,7 @@ Four levels:
 - UNIx (and UNIS) weapon damage/bonus is indexed by **WEAPON id** (weapons.dat), not unit id, and is used for every unit whose use-default flag is 0 (every `m.rename(...)`). An unset entry = 0 damage.
 - Hero units have their own weapons: Kerrigan(16)=weapon 3, Raynor marine(20)=1, Raynor vulture(19)=5, Schezar(17)=9/10, Norad II(29)=21/22, Zeratul=85... Never guess: look it up in `starcraft/tech/bw_weapons.json` (built from BWAPI by `tech/sources/build_weapons.py`).
 - sclib.save fills the real default damage for every weapon of every customised unit automatically and asserts >0; `WDMG[w]=(dmg,bonus)` is only for deliberate overrides and warns if w is not a weapon of a customised unit. Do not add per-map WDMG lines for defaults.
-- Mandatory check 23 in `tools/predelivery_check.py` (`tools/unit_damage.py MAP.scx`): FAIL if any armed unit (placed, buildable or customised, heroes included) has 0 damage, or UNIS (4048 B, 100 weapons) and UNIx (4168 B, 130 weapons) disagree / have wrong size.
+- Mandatory check 23 in `tools/bw/predelivery_check.py` (`tools/bw/unit_damage.py MAP.scx`): FAIL if any armed unit (placed, buildable or customised, heroes included) has 0 damage, or UNIS (4048 B, 100 weapons) and UNIx (4168 B, 130 weapons) disagree / have wrong size.
 
 ### Tech data
 - Verify tech/upgrade IDs against the real BW tables. An off-by-one shift silently enables the wrong spells.
@@ -61,7 +61,7 @@ Four levels:
 - Never offer a unit/building while its core abilities are disabled. Table: `tech/bw_techtree.json` -> `core_abilities` (Comsat->Scanner, Medic->Healing, Vessel->Def. Matrix, Ghost->Lockdown, Vulture->Spider Mines, Tank->Siege, Queen->Infestation/Parasite, Defiler->Dark Swarm/Consume, HT->Storm/Hallucination/Archon Warp, DT->DA Meld, Arbiter->Recall/Stasis, Corsair->Disruption Web, Dark Archon->Mind Control/Feedback, Lurker->Lurker Aspect).
 - Free-in-BW abilities (Scanner, Def. Matrix, Healing, Infestation, Parasite, Dark Swarm, Archon Warp, DA Meld, Feedback) are enabled AND pre-researched; others must be researchable at an obtainable building.
 - Generator: `sclib.tech_sections` auto-adds core techs of every listed unit (`_with_core`). Campaign: sclib DEFAULT_RESEARCHED was off by one (Dark Swarm not free) - fixed.
-- Mandatory predelivery check 24 (`tools/core_tech.py`). check_tech.py missed it because it skips techs that are disabled.
+- Mandatory predelivery check 24 (`tools/bw/core_tech.py`). The tech-tree check missed it because it skips techs that are disabled.
 
 ### Text contrast
 - Briefing text uses a DIFFERENT palette (glue/tfont) than in-game text. Briefing-bright codes, ALLOWLIST: \x02 periwinkle, \x03 lime green, \x04 yellow-green, \x06 white, \x07 red (\x01 = default periwinkle). Everything else renders black or unpredictable in the briefing: \x05 grey, \x08, \x0e-\x11, \x15-\x1c, and \x1d-\x1f are not listed as working there either. Sources: staredit.net wiki "Color" and "String", topics 6880, 17573, 17796 (consistent; not verified in our own Remastered screenshot except \x0f = dark).
@@ -107,13 +107,13 @@ Four levels:
 - Predelivery check 26 (`seams.doodad_peaks`): FAIL for any DD2 tile doodad with a border edge step >15. Heuristic (pixel colours; the CV5 edge-type data and VF4 heights for Remastered megatiles are not available here), so it may also flag a few blocks that look acceptable; look at the render before exempting.
 
 ### Placement and generator pitfalls
-- Buildings only on legal ground with no overlaps, and units only on reachable ground. Run the placement check (legal build tiles, no overlaps, reachable units) and the trigger simulator.
+- Buildings only on legal ground with no overlaps, and units only on reachable ground. Run the placement check `tools/bw/placecheck.py MAP.scx TILESET` (legal build tiles, no overlaps, reachable units; `placecheck.autofix(m)` in build scripts) and the trigger simulator `tools/bw/trigsim.py` (`trigsim.prove(map, scenario)`); `tools/bw/example_mission.py` runs both.
 - Every map has a unique layout. No reused templates. Map edges look natural: a mix of cliffs, water/space/lava (fitting the tileset), normal ground and blended doodads. No straight seams.
-- fortify.Grid: place the STARTLOC before `g.ok(hall=True)`; its main component drives the ring check.
-- sclib TURRET/BUNKER constants are swapped (use 124/125). Power Generator 200 is 4x3.
+- `missionkit.Grid` (`tools/lib/bw/missionkit.py`): place the STARTLOC before `g.ok(hall=True)`; its main component drives the ring check.
+- Unit ids: Missile Turret 124, Bunker 125 (`sclib.TURRET`, `sclib.BUNKER`; check older scripts that swapped them). Power Generator 200 is 4x3.
 - Fords/land bridges need width ≥2.4, or the banks disconnect after autofix.
-- trigsim does not model combat, rescue or preserve; subclass it for preserve (act 3) and log create/order locations. In proof scenarios, SPAWN P1 units at targets (moving them strips earlier objectives). Check counter-attacks via order destinations, not create locations.
-- Exclude the P5 effect/uplink player from wave-escalation checks.
+- `tools/bw/trigsim.py` does not model combat, rescue by touch or Preserve Trigger; subclass it for preserve (act 3) and log create/order locations. In proof scenarios, SPAWN P1 units at targets (moving them strips earlier objectives). Check counter-attacks via order destinations, not create locations.
+- Exclude an effect-only player (a slot that only owns scripted effects or map revealers) from wave-escalation checks.
 
 ### Gas buildings need a town hall
 - Never place a Refinery, Extractor or Assimilator without its own owner's town hall nearby (about 12 tiles). Only exception: mission design with a reason (e.g. a captured or abandoned outpost), listed in <map>.gas_ok.json.
@@ -129,7 +129,7 @@ Four levels:
 - With the wine harness installed (`tools/bw/scmdraft_harness/README.md`) the check also opens the map in the real ScmDraft 2 and requires '(ENGINE) Loaded map'. The static part alone is a proxy; say which one ran.
 
 ### Delivery
-- Run `tools/bw/predelivery_check.py` (all checks incl. 19-25, 34, 35), the placement check and the trigger simulation. Say honestly what was not tested in-game.
+- Run `tools/bw/predelivery_check.py` (all checks incl. 19-25, 34-41), the placement check (`tools/bw/placecheck.py`) and the trigger simulation (`tools/bw/trigsim.py`). Deliver only with 0 FAIL. Say honestly what was not tested in-game.
 - Render a preview PNG per mission, with the hero colour shown correctly. Send a top-down minimap PNG with every map.
 
 ---
@@ -144,7 +144,7 @@ Apply unless the Design_Note records a deviation with a reason (campaign: "Campa
 
 ### Base elevation trope
 - Enemy AND player bases are NOT on high/mid ground by default. Use normal/varied elevation; raised only with mission justification, rarely, never as a recurring pattern.
-- Check 20 in predelivery_check.py (tools/base_elevation.py): CV5 height (0x400 high, 0x200 mid) at each CC/Nexus/Hatchery/start vs the walkable ring median at 12-24 tiles. >1 unapproved raised = FAIL, 1 = WARN. Approve in `<map>.highground_ok.json` `{"bases":[{"hall":[tx,ty],"reason":"..."}]}`. Campaign summary: `python3 tools/base_elevation.py *.scx` (WARN if >1 in 4 missions).
+- Check 20 in `tools/bw/predelivery_check.py` (`tools/bw/base_elevation.py`): CV5 height (0x400 high, 0x200 mid) at each CC/Nexus/Hatchery/start vs the walkable ring median at 12-24 tiles. >1 unapproved raised = FAIL, 1 = WARN. Approve in `<map>.highground_ok.json` `{"bases":[{"hall":[tx,ty],"reason":"..."}]}`. Campaign summary: `python3 tools/base_elevation.py *.scx` (WARN if >1 in 4 missions).
 
 ### Heroes
 - Hero acquisition: a hero who joins (rescued, arrives, recruited) is always part of the main storyline, through a scripted event or a required objective. Never make it an optional side quest.
@@ -152,7 +152,7 @@ Apply unless the Design_Note records a deviation with a reason (campaign: "Campa
 
 ### Objectives and balance
 - Objective vs. conquest balance: fulfilling the objectives must be clearly easier than destroying all enemy bases. Make the bases strong and fortified (layered static defence, defender groups, rebuilding, reinforcement waves) unless conquest is itself the objective. In the Design_Note, estimate the effort for both paths (enemy HP, defence, travel distance) and require objective effort <= about 75% of conquest effort. When in doubt, make the bases stronger rather than the objectives easier.
-- Typically 1-2 main objectives plus optional quests with a tangible reward, but vary the structure (see fixed rules, quest structure). Sidequests should still be a real challenge.
+- Typically 1-2 main objectives plus optional quests with a tangible reward that has an in-world source (see "Rewards make sense in the story"), but vary the structure (see fixed rules, quest structure). Sidequests should still be a real challenge.
 - Main objectives vary: hold a position for a time, escort, rescue, recover an artifact, stealth with a small group, stop a ritual/portal, capture points, hunt a leader, evacuate/flee, survive. "Destroy the main base" only when the story calls for it; never the default.
 - The difficulty curve is fair: mission 1 is easy, and difficulty rises per chapter. Offer difficulty levels that scale enemy strength.
 - Pacing: a calm build-up phase, waves that grow, and the climax at the end. (Waves carry no warning text by default, see attack announcements.)
@@ -236,6 +236,24 @@ For Brood War: the same question applies to changed units (unit/weapon/tech data
 - Every story line (briefing and in-mission) is voiced: `snd=m.voice(key,text,script=...,speaker=...,profile=...,**CAST[who])` renders a WAV with TTS and embeds it; in-mission lines use `m.trans(text,portrait_unit,loc,snd)` (Transmission), not Display Text. Display Text is for status lines (counters, "OBJECTIVES UPDATED"), never for a character speaking. Predelivery check 37 FAILs a campaign mission with 0 voiced lines or with speaker lines ("Name: text") shown as plain text. Exception only as mission design: `NO_VOICE_OK: <reason>` in the Design_Note.
 - Voice engine: edge-tts (online Microsoft service; `pip install edge-tts`, plus ffmpeg). Output rights and alternatives: DEPENDENCIES.md "Voiced dialogue for Brood War". If the engine is not available, stop and tell the user; never ship a text-only mission silently.
 - Worked example: `tools/bw/example_mission.py`.
+
+## Rewards make sense in the story (fixed rule, same rule for WC3)
+Never hand out flat minerals, gas or units for an unrelated deed (400 minerals for building a Nydus Canal, a squad
+appearing because three enemies died). A reward needs an in-world source the player sees:
+- a guarded cache or loot (mineral cluster / gas tank power-ups at the spot, a container the player breaks open),
+- a grateful ally who pays or joins (Give Units of a rescuable or allied player's units and buildings),
+- a captured base, mine or depot (the resources stay where they are and the player takes them over),
+- a rescued unit (rescuable player, standard BW rescue),
+- seized convoy cargo (the convoy is visible before it is stopped),
+- unlocked tech (the facility the player captured or protected).
+Write one Design_Note line per reward:
+`REWARD_WHY: <objective> :: <reward> :: <in-world source the player sees>`
+Predelivery check 41 (`tools/bw/check_story_delivery.py`) FAILs a non-start trigger that adds minerals/gas to a human
+player (Set Resources, Add), or gives units to / creates units for a human player after an event, without a matching
+REWARD_WHY line (the amount for resources, a unit name or group word for units). Sources such as "reward" or "bonus"
+are rejected. Non-quest income that the story explains (a timed supply drop) carries a Comment action
+`INCOME_OK: <reason>` in that trigger. Worked example: the rescued squad in `tools/bw/example_mission.py` hands over
+its depot and bunker.
 
 ## Voice delivery notes (fixed rule, same rule for WC3)
 Every voiced line carries delivery notes in VO markup v1 (`docs/voice-delivery-markup.md`): `[emotion: ...]` first,
