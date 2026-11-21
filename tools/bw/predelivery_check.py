@@ -9,9 +9,10 @@ Parses the FINAL .scx (not the build script) and exits 1 on any FAIL. Checks:
  6 every unit ID (placed and trigger-created) is a real BW unit (data/bw/bw_unit_ids.json)
  7 tech tree (check_tech.check_sections)
  8 dialogue: silence between two spoken lines <= 1 s (briefing + in-mission, incl. trigger-pass latency)
-36-40 story delivery and campaign map shape (check_story_delivery.py): briefing present (NO_BRIEFING_OK), voiced dialogue
+36-41 story delivery and campaign map shape (check_story_delivery.py): briefing present (NO_BRIEFING_OK), voiced dialogue
    and no character lines as plain text (NO_VOICE_OK), no escaped colour-code residue (u0003, \\x03, <03>),
-   check_map_design_bw.py and the cliff-shape rule (bw_cliff_outlines) for campaign maps too.
+   check_map_design_bw.py and the cliff-shape rule (bw_cliff_outlines) for campaign maps too, and every objective reward
+   (resources added, units given/created after an event) has a REWARD_WHY line with an in-world source.
 Robustness: a crashing sub-check is a FAIL with its error and the remaining checks still run; maps without optional
    sections (UNIS, MBRF, WAV, PUPx ...) are checked with game defaults instead of crashing.
  9 terrain: tile doodads must blend into the ground (no hard rectangles)
@@ -568,7 +569,7 @@ def run(path,R=None):
     except Exception as e: R.append(f'FAIL ally_shared_vision check crashed: {e!r}')
     return R
 def run_safe(path):
-    """all checks; never aborts: a crash inside run() is reported as FAIL and checks 36-40 still run"""
+    """all checks; never aborts: a crash inside run() is reported as FAIL and checks 36-41 still run"""
     import traceback
     R=[]
     try: run(path,R)
@@ -576,7 +577,7 @@ def run_safe(path):
         tb=traceback.extract_tb(e.__traceback__); where=next((f'{os.path.basename(f.filename)}:{f.lineno}' for f in reversed(tb)),'?')
         R.append(f'FAIL predelivery check crashed at {where}: {type(e).__name__}: {e} -- the checks after this point did not run; fix the map or the check'[:500])
     import check_story_delivery
-    R+=_guard(R,'36-40 story delivery',lambda: check_story_delivery.run(path),[])
+    R+=_guard(R,'36-41 story delivery',lambda: check_story_delivery.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

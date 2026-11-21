@@ -13,6 +13,13 @@ Called by predelivery_check.py (checks 36-40). Every sub-check that crashes is r
                       (u0003, \\u0003, \\x03, <03>), e.g. from JSON or Python escaping in a generator.
 39 map_design         check_map_design_bw.py runs for campaign maps too (FAIL lines are copied).
 40 cliff_shape        organic cliff outlines (bw_cliff_outlines: no long straight cliff runs, enough corners).
+41 reward_reason      every objective reward has an in-world source the player sees. A trigger that is not a start trigger
+                      and adds minerals/gas to a human player (Set Resources, Add), or gives units to / creates units for a
+                      human player after an event (any condition other than Always / Elapsed Time), needs a Design_Note line
+                      REWARD_WHY: <objective> :: <reward> :: <in-world source the player sees>
+                      matching that reward (the amount for resources, a unit name word or a generic group word for units).
+                      Sources that only say 'reward', 'bonus' etc. are rejected. Non-quest income (a timed supply drop
+                      that the story explains) is exempt with a Comment action 'INCOME_OK: <reason>' in that trigger.
 A map counts as a campaign mission if it has Set Mission Objectives, a Transmission, a Victory action or a
 Design_Note with '## Characters'. Melee/ranked maps only get checks 38-40.
 """
@@ -76,6 +83,33 @@ def speaker_line(t):
     if not all(w[:1].isupper() or w.lower() in SMALL for w in name.split()): return None
     if len(rest.split()) < 3: return None
     return name
+
+TRIVIAL_SOURCE = {'reward', 'bonus', 'objective', 'quest', 'prize', 'completion', 'none', 'n/a', 'na', 'tbd', 'because',
+                  'for completing', 'objective reward', 'quest reward', 'mission reward', 'bonus reward', 'gift', 'payment'}
+GROUP_WORDS = {'unit', 'units', 'squad', 'team', 'troops', 'forces', 'men', 'crew', 'buildings', 'base', 'camp', 'outpost',
+               'join', 'joins', 'everything', 'garrison', 'survivors', 'convoy'}
+
+def reward_lines(note):
+    """[(objective, reward, source, valid, why_invalid)] from REWARD_WHY lines."""
+    out = []
+    for raw in re.findall(r'REWARD_WHY\s*:\s*(.+)', note):
+        parts = [p.strip().strip('`*').strip() for p in raw.split('::')]
+        if len(parts) != 3 or not all(parts):
+            out.append((raw, '', '', False, 'needs three parts: <objective> :: <reward> :: <in-world source>')); continue
+        src = re.sub(r'[^a-z/ ]', '', parts[2].lower()).strip()
+        words = [w for w in src.split() if w not in ('the', 'a', 'an', 'of', 'for', 'as')]
+        if src in TRIVIAL_SOURCE or len(words) < 2 or all(w in TRIVIAL_SOURCE for w in words):
+            out.append((*parts, False, f"source '{parts[2]}' is not an in-world source the player sees")); continue
+        out.append((*parts, True, ''))
+    return out
+
+def _unit_words(uid):
+    try:
+        import json
+        n = json.load(open(os.path.join(ROOT, 'data', 'bw', 'bw_unit_ids.json'))).get(str(uid), '')
+    except Exception:
+        n = ''
+    return {w.lower() for w in re.split(r'[_\s]+', n) if len(w) >= 4 and w.lower() not in ('terran', 'zerg', 'protoss')}
 
 def run(path):
     R = []
@@ -161,7 +195,44 @@ def run(path):
         info = next((i for i in I if i.startswith('cliff_outlines')), '')
         if not F: R.append('OK   cliff shape: ' + info.replace('cliff_outlines cliff outlines: ', ''))
         R.extend('WARN ' + i[5:] for i in I if i.startswith('WARN'))
-    for label, fn in (('36 briefing', c36), ('37 voiced dialogue', c37), ('38 text residue', c38), ('39 map design', c39), ('40 cliff shape', c40)):
+    def c41():
+        own = S.get('OWNR', b'')
+        humans = {p for p in range(8) if p < len(own) and own[p] == 6}
+        if not humans: R.append('OK   reward reasons: no human player'); return
+        lines = reward_lines(note)
+        good = [l for l in lines if l[3]]
+        for l in lines:
+            if not l[3]: res(False, f'REWARD_WHY line invalid ({l[4]}): {l[0][:80]}')
+        def to_human(p, owners): return p in humans or (p == 13 and owners & humans) or p in (17, 18, 19, 20, 21)
+        bad = []; n = 0
+        for ti_, (c, a, owners) in enumerate(TR):
+            types = {x[15] for x in c}
+            if not c or types <= {22} or (types <= {22, 12} and all(x[15] != 12 or struct.unpack_from('<I', x, 8)[0] <= 5 for x in c)):
+                continue                                   # start trigger (start resources, starting units)
+            comments = ' '.join(STR.get(struct.unpack_from('<I', x, 4)[0], '') for x in a if x[26] == 47)
+            if re.search(r'INCOME_OK\s*:\s*\S{3,}', comments): continue
+            event = not types <= {22, 12}
+            for x in a:
+                typ, mod = x[26], x[27]; pl = struct.unpack_from('<I', x, 16)[0]; num = struct.unpack_from('<I', x, 20)[0]
+                uid = struct.unpack_from('<H', x, 24)[0]; ow = set(owners)
+                if typ == 26 and mod == 8 and to_human(pl, ow) and num > 0:
+                    kind = ('minerals', 'gas', 'minerals and gas')[min(uid, 2)]
+                    want = lambda l, num=num: str(num) in re.sub(r'[,.]', '', l[1])
+                    desc = f'+{num} {kind} (trigger {ti_})'
+                elif uid not in (33, 101) and ((typ == 48 and to_human(num, ow) and not to_human(pl, ow) and event) or (typ == 44 and to_human(pl, ow) and event)):
+                    words = _unit_words(uid); grp = uid >= 228
+                    want = lambda l, words=words, grp=grp: (grp and bool(l[1])) or any(w in l[1].lower() for w in words | (GROUP_WORDS if grp else set()))
+                    desc = f"{'give' if typ == 48 else 'create'} unit {uid} for a human player (trigger {ti_})"
+                else:
+                    continue
+                n += 1
+                if not any(want(l) for l in good): bad.append(desc)
+        res(not bad, f'rewards have an in-world source (REWARD_WHY: <objective> :: <reward> :: <source the player sees>; '
+                     f'{n} reward action(s), {len(good)} valid REWARD_WHY line(s)) '
+            + (f'-> missing for {bad[:5]}' + (f' ...{len(bad)} total' if len(bad) > 5 else '')
+               + '. Give the reward a visible source (guarded cache, grateful ally, captured base or depot, rescued unit, seized cargo) '
+                 'and document it, or mark non-quest income with a Comment INCOME_OK: <reason>' if bad else ''))
+    for label, fn in (('36 briefing', c36), ('37 voiced dialogue', c37), ('38 text residue', c38), ('39 map design', c39), ('40 cliff shape', c40), ('41 reward reason', c41)):
         guard(label, fn)
     return R
 
