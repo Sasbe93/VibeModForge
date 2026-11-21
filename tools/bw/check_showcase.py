@@ -1,0 +1,1 @@
+../wc3/check_showcase.py

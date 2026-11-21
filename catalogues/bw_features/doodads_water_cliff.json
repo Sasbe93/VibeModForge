@@ -1,0 +1,3180 @@
+{
+ "unique_maps": [
+  "(2)Eclipse_1.2.scx",
+  "(3)Plasma1.0.scx",
+  "(4)Fighting Spirit.scx",
+  "(4)Polypoid 1.75.scx",
+  "(4)Radeon 1.0.scx",
+  "(4)Ringing Bloom 1.2.scx",
+  "Aiolos.scx",
+  "Attitude 1.0.scx",
+  "AttitudeSE.scx",
+  "ColorlessFate.scx",
+  "Death Valley.scx",
+  "Deja Vu SE.scx",
+  "Dominator SE.scx",
+  "Jane Doe 1.2.scx",
+  "KnockOut 1.4.scx",
+  "Neo Sylphid 3.2.scx",
+  "Octagon 1.0.scx",
+  "OdysseyRE.scx",
+  "Pole Star 1.1.scx",
+  "Pole Star.scx"
+ ],
+ "total_doodads": {
+  "badlands": 374,
+  "jungle": 2932,
+  "platform": 685,
+  "desert": 181,
+  "twilight": 713,
+  "ice": 260
+ },
+ "water": {
+  "badlands": {
+   "311": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "deep": 0,
+    "shore": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "liqt": [
+     5
+    ],
+    "nmaps": 1
+   },
+   "310": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "deep": 1,
+    "shore": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 4,
+    "liqt": [
+     5
+    ],
+    "nmaps": 1
+   },
+   "309": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "deep": 0,
+    "shore": 1,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "liqt": [
+     5
+    ],
+    "nmaps": 1
+   }
+  },
+  "jungle": {
+   "162": {
+    "n": 17,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx"
+    ],
+    "sym": 4,
+    "deep": 0,
+    "shore": 17,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "liqt": [
+     5
+    ],
+    "nmaps": 5
+   },
+   "163": {
+    "n": 13,
+    "maps": [
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx"
+    ],
+    "sym": 2,
+    "deep": 0,
+    "shore": 13,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "liqt": [
+     5
+    ],
+    "nmaps": 4
+   },
+   "161": {
+    "n": 9,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "deep": 0,
+    "shore": 9,
+    "spr": 0,
+    "w": 6,
+    "h": 4,
+    "liqt": [
+     5
+    ],
+    "nmaps": 6
+   },
+   "160": {
+    "n": 5,
+    "maps": [
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "deep": 0,
+    "shore": 5,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "liqt": [
+     5
+    ],
+    "nmaps": 5
+   },
+   "271": {
+    "n": 5,
+    "maps": [
+     "Neo Sylphid 3.2.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "deep": 0,
+    "shore": 5,
+    "spr": 0,
+    "w": 10,
+    "h": 8,
+    "liqt": [
+     5
+    ],
+    "nmaps": 2
+   },
+   "270": {
+    "n": 1,
+    "maps": [
+     "Neo Sylphid 3.2.scx"
+    ],
+    "sym": 0,
+    "deep": 0,
+    "shore": 1,
+    "spr": 0,
+    "w": 10,
+    "h": 8,
+    "liqt": [
+     5
+    ],
+    "nmaps": 1
+   }
+  },
+  "platform": {
+   "257": {
+    "n": 2,
+    "maps": [
+     "(4)Radeon 1.0.scx"
+    ],
+    "sym": 2,
+    "deep": 0,
+    "shore": 2,
+    "spr": 0,
+    "w": 12,
+    "h": 9,
+    "liqt": [
+     2
+    ],
+    "nmaps": 1
+   },
+   "256": {
+    "n": 2,
+    "maps": [
+     "(4)Radeon 1.0.scx"
+    ],
+    "sym": 2,
+    "deep": 0,
+    "shore": 2,
+    "spr": 0,
+    "w": 12,
+    "h": 9,
+    "liqt": [
+     2
+    ],
+    "nmaps": 1
+   }
+  },
+  "twilight": {
+   "124": {
+    "n": 14,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 2,
+    "deep": 5,
+    "shore": 9,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "liqt": [
+     5
+    ],
+    "nmaps": 4
+   },
+   "123": {
+    "n": 12,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "deep": 3,
+    "shore": 9,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "liqt": [
+     5
+    ],
+    "nmaps": 4
+   },
+   "125": {
+    "n": 11,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 1,
+    "deep": 2,
+    "shore": 9,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "liqt": [
+     5
+    ],
+    "nmaps": 4
+   },
+   "126": {
+    "n": 10,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 4,
+    "deep": 2,
+    "shore": 8,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "liqt": [
+     5
+    ],
+    "nmaps": 3
+   },
+   "127": {
+    "n": 9,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 2,
+    "deep": 1,
+    "shore": 8,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "liqt": [
+     5
+    ],
+    "nmaps": 3
+   },
+   "128": {
+    "n": 9,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 2,
+    "deep": 1,
+    "shore": 8,
+    "spr": 0,
+    "w": 6,
+    "h": 3,
+    "liqt": [
+     5
+    ],
+    "nmaps": 4
+   }
+  }
+ },
+ "cliff": {
+  "badlands": {
+   "44": {
+    "n": 15,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 2,
+    "spr": 15,
+    "w": 4,
+    "h": 3,
+    "un": 4.999999999999999,
+    "nmaps": 1
+   },
+   "41": {
+    "n": 13,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 2,
+    "spr": 13,
+    "w": 4,
+    "h": 4,
+    "un": 6.5,
+    "nmaps": 1
+   },
+   "43": {
+    "n": 13,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 13,
+    "w": 4,
+    "h": 3,
+    "un": 4.333333333333333,
+    "nmaps": 1
+   },
+   "42": {
+    "n": 10,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 10,
+    "w": 4,
+    "h": 4,
+    "un": 5.0,
+    "nmaps": 1
+   },
+   "355": {
+    "n": 4,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "358": {
+    "n": 4,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.06666666666666667,
+    "nmaps": 1
+   },
+   "343": {
+    "n": 3,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "387": {
+    "n": 3,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "46": {
+    "n": 3,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 1.3125,
+    "nmaps": 1
+   },
+   "45": {
+    "n": 3,
+    "maps": [
+     "(3)Plasma1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 1.3125,
+    "nmaps": 1
+   },
+   "99": {
+    "n": 2,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "113": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.5,
+    "nmaps": 1
+   },
+   "342": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "31": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 4,
+    "h": 3,
+    "un": 0.16666666666666666,
+    "nmaps": 1
+   },
+   "356": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "112": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "334": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "104": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "36": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 4,
+    "h": 4,
+    "un": 0.6875,
+    "nmaps": 1
+   },
+   "8": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.5,
+    "nmaps": 1
+   },
+   "6": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "354": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "344": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "107": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "116": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "111": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "100": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "366": {
+    "n": 1,
+    "maps": [
+     "(2)Eclipse_1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  },
+  "jungle": {
+   "33": {
+    "n": 36,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "35": {
+    "n": 36,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 6,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "32": {
+    "n": 35,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 4
+   },
+   "34": {
+    "n": 32,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "37": {
+    "n": 28,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "36": {
+    "n": 24,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "53": {
+    "n": 23,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 4
+   },
+   "39": {
+    "n": 22,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 4
+   },
+   "42": {
+    "n": 22,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 7
+   },
+   "54": {
+    "n": 22,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "46": {
+    "n": 21,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "49": {
+    "n": 21,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "38": {
+    "n": 20,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "41": {
+    "n": 20,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "43": {
+    "n": 19,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "50": {
+    "n": 18,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Neo Sylphid 3.2.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "40": {
+    "n": 17,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "51": {
+    "n": 16,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 6
+   },
+   "44": {
+    "n": 15,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "48": {
+    "n": 12,
+    "maps": [
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "45": {
+    "n": 10,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "55": {
+    "n": 10,
+    "maps": [
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 7,
+    "spr": 10,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "52": {
+    "n": 9,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx",
+     "Neo Sylphid 3.2.scx"
+    ],
+    "sym": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "26": {
+    "n": 7,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "Aiolos.scx",
+     "AttitudeSE.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 4,
+    "spr": 7,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 5
+   },
+   "277": {
+    "n": 5,
+    "maps": [
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "278": {
+    "n": 5,
+    "maps": [
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "275": {
+    "n": 5,
+    "maps": [
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "56": {
+    "n": 5,
+    "maps": [
+     "Aiolos.scx",
+     "Octagon 1.0.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 5,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "47": {
+    "n": 4,
+    "maps": [
+     "(4)Polypoid 1.75.scx",
+     "Aiolos.scx",
+     "Attitude 1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "129": {
+    "n": 3,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "(4)Polypoid 1.75.scx",
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 3,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "274": {
+    "n": 3,
+    "maps": [
+     "Attitude 1.0.scx",
+     "AttitudeSE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "12": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "13": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "6": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "128": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx",
+     "(4)Polypoid 1.75.scx"
+    ],
+    "sym": 1,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "98": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "102": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "112": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "116": {
+    "n": 2,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "31": {
+    "n": 2,
+    "maps": [
+     "Aiolos.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "253": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "251": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "254": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "249": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "248": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "59": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 1,
+    "spr": 1,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "60": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "4": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "5": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "127": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "77": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "3": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "2": {
+    "n": 1,
+    "maps": [
+     "(4)Fighting Spirit.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "292": {
+    "n": 1,
+    "maps": [
+     "Octagon 1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "294": {
+    "n": 1,
+    "maps": [
+     "Octagon 1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "115": {
+    "n": 1,
+    "maps": [
+     "Aiolos.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "24": {
+    "n": 1,
+    "maps": [
+     "Aiolos.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "28": {
+    "n": 1,
+    "maps": [
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "27": {
+    "n": 1,
+    "maps": [
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "80": {
+    "n": 1,
+    "maps": [
+     "OdysseyRE.scx"
+    ],
+    "sym": 1,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "83": {
+    "n": 1,
+    "maps": [
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "110": {
+    "n": 1,
+    "maps": [
+     "OdysseyRE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  },
+  "platform": {
+   "105": {
+    "n": 5,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 5,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "112": {
+    "n": 5,
+    "maps": [
+     "KnockOut 1.4.scx",
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 5,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "138": {
+    "n": 4,
+    "maps": [
+     "(4)Radeon 1.0.scx",
+     "KnockOut 1.4.scx",
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 4
+   },
+   "107": {
+    "n": 4,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 4,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "116": {
+    "n": 4,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 4,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "387": {
+    "n": 4,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.03333333333333333,
+    "nmaps": 1
+   },
+   "384": {
+    "n": 4,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.06666666666666667,
+    "nmaps": 1
+   },
+   "117": {
+    "n": 4,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 3,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "120": {
+    "n": 3,
+    "maps": [
+     "KnockOut 1.4.scx",
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "355": {
+    "n": 3,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "109": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "108": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "106": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "125": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "381": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "104": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "113": {
+    "n": 2,
+    "maps": [
+     "Pole Star 1.1.scx",
+     "Pole Star.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "352": {
+    "n": 2,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "158": {
+    "n": 1,
+    "maps": [
+     "(4)Radeon 1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 8,
+    "h": 6,
+    "un": 0.08333333333333333,
+    "nmaps": 1
+   },
+   "159": {
+    "n": 1,
+    "maps": [
+     "(4)Radeon 1.0.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 8,
+    "h": 6,
+    "un": 0.08333333333333333,
+    "nmaps": 1
+   },
+   "111": {
+    "n": 1,
+    "maps": [
+     "KnockOut 1.4.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  },
+  "desert": {
+   "192": {
+    "n": 3,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "230": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 10,
+    "h": 6,
+    "un": 0.16666666666666669,
+    "nmaps": 1
+   },
+   "231": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 10,
+    "h": 6,
+    "un": 0.16666666666666669,
+    "nmaps": 1
+   },
+   "241": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "1": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "5": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 2,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "86": {
+    "n": 2,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "235": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "239": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "238": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "0": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "3": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "6": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "16": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "193": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "194": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "50": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "125": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "127": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "130": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "124": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "87": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "89": {
+    "n": 1,
+    "maps": [
+     "Death Valley.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  },
+  "twilight": {
+   "26": {
+    "n": 31,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 7,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 4
+   },
+   "18": {
+    "n": 15,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 5,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "29": {
+    "n": 8,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "335": {
+    "n": 5,
+    "maps": [
+     "Deja Vu SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "28": {
+    "n": 4,
+    "maps": [
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "15": {
+    "n": 3,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "17": {
+    "n": 3,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "70": {
+    "n": 3,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Deja Vu SE.scx",
+     "Dominator SE.scx"
+    ],
+    "sym": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 3
+   },
+   "44": {
+    "n": 3,
+    "maps": [
+     "Deja Vu SE.scx",
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "329": {
+    "n": 3,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "39": {
+    "n": 3,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "12": {
+    "n": 3,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "336": {
+    "n": 2,
+    "maps": [
+     "Deja Vu SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "50": {
+    "n": 2,
+    "maps": [
+     "Dominator SE.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "27": {
+    "n": 2,
+    "maps": [
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "48": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "334": {
+    "n": 2,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "332": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "333": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "331": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "324": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "323": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "322": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "49": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "315": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "11": {
+    "n": 2,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx",
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 2
+   },
+   "3": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "71": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "339": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "338": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "337": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "325": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "6": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "22": {
+    "n": 1,
+    "maps": [
+     "Deja Vu SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "115": {
+    "n": 1,
+    "maps": [
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "171": {
+    "n": 1,
+    "maps": [
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "38": {
+    "n": 1,
+    "maps": [
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "23": {
+    "n": 1,
+    "maps": [
+     "Dominator SE.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "313": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 6,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "330": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "328": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "55": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "54": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "47": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "45": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "19": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "170": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "41": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "37": {
+    "n": 1,
+    "maps": [
+     "Jane Doe 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "92": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "14": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "10": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 3,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "62": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "74": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 4,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "67": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "35": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "312": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "93": {
+    "n": 1,
+    "maps": [
+     "(4)Ringing Bloom 1.2.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  },
+  "ice": {
+   "295": {
+    "n": 6,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "203": {
+    "n": 6,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "198": {
+    "n": 5,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 1,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "197": {
+    "n": 5,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "283": {
+    "n": 4,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "294": {
+    "n": 3,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "194": {
+    "n": 3,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 2,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "296": {
+    "n": 2,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "202": {
+    "n": 2,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "196": {
+    "n": 2,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "282": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "59": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "79": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "291": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "292": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "293": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 6,
+    "h": 5,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "31": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "34": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "18": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "35": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "20": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "22": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 2,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "30": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 1,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "199": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "195": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "182": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "15": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "16": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "11": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 4,
+    "h": 4,
+    "un": 0.0,
+    "nmaps": 1
+   },
+   "183": {
+    "n": 1,
+    "maps": [
+     "ColorlessFate.scx"
+    ],
+    "sym": 0,
+    "spr": 0,
+    "w": 2,
+    "h": 1,
+    "un": 0.0,
+    "nmaps": 1
+   }
+  }
+ }
+}

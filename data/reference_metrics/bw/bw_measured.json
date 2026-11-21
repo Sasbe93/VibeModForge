@@ -1,0 +1,477 @@
+{
+ "Aiolos.scx": {
+  "size": "128x128",
+  "starts": 3,
+  "mineral_fields": 111,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 108,
+   "16": 3
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    10,
+    13516,
+    1
+   ],
+   [
+    10,
+    13516,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.0,
+   9.4
+  ],
+  "gas_dist": [
+   6.6,
+   8.0
+  ],
+  "walk": 0.72,
+  "levels": {
+   "0": 0.5,
+   "1": 0.5
+  },
+  "neutral_other": 4
+ },
+ "AttitudeSE.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 120,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 120
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.73,
+  "levels": {
+   "0": 0.71,
+   "1": 0.29
+  },
+  "neutral_other": 4
+ },
+ "Benzene.scx": {
+  "size": "128x112",
+  "starts": 2,
+  "mineral_fields": 86,
+  "geysers": 10,
+  "mineral_amounts": {
+   "1500": 74,
+   "1000": 12
+  },
+  "gas_amounts": {
+   "5000": 10
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   6.0,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.65,
+  "levels": {
+   "0": 0.07,
+   "1": 0.51,
+   "2": 0.42
+  },
+  "neutral_other": 0
+ },
+ "CircuitBreakers.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 124,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 124
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.6
+  ],
+  "gas_dist": [
+   5.5,
+   5.6
+  ],
+  "walk": 0.7,
+  "levels": {
+   "0": 0.17,
+   "1": 0.6,
+   "2": 0.23
+  },
+  "neutral_other": 0
+ },
+ "ColorlessFate.scx": {
+  "size": "128x96",
+  "starts": 2,
+  "mineral_fields": 90,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 88,
+   "16": 2
+  },
+  "gas_amounts": {
+   "5000": 8,
+   "2000": 2,
+   "3500": 2
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.67,
+  "levels": {
+   "0": 0.42,
+   "1": 0.58
+  },
+  "neutral_other": 2
+ },
+ "Eclipse.scx": {
+  "size": "128x112",
+  "starts": 2,
+  "mineral_fields": 84,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 84
+  },
+  "gas_amounts": {
+   "5000": 10,
+   "3000": 2
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.74,
+  "levels": {
+   "0": 0.65,
+   "2": 0.35
+  },
+  "neutral_other": 0
+ },
+ "FightingSpirit.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 108,
+  "geysers": 14,
+  "mineral_amounts": {
+   "1500": 97,
+   "794": 1,
+   "537": 1,
+   "428": 1
+  },
+  "gas_amounts": {
+   "5000": 12,
+   "3207": 1,
+   "2985": 1
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   6.1,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.75,
+  "levels": {
+   "0": 0.69,
+   "1": 0.31
+  },
+  "neutral_other": 0
+ },
+ "KnockOut.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 124,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 116,
+   "0": 8
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.76,
+  "levels": {
+   "0": 0.42,
+   "1": 0.29,
+   "2": 0.29
+  },
+  "neutral_other": 0
+ },
+ "Octagon.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 116,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 116
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.75,
+  "levels": {
+   "0": 0.47,
+   "1": 0.53
+  },
+  "neutral_other": 0
+ },
+ "OdysseyRE.scx": {
+  "size": "112x128",
+  "starts": 8,
+  "mineral_fields": 138,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 88,
+   "122": 48,
+   "22": 2
+  },
+  "gas_amounts": {
+   "5000": 11,
+   "4000": 1
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   2.0,
+   11.0
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.68,
+  "levels": {
+   "0": 0.67,
+   "1": 0.33
+  },
+  "neutral_other": 0
+ },
+ "Plasma.scx": {
+  "size": "96x128",
+  "starts": 3,
+  "mineral_fields": 99,
+  "geysers": 9,
+  "mineral_amounts": {
+   "1500": 87,
+   "32": 12
+  },
+  "gas_amounts": {
+   "5000": 9
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.0,
+   7.6
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.84,
+  "levels": {
+   "0": 0.81,
+   "2": 0.19
+  },
+  "neutral_other": 12
+ },
+ "Polypoid.scx": {
+  "size": "128x128",
+  "starts": 4,
+  "mineral_fields": 116,
+  "geysers": 12,
+  "mineral_amounts": {
+   "1500": 116
+  },
+  "gas_amounts": {
+   "5000": 12
+  },
+  "main": [
+   [
+    9,
+    13500,
+    1
+   ],
+   [
+    9,
+    13500,
+    1
+   ]
+  ],
+  "min_dist_tiles": [
+   5.8,
+   7.3
+  ],
+  "gas_dist": [
+   5.5,
+   5.5
+  ],
+  "walk": 0.79,
+  "levels": {
+   "0": 0.66,
+   "1": 0.34
+  },
+  "neutral_other": 13
+ }
+}
