@@ -66,6 +66,10 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    Transmission at a location) has vision there from its first line: own units, ally shared vision already active, or a
    Map Revealer created before the line (sclib scene_reveal). Design note 'SCENE_VIEW: <scene> :: <location> ::
    <alliance-vision | revealer | own units present>'
+46 escort_route_challenge (check_escort_route.py): an escortee's ordered route (pathfound over walkable ground) is at least a
+   third of the map width, passes 2+ threat encounters (enemy armed units/towers near the path, ambush triggers), every
+   encounter is reachable by the player's ground units without breaking an enemy base; design note 'ESCORT_ROUTE:
+   <escortee> :: <length tiles/time> :: <threats with locations> :: <what the player must do>'
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -604,6 +608,8 @@ def run_safe(path):
     R+=_guard(R,'44 start setup variety',lambda: check_start_setup.run_auto(path),[])
     import check_scene_view
     R+=_guard(R,'45 scene location visible',lambda: check_scene_view.run(path),[])
+    import check_escort_route
+    R+=_guard(R,'46 escort route challenge',lambda: check_escort_route.run(path),[])
     return R
 if __name__=='__main__':
     rc=0
