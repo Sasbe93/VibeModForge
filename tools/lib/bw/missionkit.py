@@ -198,7 +198,7 @@ def res_base(m, g, ti, hx, hy, side, n, amounts, gas, owner=None, hall=None, gey
     """Blizzard mineral formation (tools/lib/bw/minform.py) for a 4x3 hall at top-left (hx,hy).
     side: 'left'/'right' (column), 'up'/'down' (row, two rows deep), 'upleft'/'upright'/'downleft'/'downright' (corner L),
     a list of those, or 'auto'. form/variant pin a shape; plan = mineral_plan(...) result used for the terrain.
-    Rules (t1009, measured on pro ladder and Empire Wars campaign maps): nearest field 3 empty tiles from the hall, back
+    Rules (measured on pro ladder and Empire Wars campaign maps): nearest field 3 empty tiles from the hall, back
     fields 4, real 2-deep stagger, never more than 3 fields flush in a straight line, geyser 3-5 tiles on a free side.
     Every field and the geyser need unwalkable ground (water, cliff, map edge) or another field within `reach` tiles
     straight behind them (resource backs, predelivery resback). Shapes already used in this map are tried last, so the

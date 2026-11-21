@@ -1,4 +1,4 @@
-"""minform: Blizzard-style mineral formations for SC:BW town halls (t1009).
+"""minform: Blizzard-style mineral formations for SC:BW town halls.
 
 Measured on 12 pro ladder maps (38 main/natural halls) and the 38 'Empire Wars' campaign maps (174 halls), see
 docs/bw-campaign-design.md 'Mineral lines':

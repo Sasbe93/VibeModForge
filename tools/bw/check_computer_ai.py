@@ -3,7 +3,7 @@
 mission start, set up the way Blizzard's campaign maps do it, so its workers mine from the first second.
    python3 tools/bw/check_computer_ai.py MAP.scx|scenario.chk [...]      (exit 1 on FAIL)
 
-Reference: all 57 official campaign maps (/workspace/t1011/official). Every one of the 125 computer players there that
+Reference: all 57 official campaign maps. Every one of the 125 computer players there that
 owns a town hall or workers has a start location; the main town script (mission script or campaign script) runs by
 'Run AI Script At Location' at a 4x3/4x4 location lying exactly on that player's town hall (location centre 0-0.5
 tiles from the hall centre), in a trigger owned by that player (or its force) with condition Always. Large locations
@@ -24,7 +24,7 @@ computer_ai_started (FAIL), per computer player (OWNR 5) that owns a pre-placed 
 ai_workers_mining (FAIL): every pre-placed worker of a computer player that stands within 12 tiles of one of its town
   halls belongs to a hall that is managed by a town script started at mission start and has mineral fields within 12
   tiles (with a valid main town every pre-placed building outside an Area Town location is assigned to that town,
-  SCAI guide 'start_town'; without one, only Area Town locations manage halls); a hall with workers and no managing script leaves them idle. (Sasbe's rule: computer workers mine
+  SCAI guide 'start_town'; without one, only Area Town locations manage halls); a hall with workers and no managing script leaves them idle. (Project rule: computer workers mine
   from the opening on. Blizzard itself starts some campaign AIs later, on a switch or when the player arrives; for us
   that needs the exemption.)
 Exemption (design note next to the map): 'AI_IDLE_OK: P<n> :: <hall x,y or "all"> :: reason' (deliberately inactive

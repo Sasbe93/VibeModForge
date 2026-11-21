@@ -503,7 +503,7 @@ class Map:
         return s.act(16,loc=loc,num=n,flags=0x04) if loc else s.act(15,num=n,flags=0x04)
     TOWN_HALLS=(106,130,131,132,133,154)
     def town_ai(s,p,script,hall,area=None,name=None,start_loc=True):
-        """Start computer player p's town AI the way Blizzard's campaign maps do (t1014; M6 Sluice Gates had idle SCVs).
+        """Start computer player p's town AI the way Blizzard's campaign maps do (a computer town without a running town AI leaves its SCVs idle).
         hall = top-left tile of the pre-placed town hall (as passed to unit()); script = 4-letter code (e.g. 'THIx').
         Main town (area=None): a location on exactly the hall's footprint (Blizzard: 4x3 'Main Town' locations), so the
         AI town is centred on the hall and takes its workers, minerals and buildings. Second base: area=(x0,y0,x1,y1)
@@ -682,7 +682,7 @@ class Map:
         assert len(pupx)==2318 and len(ptex)==1672
         chk=b''.join(k.encode()+struct.pack('<I',len(v))+v for k,v in sec)
         tmp=path+'.chk'; open(tmp,'wb').write(chk)
-        try:   # computer_ai_started / ai_workers_mining (t1014): warn at build time, predelivery check 48 FAILs
+        try:   # computer_ai_started / ai_workers_mining: warn at build time, predelivery check 48 FAILs
             import sys as _sys; _here=os.path.dirname(os.path.abspath(__file__))
             for _p in (_here, os.path.join(_here,'..','..','bw')):
                 if os.path.exists(os.path.join(_p,'check_computer_ai.py')) and _p not in _sys.path: _sys.path.insert(0,_p)

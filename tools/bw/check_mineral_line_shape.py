@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check 43 mineral_line_shape (t1009): mineral lines look like Blizzard lines, and a campaign map does not repeat one
+"""Check 43 mineral_line_shape: mineral lines look like Blizzard lines, and a campaign map does not repeat one
 shape everywhere.   python3 check_mineral_line_shape.py MAP.scx [...]
 
 Per base (town hall or start location; hall-less fields: the cluster on its own), lines of 5+ fields:
