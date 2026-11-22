@@ -2,6 +2,8 @@
 
 EXAMPLE mission (StarCraft: Brood War, .scx, Badlands 128x96), built by `tools/bw/example_mission.py`.
 Placeholder scenario that shows the structure of a campaign design note; replace everything with your own story.
+STRUCTURE ONLY: copy the sections and the line formats, never the mission design (objective, map layout, start setup,
+enemy, story, rewards). More examples of other types and complexity: `docs/bw-example-missions.md`.
 A Terran outpost on an old road is raided again and again by a Zerg brood dug in on the ridge above it.
 
 ## Campaign outline

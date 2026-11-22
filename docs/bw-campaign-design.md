@@ -301,6 +301,14 @@ For Brood War: the same question applies to changed units (unit/weapon/tech data
 - Voice engine: edge-tts (online Microsoft service; `pip install edge-tts`, plus ffmpeg). Output rights and alternatives: DEPENDENCIES.md "Voiced dialogue for Brood War". If the engine is not available, stop and tell the user; never ship a text-only mission silently.
 - Worked example: `tools/bw/example_mission.py`.
 
+## Example missions: copy the structure, never the design (fixed rule)
+`docs/bw-example-missions.md` lists the BW example missions (`tools/bw/example_mission.py` and `tools/bw/examples/`):
+simple, medium and complex missions of different types (survive, rescue, escort, hold, boss hunt, hero squad,
+multi-phase) and start setups. Take only their STRUCTURE: the build pipeline, the design-note sections, and the trigger,
+voice and check conventions. Never take their mission design: objective, map layout, start setup, enemy, story and
+rewards are invented for each mission. Use a different example than for the previous mission, and keep neighbouring
+missions varied (mission-type variety, predelivery check `mission_type_variety`).
+
 ## Rewards make sense in the story (fixed rule, same rule for WC3)
 Never hand out flat minerals, gas or units for an unrelated deed (400 minerals for building a Nydus Canal, a squad
 appearing because three enemies died). The reward follows from what the objective is in the story; ask "what does

@@ -4,8 +4,11 @@
 Run from the repository root:   python3 tools/bw/example_mission.py [--no-checks]
 Writes output/example_mission/Example_Mission.scx plus Design_Note_Example_Mission.md, Voice_Script_Example_Mission.md,
 a minimap PNG and a routes PNG, then runs the delivery checks (predelivery_check.py incl. map design and cliff shape, placement
-check, trigger simulation). The scenario is a neutral placeholder: copy this file as the base for a real mission and
-replace terrain, cast, story and objectives with your own (keep the structure and the checks).
+check, trigger simulation). The scenario is a neutral placeholder.
+STRUCTURE ONLY: copy the build pipeline, the design-note sections and the trigger/voice/check conventions, never the
+mission design (objective, map layout, start setup, enemy, story, rewards). Every mission invents its own, uses a
+different example than the previous mission (more examples: docs/bw-example-missions.md), and neighbouring missions
+follow the mission-type variety rule.
 
 What it demonstrates
   terrain     organic ISOM painting (blobs, meandering roads, ragged map edge), a raised ridge with seam-aware normal-size

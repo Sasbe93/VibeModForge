@@ -1,6 +1,8 @@
 """missionkit: generic building blocks for StarCraft: Brood War campaign missions on top of sclib.
 
-Used by tools/bw/example_mission.py. Everything here works for any mission and any tileset; nothing is tied to a story.
+Used by tools/bw/example_mission.py and tools/bw/examples/ (docs/bw-example-missions.md). Everything here works for any
+mission and any tileset; nothing is tied to a story. The examples show the STRUCTURE of a mission only: never copy their
+mission design (objective, map layout, start setup, enemy, story, rewards).
   TerrainInfo     tile flags from the tileset (walkable, buildable, height level)
   Grid            placement grid: free, flat, buildable footprints with a walkable ring; unit spots on the main ground
   near()          deterministic spiral search for a building spot
@@ -11,6 +13,10 @@ Used by tools/bw/example_mission.py. Everything here works for any mission and a
   auto_ramps()    seam-aware ramp doodads from a plateau top down to low ground (normal size >= 8x5)
   dress()         doodad dressing on the battlefield, then removes every doodad the delivery checks call a hard seam
   Cast            speakers (TTS voice, colour, portrait), voiced lines, transmissions and the briefing
+  CREEP_SRC, ZERG_HALLS, PROTOSS_FREE  unit id sets: creep sources, the Zerg hall morph chain, Protoss without power
+  Town            buildings of one owner placed race-correctly (Zerg on creep, Protoss in pylon power, Terran anywhere)
+  waves()         scripted attack waves at elapsed times, optionally gated on the producing building still standing
+  auto_forbid()   doodad keep-out boxes around given boxes, placed units and locations
 Needs the same files as sclib: the isomtool binary and the tileset files (external/README.md).
 """
 import math, random, struct, os, sys
@@ -409,3 +415,56 @@ class Cast:
             t, snd = s.line(who, script); acts += m.b_trans(t, slots[who], snd)
         acts += [m.b_wait(300)] + m.b_end(tuple(sorted(set(slots.values()))))
         m.B(acts)
+
+# ---------- shared helpers for the example missions (tools/bw/examples) and any other mission ----------
+CREEP_SRC = {131: (9.5, 6.5), 132: (9.5, 6.5), 133: (9.5, 6.5), 143: (5.5, 4), 146: (5.5, 4), 144: (5.5, 4)}
+ZERG_HALLS = {131, 132, 133}; PROTOSS_FREE = {154, 156, 157}      # Nexus, Pylon, Assimilator need no power
+
+class Town:
+    """buildings of one owner placed race-correctly: Zerg buildings only on creep (Hatchery/colony creep ellipses),
+    Protoss buildings only inside a Pylon's power field, Terran anywhere. put() falls back to any free spot (placecheck
+    autofix then adds creep/pylons for computer players)."""
+    def __init__(s, m, g, owner, race):
+        s.m, s.g, s.owner, s.race = m, g, owner, race; s.creep = []; s.pylons = []
+    def _ok(s, uid, x0, y0):
+        w, h = BUILDSIZE[uid]
+        if s.race == 'zerg' and uid not in ZERG_HALLS and uid != 149:
+            return any(all(((cx-qx)/rx)**2+((cy-qy)/ry)**2 <= 1 for cx in (x0, x0+w) for cy in (y0, y0+h)) for qx, qy, rx, ry in s.creep)
+        if s.race == 'protoss' and uid not in PROTOSS_FREE:
+            px, py = x0*32+w*16, y0*32+h*16
+            return any(((px-qx)/256)**2+((py-qy)/160)**2 <= 0.85 for qx, qy in s.pylons)
+        return True
+    def put(s, uid, cx, cy, rmax=6):
+        sp = near(s.g, uid, cx, cy, 0, rmax, cond=lambda x0, y0: s._ok(uid, x0, y0)) or near(s.g, uid, cx, cy, 0, rmax+4)
+        if not sp: raise SystemExit(f'Town.put: no room for unit {uid} near {cx},{cy}')
+        s.m.unit(uid, *sp, s.owner); s.g.add_raw(s.m.units[-1]); s.note(uid, *sp)
+        return sp
+    def note(s, uid, x0, y0):
+        """register a hall/colony/pylon placed elsewhere (e.g. by res_base) as a creep or power source"""
+        w, h = BUILDSIZE.get(uid, (1, 1))
+        if uid in CREEP_SRC: s.creep.append((x0+w/2, y0+h/2, *CREEP_SRC[uid]))
+        if uid == 156: s.pylons.append((x0*32+w*16, y0*32+h*16))
+    def workers(s, uid, n, x0, x1, y0, y1):
+        k = 0
+        for x in range(x0, x1):
+            for y in range(y0, y1):
+                if k < n and s.g.spot_unit(x, y): s.m.unit(uid, x, y, s.owner); s.g.occ.add((x, y)); k += 1
+        return k
+
+def waves(m, owner, times, src, dst, groups, alts=None, switch0=None, extra_conds=()):
+    """scripted attack waves: at each elapsed time t (seconds) create the groups [(unit, n), ...] (n <= 4, sclib trickles
+    them) at location src and order them to dst. groups may be a function i -> list. alts (e.g. m.target_stands(...))
+    gate every wave on 'the producing building still stands' over its whole morph chain; switch0 makes each wave run once."""
+    for i, t in enumerate(times):
+        gr = groups(i) if callable(groups) else groups
+        acts = [m.create(owner, u, n, src) for u, n in gr] + [m.order(owner, 229, src, dst)]
+        if alts: m.T_each([owner], [m.ET(t)] + list(extra_conds), alts, acts, switch=None if switch0 is None else switch0+i)
+        else: m.T([owner], [m.ET(t)] + list(extra_conds), acts)
+
+def auto_forbid(m, boxes=(), unit_margin=2):
+    """doodad keep-out boxes: the given boxes, a margin around every placed unit and every location"""
+    out = list(boxes)
+    for raw in m.units:
+        px, py = struct.unpack_from('<HH', raw, 4); out.append((px//32-unit_margin, py//32-unit_margin, px//32+unit_margin+1, py//32+unit_margin+1))
+    out += [(v[1]-1, v[2]-1, v[3]+1, v[4]+1) for k, v in m.locs.items() if k != 'Anywhere']
+    return out
