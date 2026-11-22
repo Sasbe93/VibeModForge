@@ -35,8 +35,15 @@ SCENE_VIEW: Okafor's radio call :: Ravine Camp :: revealer
 SCENE_VIEW: the squad rejoins :: Ravine Camp :: own units present
 SCENE_VIEW: victory call :: Ridge Hall :: own units present
 
+## Planned duration
+The mission is meant to take about 10 minutes on Normal (Easy about 14, Hard about 8). Walking is only a small part of
+that; the rest is the fights on the road, the push on the ridge, and the optional ravine rescue. Each objective's
+encounter count scales with its budget: about one real fight per 1-2 minutes, and a rescue or reach still has at least
+two threat sources.
+TARGET_DURATION: 10 :: Easy 14 / Hard 8 :: Destroy the Hatchery on the ridge=6; Reach the survey squad=4
+
 ## Objective paths
-OBJECTIVE_PATHS: Destroy the Hatchery on the ridge :: start to the ridge hatchery, 100 tiles / 33 s at Marine speed (Fastest) :: the ridge gate is held by Sunken Colonies, zerglings and hydralisks (one encounter at the top of the ramps); scripted waves leave Ridge Gate for Outpost Front every 160 s from t=240 s, first arrival about t=256 s, from the north-east :: the player has to push two ramps and the gate while the hatchery still feeds those waves
+OBJECTIVE_PATHS: Destroy the Hatchery on the ridge :: start to the ridge hatchery, about 100 tiles / 33 s at Marine speed (Fastest) :: two zergling packs on the ridge road (around 36,46 and 60,22) plus the ridge gate held by Sunken Colonies, zerglings and hydralisks (three path encounters); scripted waves leave Ridge Gate for Outpost Front every 160 s from t=240 s, first arrival about t=256 s, from the north-east :: the player has to fight two packs, then push two ramps and the gate, while the hatchery still feeds those waves
 OBJECTIVE_PATHS: Reach the survey squad in the eastern ravine :: start to Ravine Camp, 77 tiles / 26 s at Marine speed (Fastest) :: two zergling packs on the southern track (around 46,82 and 66,82), two threat encounters, well clear of the camp :: the player has to fight through both packs to reach the squad; the camp itself is not under fire
 
 ## Map
@@ -44,7 +51,7 @@ OBJECTIVE_PATHS: Reach the survey squad in the eastern ravine :: start to Ravine
 - North-east: the ridge (high dirt) with the Zerg main, two normal-size ramps toward the south-west.
 - East: a Zerg expansion on low ground (a second Zerg base that feeds the waves; not an objective).
 - South-east: the ravine camp of the survey squad (rescuable, far from enemy units). Two zergling scout packs sit on the southern track to the camp.
-- Centre: a pond, grass fields and rocky patches; the old road (mud) meanders from the outpost to the ridge.
+- Centre: a pond, grass fields and rocky patches; the old road (mud) meanders from the outpost to the ridge. Two zergling scout packs sit on that road.
 - Map edge: ragged dirt/high-dirt/water border; no straight frame.
 
 ## Flow

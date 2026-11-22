@@ -121,6 +121,10 @@ m.loc('Ravine Camp', RX-6, RY-6, RX+8, RY+6)
 # the optional reach has to be a real path, not an empty walk
 K.scatter(m, g, ZERGLING, 4, 46, 82, P2, 1.5)
 K.scatter(m, g, ZERGLING, 4, 66, 82, P2, 1.5)
+# two more scout packs on the ridge road, so the main destroy path has three encounters
+# (the two packs plus the ridge gate) for a 6-minute budget of the hatchery objective
+K.scatter(m, g, ZERGLING, 4, 36, 46, P2, 1.5)
+K.scatter(m, g, ZERGLING, 4, 60, 22, P2, 1.5)
 
 # ---------------- locations ----------------
 m.loc('Outpost', HX-4, HY-10, HX+24, HY+12)

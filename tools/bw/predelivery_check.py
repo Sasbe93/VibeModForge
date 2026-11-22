@@ -86,13 +86,17 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
 50 side_objective_variety (check_side_objective_variety.py): design note 'SIDE_OBJECTIVE: <name> :: <type> :: <reward>'
    for every optional objective; at most one destroy side objective per mission and never in two neighbouring
    missions, unless 'SIDE_OBJECTIVE_REPEAT_OK: <reason>' (the reward follows from the objective: REWARD_WHY, check 41)
-51 objective_paths (check_objective_paths.py, tools/bw/path_tool.py): every main and side objective is judged by its
-   real paths (start to each target, a rescue there and back, escort routes, scripted waves to the player base with
-   travel and arrival times, approach directions and chokes). Design note 'OBJECTIVE_PATHS: <objective> :: <path(s)
-   with length in tiles/travel time> :: <threats / waves and directions> :: <why it is a challenge>'. FAIL: a missing
-   line; a rescue or reach path with fewer than 2 threat encounters; a survive objective with fewer than 3 scripted
-   waves arriving within the timer, or all waves entering through one choke. Exemption 'OBJECTIVE_PATHS_EASY_OK: <reason>'
-   waives the difficulty rules (not a missing line). Escort length and reachability stay in check 46.
+51 objective_paths (check_objective_paths.py, tools/bw/path_tool.py, tools/lib/mission_duration.py): every main and
+   side objective is judged by its real paths and its planned duration. Design note
+   'TARGET_DURATION: <Normal minutes> :: <Easy/Hard> :: <objective>=<minutes>; ...' and
+   'OBJECTIVE_PATHS: <objective> :: <path(s) with length in tiles/travel time> :: <threats / waves and directions> ::
+   <why it is a challenge>'. FAIL: a missing or incomplete TARGET_DURATION (every objective needs a budget; EASY_OK
+   does not waive this); a missing OBJECTIVE_PATHS line; fewer path encounters than the budget asks for (one per
+   2 minutes, and at least 2 on a rescue, reach or escort route); a survive/hold timer without a scripted wave about
+   every 120 s, or two or more waves all entering through one choke; a walk+fight estimate below about a third of
+   the objective's budget; the main objective completable before the first path encounter or scripted wave.
+   Exemption 'OBJECTIVE_PATHS_EASY_OK: <reason>' waives the difficulty rules only. Escort length and reachability
+   stay in check 46.
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
