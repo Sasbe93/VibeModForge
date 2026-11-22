@@ -99,7 +99,8 @@ def run(path):
             F.append(f"TARGET_DURATION does not give a time budget for '{name}'")
         if typ in D.PATH_TYPES and not easy and nenc<D.RESCUE_MIN_ENCOUNTERS:
             F.append(f"{typ} path for '{name}' has {nenc} threat encounter(s) (need at least {D.RESCUE_MIN_ENCOUNTERS}: ambushes, chokes held by enemies, patrols, base range, triggered attacks along the way)")
-        if budget is not None and need is not None and not easy and nenc<need:
+        judged=typ not in ('survive','other') or bool(paths)   # survive is judged by its waves; an untraced 'other' line (defeat condition, ability use) has no path to count
+        if budget is not None and need is not None and not easy and judged and nenc<need:
             F.append(f"'{name}' has {nenc} threat encounter(s), but its {budget:.0f} min budget asks for {need} (one per {D.BUDGET_MIN_PER_ENCOUNTER:.0f} min, and at least {D.RESCUE_MIN_ENCOUNTERS} on a rescue/reach/escort route)")
         if typ=='survive' and not easy:
             timer=o.get('timer') if o.get('timer') else (budget*60 if budget else None)
@@ -115,7 +116,7 @@ def run(path):
                 F.append(f"survive objective '{name}': all scripted waves enter through one choke (directions {dirs}); give the player more than one approach")
         if typ=='escort' and not easy and nenc<D.RESCUE_MIN_ENCOUNTERS:
             pass  # already reported in the PATH_TYPES branch
-        if budget is not None and not easy and typ!='survive':
+        if budget is not None and not easy and typ!='survive' and judged:
             floor=budget*60*D.ESTIMATE_MIN_FRACTION
             if est<floor:
                 F.append(f"'{name}': walk+fight estimate is {est:.0f}s, below a third of its {budget:.0f} min budget ({floor:.0f}s); lengthen the path, add encounters, or cut the budget")
@@ -126,7 +127,8 @@ def run(path):
         nenc=path_encounters(main)
         t_walk=walk_sec(main)
         t_wave=first_wave(waves)
-        if nenc==0 and t_walk<t_wave:
+        untraced=main.get('type')=='other' and not main.get('paths')   # a capture/ability objective without a traced path cannot be timed
+        if nenc==0 and t_walk<t_wave and main.get('type')!='survive' and not untraced:   # a survive objective ends with its timer, never by walking
             when='the first scripted wave arrives at t=%.0fs'%t_wave if t_wave!=math.inf else 'no scripted wave or path encounter is in the way'
             F.append(f"main objective '{main['name']}' can be finished in {t_walk:.0f}s of walking with 0 path encounters, before {when}")
     tag='FAIL' if F else 'OK  '

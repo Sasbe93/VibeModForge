@@ -114,9 +114,9 @@ def run(path):
         for src,dst in L:
             a_,b_=ltile(src),ltile(dst)
             if not a_ or not b_: broken.append(f'{lname(src)}->{lname(dst)}'); continue
-            seg,L,_,_=P.pathfind(W,H,wk,a_,b_)
-            if L==math.inf or not seg: broken.append(f'{lname(src)}->{lname(dst)} (no ground path)'); continue
-            length+=L; path_t+=seg
+            seg,leg_len,_,_=P.pathfind(W,H,wk,a_,b_)      # leg_len, not L: L is the leg list printed below
+            if leg_len==math.inf or not seg: broken.append(f'{lname(src)}->{lname(dst)} (no ground path)'); continue
+            length+=leg_len; path_t+=seg
         hits=[]
         for tx,ty,uid,kind in threats:
             d,i=min((math.hypot(tx-x,ty-y),i) for i,(x,y) in enumerate(path_t)) if path_t else (1e9,0)

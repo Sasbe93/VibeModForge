@@ -236,7 +236,7 @@ def detect_objectives(v):
     for c,a,own in v.trigs:
         if any(x[26]==14 and u32(x,12)>0 for x in a):
             # Set Countdown: time at offset 12, mod at 27 (7=set)
-            countdown=u32(next(x for x in a if x[26]==14 and u32(x,12)>0),12)/1000
+            countdown=u32(next(x for x in a if x[26]==14 and u32(x,12)>0),12)   # Set Countdown Timer stores whole seconds in bytes 12-15 (docs.scmjs.dev, action 14)
         if any(x[15]==1 and u32(x,8)==0 for x in c) and any(x[26]==2 for x in a): cd_defeat=True
         if any(x[26]==1 for x in a):   # Victory
             for x in c:
@@ -338,7 +338,7 @@ def detect_objectives(v):
         # only add if the objectives or mission suggest a hold; a destroy-with-timer is time-limit, not survive
         if any(classify(t)=='survive' for t in texts) or (texts and any('survive' in t.lower() or 'hold' in t.lower() for t in texts)):
             objs.append({'name':'Survive','type':'survive','optional':False,'paths':[],'timer':countdown,'waves':[],'notes':[]})
-    if victory_brings and not any(o['type'] in ('rescue','reach') for o in objs):
+    if victory_brings and not any(o['type'] in ('rescue','reach','escort') for o in objs):   # an escort's arrival Bring is the escort, not a rescue
         uid,loc,qty,cmp=victory_brings[0]
         if uid<228:
             spots=[(u['x']/32,u['y']/32,u['id']) for u in v.U if u['id']==uid and u['o'] in v.rescue|v.hum]
