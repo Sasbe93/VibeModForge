@@ -14,7 +14,7 @@ THREAT_R=7; AMBUSH_R=3; GAP=10
 TOWERS={125,146,162}          # Bunker, Sunken Colony, Photon Cannon
 WORKERS={7,41,64}; SLOC=214
 HALLS={106,107,108,131,132,133,154}
-MEN,BUILDINGS,FACTORIES,ANYUNIT=229,230,231,229
+ANYUNIT,MEN,BUILDINGS,FACTORIES=229,230,231,232   # trigger unit groups (eudplib DefUnitDict)
 # Flingy speeds in pixels/frame at Fastest (Liquipedia / flingy.dat). Travel seconds = tiles*32/(speed*FPS).
 SPEED={0:4.0,1:4.0,2:6.4,3:4.69,5:4.0,7:4.92,8:6.67,9:5.0,11:5.47,12:2.5,13:12.5,
        32:4.0,34:4.0,37:5.49,38:3.66,39:5.12,40:6.67,41:4.92,42:0.83,43:6.67,44:2.5,

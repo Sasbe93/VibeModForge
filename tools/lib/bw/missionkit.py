@@ -468,3 +468,39 @@ def auto_forbid(m, boxes=(), unit_margin=2):
         px, py = struct.unpack_from('<HH', raw, 4); out.append((px//32-unit_margin, py//32-unit_margin, px//32+unit_margin+1, py//32+unit_margin+1))
     out += [(v[1]-1, v[2]-1, v[3]+1, v[4]+1) for k, v in m.locs.items() if k != 'Anywhere']
     return out
+
+
+# ---------------- tech level per chapter (Sasbe t1025; predelivery check tech_restriction) ----------------
+def tech_level(race, level, drop=(), add=(), player=0):
+    """sclib Map.tech dict for a chapter's tech level. race: 'Terran'|'Zerg'|'Protoss'; level: 'early' (no middle or top
+    tier, weapon/armor level 1), 'mid' (no top tier), 'late' (only what `drop` removes), 'full' (everything).
+    drop/add: extra unit ids to disable/enable. Upgrades and techs whose research building (or level requirement) is
+    disabled are switched off with it; core abilities of available units stay on (sclib._with_core).
+    Write the matching 'TECH_LEVEL: <level> :: <chapter> :: <what and why>' line into the design note."""
+    import json as _j
+    tiers = _j.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'data', 'bw', 'tech', 'bw_tech_tiers.json')))
+    tree = _j.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'data', 'bw', 'tech', 'bw_techtree.json')))
+    off = set(drop)
+    if level == 'early': off |= set(tiers['top'][race]) | set(tiers['middle'][race])
+    elif level == 'mid': off |= set(tiers['top'][race])
+    off -= set(add)
+    units = set(range(228)) - off
+    ups = {i: sclib.UPG_MAX.get(i, 1) for i in range(61)}
+    for g in tree['upgrades']:
+        if g['race'] != race: continue
+        if g['researched_at'] in off or any(r in off for r in g.get('requires') or []): ups[g['id']] = 0; continue
+        mx = g['max_level']
+        for lv in sorted(g.get('level_requires', {}), key=int):
+            if any(r in off for r in g['level_requires'][lv]): mx = min(mx, int(lv) - 1)
+        if level == 'early' and g['id'] in tiers['weapon_armor'][race]: mx = min(mx, 1)
+        ups[g['id']] = mx
+    techs = set(range(44))
+    for t in tree['techs']:
+        if t.get('race') != race: continue
+        if t['researched_at'] in off or any(r in off for r in t.get('requires') or []) or not any(u in units for u in t.get('users') or [0]):
+            techs.discard(t['id'])
+    # a core ability whose research building is disabled (Corsair without a Fleet Beacon) starts researched
+    tinfo = {t['id']: t for t in tree['techs']}
+    pre = {c for u in units for c in sclib.CORE_TECH.get(u, ()) if c in tinfo and tinfo[c]['researched_at'] in off}
+    techs |= pre
+    return dict(player=player, units=units, upgrades=ups, techs=techs, pre=pre)

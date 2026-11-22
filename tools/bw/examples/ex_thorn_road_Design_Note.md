@@ -108,8 +108,11 @@ PHASES: base, escort, combat
 Four guard posts and a plateau lookout on the road, two or three triggered ambushes, the town AI's own attacks.
 Start resources 300/150.
 
+## Tech level
+TECH_LEVEL: mid :: stand-alone (middle chapter of a Protoss campaign) :: Gateway, Citadel, Robotics and Stargate tier (Zealots with Leg Enhancements, Dragoons, Reavers, Shuttles, Scouts, Corsairs); no Templar Archives tier yet
+
 ## Campaign rules
-Tech: full Protoss tree. No attack announcements.
+Tech: Citadel, Robotics and Stargate tier (TECH_LEVEL mid). No attack announcements.
 
 ## Mission design deviations
 - The temple plateau has one stair only (it is a lookout, not a route).

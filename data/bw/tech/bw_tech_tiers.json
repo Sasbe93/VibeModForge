@@ -1,0 +1,14 @@
+{
+ "_note": "Tech tiers for the tech_restriction check (predelivery 54) and missionkit.tech_level. 'top' = Hive / Science Facility / Templar Archives tier and what needs it; 'middle' = Lair / Factory+Starport / Citadel+Robotics+Stargate tier. Unit ids as in bw_techtree.json.",
+ "top": {
+  "Terran": [116, 117, 118, 108, 1, 9, 12, 58, 14],
+  "Zerg": [133, 136, 140, 137, 134, 46, 39, 44, 62],
+  "Protoss": [165, 170, 169, 67, 61, 68, 63, 71, 72]
+ },
+ "middle": {
+  "Terran": [113, 114, 123, 120, 115, 2, 5, 3, 8, 11],
+  "Zerg": [132, 141, 138, 43, 47, 45, 103],
+  "Protoss": [163, 155, 167, 159, 171, 69, 83, 84, 70, 60]
+ },
+ "weapon_armor": {"Terran": [0, 1, 2, 7, 8, 9], "Zerg": [3, 4, 10, 11, 12], "Protoss": [5, 6, 13, 14, 15]}
+}

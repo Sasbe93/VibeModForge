@@ -103,8 +103,17 @@ PHASES: base, combat, twist, chase
 ## Difficulty
 Four guard posts on each route, a fortified plateau, a fortress, eleven waves and two town AIs. Start resources 300/50.
 
+## Shortcuts
+Zerg up to the Hive with Defilers; no Greater Spire or Ultralisk Cavern. Overlords (with Ventral Sacs), Mutalisks,
+Scourge and Queens fly; a Nydus Canal needs creep at the exit (the check only warns).
+OBJECTIVE_SHORTCUTS: Reach the overlook at Bone Ridge :: flyer, transport (Overlord with Ventral Sacs), nydus :: four marine squads stand on the air line, more than the three fights on the road; no creep reaches the ridge for a Nydus exit
+OBJECTIVE_SHORTCUTS: Storm the Command Post and kill the traitor General Hask :: flyer, transport, nydus :: four marine squads (one with a bunker) cover the air line, as many as the road; the general must be killed at the post anyway
+
+## Tech level
+TECH_LEVEL: late :: stand-alone (late chapter of a Zerg campaign) :: Hive tier with Defilers and Nydus Canals; no Greater Spire or Ultralisk Cavern yet (Guardians, Devourers and Ultralisks come in the finale)
+
 ## Campaign rules
-Tech: full Zerg tree. No attack announcements.
+Tech: Hive tier without Greater Spire and Ultralisk Cavern (TECH_LEVEL late). No attack announcements.
 
 ## Mission design deviations
 - None.

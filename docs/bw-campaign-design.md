@@ -372,6 +372,38 @@ changes owner to the Zerg player, so for the Terran owner it is gone.
   is "exactly 0" of a lift-off building at a location.
 - Fixtures: `python3 tools/bw/selftest_side_and_morph.py` (each check fails on a bad case and passes on a good one).
 
+## Objective shortcuts, enemy-base pressure and tech per chapter (fixed rule, Brood War and Warcraft III)
+A medium mission that a lifted Barracks, one Wraith or an early raid on a nearby base can finish is not a medium
+mission. Before building, think through what the player's own units, buildings and abilities can do against each
+objective; the analysis is dynamic, from what this mission actually hands out.
+- **Objective shortcuts.** For every reach, rescue, capture or escort objective list the vectors the player has:
+  lift-off (a Barracks, Factory, Starport or Command Center lands next to the target and trains the counted unit
+  there), flyers (Wraith, Dropship, Overlord, Mutalisk, Scout, Observer, a flying rescuee), transports (Dropship,
+  Shuttle, Overlord with Ventral Sacs and a Lair), Recall (Arbiter), Nydus Canal, cloak past guards. Block each one in
+  the design (anti-air on the straight air line, at least as many encounters as on the ground path; a counted unit
+  the player cannot train or fly; the location must be cleared first; the tech or unit disabled this chapter) or
+  accept it on purpose. Note lines:
+  `OBJECTIVE_SHORTCUTS: <objective|location> :: <vectors> :: <how each one is blocked>` and
+  `SHORTCUT_OK: <objective|location> :: <vector> :: <why skipping the path is fine>`.
+- **Enemy-base pressure.** Attacks come from at least two independent sources: waves fed by different bases, a town AI
+  that needs more than one hall, reinforcements from beyond the map edge, or a base that is itself the victory target.
+  One enemy base that the player can reach early, that is not the objective and whose death stops every wave and the
+  AI turns the rest of the mission into a walk. `PRESSURE_SINGLE_OK: <reason>` only when that is the design.
+- **Tech per chapter.** Each mission hands out the tech tree of its place in the campaign: early chapters give the
+  first tier (no top tier, at most half of the middle tier, weapon/armor level 1), middle chapters hold back the top
+  tier, the finale may give the full tree. Build it with `missionkit.tech_level(race, level, drop=..., add=...)`
+  (it switches off upgrades and techs with their building and pre-researches a core ability whose building is held
+  back). Note line: `TECH_LEVEL: <early|mid|late|full> :: <chapter, e.g. M2 of 8, or stand-alone> :: <what and why>`;
+  `full` needs a reason. Restricting tech also closes shortcut vectors (no Starport, no Arbiter).
+- Predelivery checks 52 objective_shortcuts (`tools/bw/check_objective_shortcuts.py`), 53 enemy_base_pressure
+  (`tools/bw/check_enemy_base_pressure.py`) and 54 tech_restriction (`tools/bw/check_tech_restriction.py`, tiers in
+  `data/bw/tech/bw_tech_tiers.json`), shared model `tools/bw/mission_model.py`. They are static: straight air lines,
+  anti-air units within 7 tiles of the line, gates read from trigger conditions and switches. Fixtures:
+  `python3 tools/bw/selftest_t1025_checks.py` (set `ATTACHED_SCX` to an outside map to include it).
+- Why: a medium "reach the Kiln" mission was won by flying the Barracks to the goal, a Zerg base next to the start fed
+  every wave and the AI, and the full Terran tree was open in an early chapter. Ground paths, wave counts and tech
+  consistency all passed.
+
 ## Voice delivery notes (fixed rule, same rule for WC3)
 Every voiced line carries delivery notes in VO markup v1 (`docs/voice-delivery-markup.md`): `[emotion: ...]` first,
 `*stress*`, short pauses `(0.3)`/`(beat)`/`...`/` - ` (0.1-0.6 s, inside the line only; the <= 1 s gap between lines

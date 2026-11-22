@@ -96,10 +96,26 @@ PHASES: base, expand, combat, hold
 - Moments: "you will not speak across this world", taunts at ten minutes
 
 ## Difficulty
-Three pickets, eleven rising waves from three directions, an expanding town AI. Start resources 500/200.
+Three pickets, eleven rising waves from three directions (north and centre fed by the Templar Hall, the south column independent of it), an expanding town AI. Start resources 500/200.
+
+## Shortcuts
+The player has Barracks and Factory tech (no Starport this chapter), so the only vector is lift-off: a Barracks,
+Factory or the Command Center flies to a relay or the canyon, lands and trains there.
+OBJECTIVE_SHORTCUTS: North Relay :: lift-off :: the relay's dragoon and photon cannon cover the air approach (one anti-air encounter, as many as the road), and the capture trigger also needs every picket at the relay dead and three own troops there, so the fight at the relay stays
+OBJECTIVE_SHORTCUTS: Centre Relay :: lift-off :: the capture trigger needs the four guards on the mesa dead and three own troops there; a landed Barracks cannot take the relay on its own
+OBJECTIVE_SHORTCUTS: South Relay :: lift-off :: the capture trigger needs the four guards at the relay dead and three own troops there; a landed Barracks cannot take the relay on its own
+OBJECTIVE_SHORTCUTS: Find the stranded Goliath crew in the Western Canyon :: lift-off (a Factory lands and trains a Goliath) :: the trigger counts Goliaths; two dragoon patrols cover the air line as well as the road (two anti-air encounters)
+
+## Pressure sources
+North and centre waves run only while the Templar Hall stands (it visibly feeds them), and so does the town AI. The
+south column is the templar's field army marching in from beyond the eastern edge: it keeps coming when the hall
+falls, so breaking the hall early never ends the pressure on the relays.
+
+## Tech level
+TECH_LEVEL: mid :: stand-alone (middle chapter of a Terran campaign) :: Barracks and Factory tier with the Armory (Marine, Firebat, Medic, Vulture, Siege Tank, Goliath); no Starport, no Science Facility tier yet
 
 ## Campaign rules
-Tech: full Terran tree. No attack announcements.
+Tech: Barracks and Factory tier (TECH_LEVEL mid). No attack announcements.
 
 ## Mission design deviations
 - None.

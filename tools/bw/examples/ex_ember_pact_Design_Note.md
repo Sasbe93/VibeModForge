@@ -110,8 +110,17 @@ PHASES: hero, base, combat, assault
 Three packs on the first road, two fortified nests with their own town AIs and siege waves, a full Zerg main.
 Start resources 0/0 (the outpost brings the economy).
 
+## Shortcuts
+The strike team brings an Observer; the base from phase 2 can build up to Stargates (no Fleet Beacon or Arbiter
+Tribunal), so there are flyers but no Recall.
+OBJECTIVE_SHORTCUTS: Reach Fort Wren with the strike team :: flyer (the Observer) :: two hydralisk packs (around 33,88 and 49,79) stand on the straight line to Fort Wren, the same count as the two fights on the road
+OBJECTIVE_SHORTCUTS: Fort Academy :: flyer (the Observer) :: the same two hydralisk packs cover the air line to the academy; the assault itself needs the army
+
+## Tech level
+TECH_LEVEL: late :: stand-alone (late chapter of a Protoss campaign) :: everything up to the Templar Archives tier (High and Dark Templar, Archons, Reavers, Scouts, Corsairs); no Fleet Beacon or Arbiter Tribunal, so no Carriers, Arbiters or Recall
+
 ## Campaign rules
-Tech: full Protoss tree. No attack announcements.
+Tech: late tier without Carriers and Arbiters (TECH_LEVEL late). No attack announcements.
 
 ## Mission design deviations
 - None.

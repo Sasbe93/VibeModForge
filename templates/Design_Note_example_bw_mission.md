@@ -46,7 +46,21 @@ TARGET_DURATION: 10 :: Easy 14 / Hard 8 :: Destroy the Hatchery on the ridge=6; 
 
 ## Objective paths
 OBJECTIVE_PATHS: Destroy the Hatchery on the ridge :: start to the ridge hatchery, about 100 tiles / 33 s at Marine speed (Fastest) :: two zergling packs on the ridge road (around 36,46 and 60,22) plus the ridge gate held by Sunken Colonies, zerglings and hydralisks (three path encounters); scripted waves leave Ridge Gate for Outpost Front every 160 s from t=240 s, first arrival about t=256 s, from the north-east :: the player has to fight two packs, then push two ramps and the gate, while the hatchery still feeds those waves
-OBJECTIVE_PATHS: Reach the survey squad in the eastern ravine :: start to Ravine Camp, 77 tiles / 26 s at Marine speed (Fastest) :: two zergling packs on the southern track (around 46,82 and 66,82), two threat encounters, well clear of the camp :: the player has to fight through both packs to reach the squad; the camp itself is not under fire
+OBJECTIVE_PATHS: Reach the survey squad in the eastern ravine :: start to Ravine Camp, 77 tiles / 26 s at Marine speed (Fastest) :: two zergling packs on the southern track (around 46,82 and 66,82), two threat encounters, well clear of the camp; two hydralisk pickets above the track cover the air line :: the player has to fight through both packs to reach the squad; the camp itself is not under fire
+
+## Shortcuts
+Checked from what the player can field in this chapter (TECH_LEVEL early: Barracks tier, no Factory or Starport, so no
+flyers, Dropships or Recall). Liftable buildings: Command Center and Barracks.
+OBJECTIVE_SHORTCUTS: Reach the survey squad in the eastern ravine :: lift-off (a Barracks or the Command Center flies to the camp, lands and trains a marine or SCV) :: two hydralisk pickets stand on the ash rises above the track (around 48,73 and 70,78), right on the air line from the outpost, so a floating Barracks meets two fights just like the walk; no flyers or transports exist in this chapter
+OBJECTIVE_SHORTCUTS: Destroy the Hatchery on the ridge :: none that skips the fight (a destroy target needs an army at the hatchery) :: the hatchery has to be killed; lifting a building to the ridge gains nothing
+
+## Pressure sources
+The ridge waves only run while the ridge hatchery stands, and that hatchery is the victory target: the waves stop
+exactly when the mission is won. The town AI also runs from the Fen expansion, so breaking one base never leaves the
+map without pressure while an objective is still open.
+
+## Tech level
+TECH_LEVEL: early :: chapter 2 of 3 (example campaign) :: Barracks tier only (Marine, Firebat, Medic, Bunker, Missile Turret, Academy with Stim Packs and Comsat), weapon and armor upgrades to level 1; the Factory and Starport arrive in chapter 3 with the survey squad's findings
 
 ## Map
 - South-west: the player's outpost, mineral line backed by water, bunker toward the road.
@@ -90,7 +104,7 @@ PHASES: base, explore, combat
 Waves of 2-4 zerglings (later 2 hydralisks) every ~160 s, only while the hatchery stands. Start resources 300/100.
 
 ## Campaign rules
-Tech: full tree (example). No attack announcements. Every reward has an in-world source (REWARD_WHY above).
+Tech: handed out chapter by chapter (this chapter: TECH_LEVEL early). No attack announcements. Every reward has an in-world source (REWARD_WHY above).
 
 ## Mission design deviations
 - none

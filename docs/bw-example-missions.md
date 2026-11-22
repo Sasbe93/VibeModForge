@@ -14,16 +14,16 @@ variety rule, predelivery check `mission_type_variety`). The stories here are ne
 
 ## The examples
 
-| Example | Complexity | Mission type | Start setup | Player race / tileset | What it demonstrates |
-|---|---|---|---|---|---|
-| Outpost Nine (`tools/bw/example_mission.py`) | simple | destroy a target + reach | build-up | Terran / Badlands 128x96 | the base example: organic terrain, ridge ramps, Blizzard mineral formations, voiced briefing, waves that stop when their hatchery dies, rescued squad as reward |
-| Glass Reef (`examples/ex_glass_reef.py`) | simple | no-base hero squad, find and use | no-base | Protoss / Twilight | hero on a rescuable slot, two legs with guarded spots, ambush that springs on an event, enemy without a base, rescue side objective (units) |
-| Last Light (`examples/ex_last_light.py`) | simple | survive a meaningful timer | established | Terran / Desert | visible countdown, START_DEFENSE_WHY, waves every 60-120 s from three directions fed by real hives, no side objective |
-| Cinder Run (`examples/ex_cinder_run.py`) | medium | rescue and return | small-base | Zerg / Ashworld | long dangerous path both ways, rescue pocket rules, unit availability (only the captive Queen), pursuit groups, AI_IDLE_OK outpost |
-| Thorn Road (`examples/ex_thorn_road.py`) | medium | escort with ambushes | small-base | Protoss / Jungle 128x96 | allied escort hero in his own slot (HERO_SLOT), legs started by waypoints, three triggered ambushes, destroy side objective whose reward is information |
-| Relay Watch (`examples/ex_relay_watch.py`) | medium | capture and hold control points | build-up | Terran / Badlands 128x96 | capture by presence, turret hand-over as reward, hold countdown with a defeat condition, expanding enemy AI with free sites, rescue side objective |
-| Hask Hunt (`examples/ex_hask_hunt.py`) | complex | kill a boss, with a twist | build-up | Zerg / Desert 128x128 | enemy general in his own slot, escape to a second fortress with a countdown, objective text that changes, two enemy town AIs, reach side objective (information) |
-| Ember Pact (`examples/ex_ember_pact.py`) | complex | multi-phase: squad -> base -> assault | no-base, base in phase 2 | Protoss / Jungle 128x128 | truce then alliance by trigger (vision starts at the pact), allied hero, dormant outpost given as reward, morph-chain targets, protect side objective |
+| Example | Complexity | Mission type | Start setup | Player race / tileset | Tech level | What it demonstrates |
+|---|---|---|---|---|---|---|
+| Outpost Nine (`tools/bw/example_mission.py`) | simple | destroy a target + reach | build-up | Terran / Badlands 128x96 | early | the base example: organic terrain, ridge ramps, Blizzard mineral formations, voiced briefing, waves fed by the ridge hatchery that is itself the victory target, town AI that needs both hatcheries, ravine reach guarded against a Barracks lift-off, rescued squad as reward |
+| Glass Reef (`examples/ex_glass_reef.py`) | simple | no-base hero squad, find and use | no-base | Protoss / Twilight | early (builds nothing) | hero on a rescuable slot, two legs with guarded spots, ambush that springs on an event, enemy without a base, rescue side objective (units) |
+| Last Light (`examples/ex_last_light.py`) | simple | survive a meaningful timer | established | Terran / Desert | mid | visible countdown, START_DEFENSE_WHY, waves every 60-120 s from three directions fed by real hives, no side objective |
+| Cinder Run (`examples/ex_cinder_run.py`) | medium | rescue and return | small-base | Zerg / Ashworld | mid (no Queens) | long dangerous path both ways, rescue pocket rules, unit availability (only the captive Queen), pursuit groups, AI_IDLE_OK outpost |
+| Thorn Road (`examples/ex_thorn_road.py`) | medium | escort with ambushes | small-base | Protoss / Jungle 128x96 | mid | allied escort hero in his own slot (HERO_SLOT), legs started by waypoints, three triggered ambushes, destroy side objective whose reward is information |
+| Relay Watch (`examples/ex_relay_watch.py`) | medium | capture and hold control points | build-up | Terran / Badlands 128x96 | mid (no Starport) | capture by presence, turret hand-over as reward, hold countdown with a defeat condition, expanding enemy AI with free sites, a wave column independent of the enemy base, relays that a landed Barracks cannot take, rescue side objective |
+| Hask Hunt (`examples/ex_hask_hunt.py`) | complex | kill a boss, with a twist | build-up | Zerg / Desert 128x128 | late | enemy general in his own slot, escape to a second fortress with a countdown, objective text that changes, two enemy town AIs, reach side objective (information) |
+| Ember Pact (`examples/ex_ember_pact.py`) | complex | multi-phase: squad -> base -> assault | no-base, base in phase 2 | Protoss / Jungle 128x128 | late | truce then alliance by trigger (vision starts at the pact), allied hero, dormant outpost given as reward, morph-chain targets, protect side objective |
 
 ## Running
 ```
@@ -41,5 +41,11 @@ Requirements as for every BW mission: isomtool and tileset files (`docs/bw-terra
 - Capture objectives are not traced as a path type; give them clear OBJECTIVE_PATHS lines.
 - A unit in `HERO_IDS` cannot be used as a plain rescuable unit; rename an ordinary unit instead.
 - On Jungle, ramp generation is less reliable: ask for one ramp and verify the plateau is reachable.
+- Every example declares `TECH_LEVEL:` and builds its tech with `missionkit.tech_level(race, level, drop=...)`; a
+  core ability whose research building is held back (Disruption Web without a Fleet Beacon) starts researched.
+- Every reach/rescue/capture objective has an `OBJECTIVE_SHORTCUTS:` line: what the player could lift, fly or drop
+  there and why it does not skip the objective (anti-air on the air line, a counted unit that cannot fly, the
+  location must be cleared first). Glass Reef accepts the Observer scouting the keepers with `SHORTCUT_OK:`.
+- No example lets one enemy base, short of the victory target, switch off every attack (enemy_base_pressure).
 - Keep a 2-tile free ring around every town hall (no water, cliffs or doodads), and keep the player's mineral line
   backed by water or cliff.

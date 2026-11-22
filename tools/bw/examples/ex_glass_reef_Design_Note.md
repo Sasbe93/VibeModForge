@@ -94,8 +94,16 @@ PHASES: explore, combat
 ## Difficulty
 Four guard packs and one ambush; no reinforcements for the player. No waves (the brood has no base here).
 
+## Shortcuts
+No base: the squad has only what it brings, including one Observer.
+OBJECTIVE_SHORTCUTS: Find the shrine keepers in the southern ruins :: flyer (the Observer) :: accepted, see SHORTCUT_OK; the later legs count only Praetor Aunvar, who walks
+SHORTCUT_OK: Keepers :: flyer :: the Observer is the squad's scout; spotting the keepers from the air is the intended way to find them, and finding them only starts the trip: the Crystal Shrine and the Waygate count only Praetor Aunvar, who has to walk the guarded road with the keepers
+
+## Tech level
+TECH_LEVEL: early :: stand-alone (early chapter, hero squad) :: the squad builds nothing in this mission (no Probe, Nexus or production), so the tech settings are not used
+
 ## Campaign rules
-Tech: full tree (example; the squad builds nothing). No attack announcements.
+Tech: not used (the squad builds nothing; TECH_LEVEL early). No attack announcements.
 
 ## Mission design deviations
 - No base and no enemy base: a hero squad mission (classic start type "no base").

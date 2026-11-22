@@ -124,6 +124,10 @@ m.loc('Ravine Camp', RX-6, RY-6, RX+8, RY+6)
 # the optional reach has to be a real path, not an empty walk
 K.scatter(m, g, ZERGLING, 4, 46, 82, P2, 1.5)
 K.scatter(m, g, ZERGLING, 4, 66, 82, P2, 1.5)
+# hydralisk pickets above the track, on the straight line from the outpost to the camp: a lifted Barracks flown to the
+# ravine (land, train a marine there) meets the same two fights as the walk (check objective_shortcuts)
+K.scatter(m, g, HYDRA, 2, 48, 73, P2, 1.0)
+K.scatter(m, g, HYDRA, 2, 70, 78, P2, 1.0)
 # two more scout packs on the ridge road, so the main destroy path has three encounters
 # (the two packs plus the ridge gate) for a 6-minute budget of the hatchery objective
 K.scatter(m, g, ZERGLING, 4, 36, 46, P2, 1.5)
@@ -164,6 +168,9 @@ CAST.brief(OBJ, [
 
 # ---------------- triggers ----------------
 m.startres = {P1: (300, 100)}
+# early chapter: barracks tier only (no Factory/Starport, no top tier, weapon/armor level 1); design note TECH_LEVEL early.
+# Without a Starport there are no flyers or Dropships to skip the ravine road (check objective_shortcuts).
+m.tech = K.tech_level('Terran', 'early')
 m.hyperplayer = P2
 L = m.L
 def objtext(opt, done_main=False, opt_state=''):

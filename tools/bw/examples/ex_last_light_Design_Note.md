@@ -82,8 +82,15 @@ PHASES: defend, combat
 Twelve scripted waves in fifteen minutes (zerglings and hydralisks, ultralisks from the fourth north/east wave). The town AI
 of both hive clusters attacks on its own as well. Start resources 600/200.
 
+## Shortcuts
+A survive objective: there is no place to reach, so lifting or flying gains nothing (check objective_shortcuts finds
+no Bring objective).
+
+## Tech level
+TECH_LEVEL: mid :: stand-alone (middle chapter of a Terran campaign) :: Barracks, Factory and Starport tier (Siege Tanks, Goliaths, Wraiths, Dropships); no Science Facility tier, so no Vessels, Battlecruisers or nukes for the hold
+
 ## Campaign rules
-Tech: full tree (example). No attack announcements.
+Tech: Factory and Starport tier (TECH_LEVEL mid). No attack announcements.
 
 ## Mission design deviations
 - Established start and four towers (see START_SETUP and START_DEFENSE_WHY): the station is a fortress under siege.

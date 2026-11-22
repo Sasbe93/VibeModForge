@@ -97,6 +97,17 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
    the objective's budget; the main objective completable before the first path encounter or scripted wave.
    Exemption 'OBJECTIVE_PATHS_EASY_OK: <reason>' waives the difficulty rules only. Escort length and reachability
    stay in check 46.
+52 objective_shortcuts (check_objective_shortcuts.py, mission_model.py): a Bring-to-location objective cannot be skipped
+   with what the player owns or can build: lift-off (fly a Terran building over, land, train a counted unit), flyers,
+   transports (Dropship, Shuttle, Overlord with Ventral Sacs), Recall. An open vector (fewer anti-air encounters on
+   the air line than min(2, ground-path encounters)) FAILs unless 'SHORTCUT_OK: <objective> :: <vector> :: <reason>';
+   any vector needs 'OBJECTIVE_SHORTCUTS: <objective> :: <vectors> :: <how blocked>'. WARN: nydus, cloak
+53 enemy_base_pressure (check_enemy_base_pressure.py): no single enemy base, reachable over ground and not the victory
+   target, feeds every pressure source (scripted waves gated on its buildings, also through switches and morph
+   chains, plus its attacking town AI). Exemption 'PRESSURE_SINGLE_OK: <reason>'
+54 tech_restriction (check_tech_restriction.py, data/bw/tech/bw_tech_tiers.json): design note 'TECH_LEVEL:
+   <early|mid|late|full> :: <chapter> :: <what and why>'; FAIL when nothing is restricted and the level is not full,
+   early with top-tier or most middle-tier tech, mid with the whole top tier (generator: missionkit.tech_level)
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -645,6 +656,12 @@ def run_safe(path):
     R+=_guard(R,'50 side objective variety',lambda: check_side_objective_variety.run(path),[])
     import check_objective_paths
     R+=_guard(R,'51 objective paths',lambda: check_objective_paths.run(path),[])
+    import check_objective_shortcuts
+    R+=_guard(R,'52 objective shortcuts',lambda: check_objective_shortcuts.run(path),[])
+    import check_enemy_base_pressure
+    R+=_guard(R,'53 enemy base pressure',lambda: check_enemy_base_pressure.run(path),[])
+    import check_tech_restriction
+    R+=_guard(R,'54 tech restriction',lambda: check_tech_restriction.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

@@ -104,8 +104,16 @@ PHASES: base, explore, combat, return
 Six Terran waves while the compound stands, four guarded spots on the way out, two pursuit groups on the way back.
 Start resources 400/100.
 
+## Shortcuts
+Zerg at the Lair tier: Overlords, Mutalisks and Scourge fly, but the objective counts only the Queen Ixa (no Queens
+can be morphed), and the Queen flies by herself on the way home.
+OBJECTIVE_SHORTCUTS: Recover the captive Queen from the holding pens :: flyer (Ixa flies home by herself) :: two anti-air posts cover her straight flight home (the bunker with its marines around 64,56-60 and the marine squad around 38,68), and pursuit groups follow her; Mutalisks do not count for the Bring
+
+## Tech level
+TECH_LEVEL: mid :: stand-alone (middle chapter of a Zerg campaign) :: Lair tier (Zergling, Hydralisk, Lurker, Mutalisk, Scourge), no Hive tier; no Queens, so only the rescued Ixa counts
+
 ## Campaign rules
-Tech: full tree except the Queen (the player cannot morph Queens in this mission, so only Ixa counts). No attack announcements.
+Tech: Lair tier without Queens (TECH_LEVEL mid; only Ixa counts). No attack announcements.
 
 ## Mission design deviations
 - AI_IDLE_OK for the wrecked outpost (see AI).

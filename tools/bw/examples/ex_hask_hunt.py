@@ -139,6 +139,7 @@ CAST.brief(objtext(0), [
 
 # ---------------- triggers ----------------
 m.startres = {P1: (300, 50)}
+m.tech = K.tech_level('Zerg', 'late', drop={137, 140, 39, 44, 62})   # late chapter: no Greater Spire or Ultralisk Cavern yet
 m.hyperplayer = P2
 L = m.L
 m.T([P1], [m.ALWAYS()],

@@ -122,6 +122,7 @@ CAST.brief(OBJ, [
 
 # ---------------- triggers ----------------
 m.startres = {P1: (600, 200)}
+m.tech = K.tech_level('Terran', 'mid')   # middle chapter: Factory and Starport tier, no Science Facility tier
 m.hyperplayer = P2
 L = m.L
 m.T([P1], [m.ALWAYS()],

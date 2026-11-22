@@ -55,7 +55,7 @@ m.ownr = [6, 0, 5, 0, 0, 0, 0, 3] + [0]*4          # human Zerg, Terran compound
 m.side = [0, 7, 1, 7, 7, 7, 7, 0] + [4]*4
 m.colr = [3, 1, 0, 2, 4, 5, 6, 7]; sclib.RENDER_COLR = m.colr
 m.forces = [0, 3, 1, 3, 3, 3, 3, 0]; m.forcenames = ['Brood', 'Compound', '', '']; m.forceflags = [2, 0, 0, 0]
-m.tech = dict(player=0, units=set(range(228)) - {QUEEN}, upgrades={i: UPG_MAX.get(i, 1) for i in range(61)}, techs=set(range(44)))
+m.tech = K.tech_level('Zerg', 'mid', drop={QUEEN})   # middle chapter: Lair tier, no Hive tier; no Queens (only Ixa counts)
 g = K.Grid(m)
 
 # ---------------- the Home Nest: small base ----------------

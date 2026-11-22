@@ -142,6 +142,7 @@ CAST.brief(objtext(0), [
 
 # ---------------- triggers ----------------
 m.startres = {P1: (0, 0)}
+m.tech = K.tech_level('Protoss', 'late', drop={169, 170, 71, 72})   # late chapter: everything but Fleet Beacon/Arbiter Tribunal (Carrier, Arbiter)
 m.hyperplayer = P2
 L = m.L
 # truce at the start (no vision: alliance_switch), the same for the marshal's slot

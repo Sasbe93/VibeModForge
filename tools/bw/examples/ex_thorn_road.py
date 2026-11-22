@@ -132,6 +132,7 @@ CAST.brief(objtext(0), [
 
 # ---------------- triggers ----------------
 m.startres = {P1: (300, 150)}
+m.tech = K.tech_level('Protoss', 'mid')   # middle chapter: Citadel/Robotics/Stargate tier, no Templar Archives tier
 m.hyperplayer = P2
 L = m.L
 # allied from the first second, vision both ways (sclib adds the vision to the alliance triggers)
