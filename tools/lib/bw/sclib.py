@@ -1,8 +1,31 @@
 """Shared builder for 'The Silent Swarm' campaign maps (CHK writer, ISOM terrain via Chkdraft core, TTS, preview)."""
-import struct, os, math, random, subprocess, json, asyncio
+import struct, os, math, random, subprocess, json, asyncio, sys, shutil, tempfile
 from eudplib.bindings._rust import mpqapi
 TOOLS=os.path.dirname(os.path.abspath(__file__))
+if os.name=='nt' and not sys.flags.utf8_mode and not os.environ.get('_VMF_UTF8_WARNED'):
+    # without UTF-8 mode, open() and pipes use the ANSI code page (cp1252): non-ASCII text in design notes, voice
+    # scripts and check output turns into mojibake or raises UnicodeEncodeError. README "Windows setup".
+    os.environ['_VMF_UTF8_WARNED']='1'
+    print('WARNING: Python is not in UTF-8 mode; set PYTHONUTF8=1 (README, Windows setup)',file=sys.stderr)
 TSNAMES=['badlands','platform','install','ashworld','jungle','desert','ice','twilight']
+def _isomtool():
+    """the ISOM terrain tool: $ISOMTOOL, else tools/lib/bw/isomtool (isomtool.exe on Windows)"""
+    if os.environ.get('ISOMTOOL'): return os.environ['ISOMTOOL']
+    return os.path.join(TOOLS,'isomtool.exe' if os.name=='nt' else 'isomtool')
+def _edge_tts():
+    """edge-tts command: the CLI on PATH, else the module of this Python (pip's Scripts folder is often not on PATH on Windows)"""
+    if shutil.which('edge-tts'): return ['edge-tts']
+    import importlib.util
+    if importlib.util.find_spec('edge_tts'): return [sys.executable,'-m','edge_tts']
+    raise RuntimeError('edge-tts not found: pip install edge-tts (see DEPENDENCIES.md)')
+def _font(n):
+    """bold label font: DejaVu (Linux), Arial (Windows), else Pillow's built-in font"""
+    from PIL import ImageFont
+    for f in ('DejaVuSans-Bold.ttf','/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf','arialbd.ttf','Arial Bold.ttf'):
+        try: return ImageFont.truetype(f,n)
+        except OSError: pass
+    try: return ImageFont.load_default(n)
+    except TypeError: return ImageFont.load_default()
 def _vcod():
     """StarEdit verification code (VCOD). Not shipped: it is Blizzard data present in every map.
     Generate it with tools/bw/extract_vcod.py (see external/README.md)."""
@@ -41,7 +64,7 @@ BUILDSIZE.update({116:(4,3),123:(3,2),REFINERY:(4,2),157:(4,2),EXTRACTOR:(4,2),
 GASB={REFINERY,EXTRACTOR,157}   # pre-placed gas buildings must carry the geyser's gas amount
 
 def _peak(f):
-    r=subprocess.run(['ffmpeg','-hide_banner','-i',f,'-af','volumedetect','-f','null','-'],capture_output=True,text=True).stderr
+    r=subprocess.run(['ffmpeg','-hide_banner','-i',f,'-af','volumedetect','-f','null','-'],capture_output=True,text=True,errors='replace').stderr
     import re; return float(re.search(r'max_volume: (-?[\d.]+) dB',r).group(1))
 def loudify(src):
     """voice mastering: compression + limiter, then peak-normalise to -1 dBFS so lines cut through unit sounds."""
@@ -66,10 +89,10 @@ def _voice_script_render(script,voice,pitch,rate,fx,out):
         with tempfile.TemporaryDirectory() as d:
             m=os.path.join(d,'s.mp3'); w=os.path.join(d,'s.wav')
             for k in range(6):
-                q=subprocess.run(['edge-tts','--voice',voice,f'--pitch={pitch}',f'--rate={r}','--text',text,'--write-media',m],capture_output=True)
+                q=subprocess.run(_edge_tts()+['--voice',voice,f'--pitch={pitch}',f'--rate={r}','--text',text,'--write-media',m],capture_output=True)
                 if q.returncode==0 and os.path.getsize(m)>1000: break
                 import time; time.sleep(3+k*4)
-            else: raise RuntimeError('edge-tts failed: '+q.stderr.decode()[-300:])
+            else: raise RuntimeError('edge-tts failed: '+q.stderr.decode(errors='replace')[-300:])
             subprocess.run(['ffmpeg','-y','-loglevel','error','-i',m,'-ar','24000','-ac','1',w],check=True)
             return sf.read(w,dtype='float32')[0]
     a,_=VD.render(script,synth,24000,1.0)
@@ -165,18 +188,18 @@ class Map:
                 if s.rnd.random()<0.25: s.blob(min(max(x+ox*2,0),s.W-1),min(max(y+oy*2,0),s.H-1),r*0.6,t,0.5)   # ragged spurs
             i+=seg
     def build_terrain(s):
-        tmp=f'/tmp/isom_{os.getpid()}'
+        tmp=os.path.join(tempfile.gettempdir(),f'isom_{os.getpid()}')
         with open(tmp+'.txt','w') as f:
             f.write(f'{s.W} {s.H} {s.base_t}\n')
             seen=set()
             for p in s.paint:
                 f.write('%d %d %d %d\n'%p)
         cv5=f'{TOOLS}/tileset/{TSNAMES[s.ts]}.cv5'
-        if not os.path.exists(f'{TOOLS}/isomtool') or not os.path.exists(cv5):
-            raise SystemExit(f'build_terrain needs the ISOM terrain tool {TOOLS}/isomtool and the tileset file {cv5}. '
+        if not os.path.exists(_isomtool()) or not os.path.exists(cv5):
+            raise SystemExit(f'build_terrain needs the ISOM terrain tool {_isomtool()} and the tileset file {cv5}. '
                              'Build isomtool and install the tileset files first (docs/bw-terrain-setup.md). '
                              'There is no fallback terrain: do not ship rectangle plateaus.')
-        r=subprocess.run([f'{TOOLS}/isomtool',cv5,str(s.ts),tmp+'.txt',tmp+'.bin'],capture_output=True,text=True)
+        r=subprocess.run([_isomtool(),cv5,str(s.ts),tmp+'.txt',tmp+'.bin'],capture_output=True,text=True,errors='replace')
         if r.returncode!=0 or not os.path.exists(tmp+'.bin'):
             raise SystemExit(f'isomtool failed (exit {r.returncode}): {r.stderr.strip()[-400:]} (docs/bw-terrain-setup.md)')
         d=open(tmp+'.bin','rb').read()
@@ -266,14 +289,14 @@ class Map:
             _voice_script_render(script,voice,pitch,rate,fx,out)
         if not os.path.exists(out):
             for k in range(6):
-                r=subprocess.run(['edge-tts','--voice',voice,f'--pitch={pitch}',f'--rate={rate}','--text',text,'--write-media',mp3],capture_output=True)
+                r=subprocess.run(_edge_tts()+['--voice',voice,f'--pitch={pitch}',f'--rate={rate}','--text',text,'--write-media',mp3],capture_output=True)
                 if r.returncode==0 and os.path.getsize(mp3)>1000: break
                 _t.sleep(3+k*4)
-            else: raise RuntimeError('edge-tts failed: '+r.stderr.decode()[-300:])
+            else: raise RuntimeError('edge-tts failed: '+r.stderr.decode(errors='replace')[-300:])
             af=['-af',fx] if fx else []
             subprocess.run(['ffmpeg','-y','-loglevel','error','-i',mp3]+af+['-ar','22050','-ac','1','-acodec','pcm_s16le',out],check=True)
         out=trim_tail(loudify(out))
-        ms=int(float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',out],capture_output=True,text=True).stdout)*1000)
+        ms=int(float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',out],capture_output=True,text=True,errors='replace').stdout)*1000)
         arch=f'staredit\\wav\\{key}.wav'; sid=s.S(arch); s.wavfiles[arch]=out
         if sid not in s.wavs: s.wavs.append(sid)
         return sid,ms
@@ -748,7 +771,8 @@ def validate(path):
     wavs=[w for w in struct.unpack('<512I',s['WAV ']) if w]
     for w in wavs:
         data=bytes(m.extract_file(strs[w-1])); assert data[:4]==b'RIFF', strs[w-1]
-    r=subprocess.run(['python3','-c',f"import eudplib as ep; ep.LoadMap({path!r}); print('LOADMAP_OK')"],capture_output=True,text=True,cwd='/tmp')
+    del m   # release the map before LoadMap opens it (an open handle locks it on Windows: error 32)
+    r=subprocess.run([sys.executable,'-c',f"import eudplib as ep; ep.LoadMap({path!r}); print('LOADMAP_OK')"],capture_output=True,text=True,errors='replace',cwd=tempfile.gettempdir())
     assert 'LOADMAP_OK' in r.stdout, r.stdout+r.stderr
     return dict(trigs=len(s['TRIG'])//2400,brief=len(s['MBRF'])//2400,units=len(s['UNIT'])//36,strings=c,wavs=len(wavs),size=os.path.getsize(path))
 
@@ -783,7 +807,7 @@ def render(path,png,labels,title):
     S=1024/(W*32) if W>=H else 1024/(H*32)
     img=big.resize((int(W*32*S),int(H*32*S)),Image.LANCZOS).convert('RGBA')
     ov=Image.new('RGBA',img.size,(0,0,0,0)); dr=ImageDraw.Draw(ov)
-    font=lambda n:ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',n)
+    font=_font
     st=s['STR ']; c=struct.unpack_from('<H',st)[0]; offs=struct.unpack_from(f'<{c}H',st,2)
     gs=lambda k: st[offs[k-1]:].split(b'\0')[0].decode() if k else ''
     UC={0:(190,80,255),1:(235,50,50),2:(60,130,255),3:(250,200,40),4:(60,220,120),5:(240,240,240),6:(255,120,200),7:(140,90,40),11:(120,230,255)}
@@ -825,10 +849,10 @@ def render(path,png,labels,title):
 
 # ---------- doodads ----------
 def _pure_groups(ts,terrain):
-    tmp=f'/tmp/pure_{ts}_{terrain}'
+    tmp=os.path.join(tempfile.gettempdir(),f'pure_{ts}_{terrain}')
     if not os.path.exists(tmp+'.bin'):
         open(tmp+'.txt','w').write(f'16 16 {terrain}\n')
-        subprocess.run([f'{TOOLS}/isomtool',f'{TOOLS}/tileset/{TSNAMES[ts]}.cv5',str(ts),tmp+'.txt',tmp+'.bin'],capture_output=True)
+        subprocess.run([_isomtool(),f'{TOOLS}/tileset/{TSNAMES[ts]}.cv5',str(ts),tmp+'.txt',tmp+'.bin'],capture_output=True)
     d=open(tmp+'.bin','rb').read()[:16*16*2]
     return {v>>4 for v in struct.unpack('<256H',d)}
 

@@ -28,14 +28,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(ROOT, 'tools', 'lib', 'bw'))
 
-def _sections(path):
+def _mpq_file(path, name):
+    """one file from the map; the MPQ handle is released before returning (an open handle locks the map on
+    Windows, and the map design check below opens it again in a subprocess)"""
     from eudplib.bindings._rust import mpqapi
-    q = mpqapi.MPQ.open(path); d = bytes(q.extract_file('staredit\\scenario.chk')); S = {}; i = 0
+    return bytes(mpqapi.MPQ.open(path).extract_file(name))
+
+def _sections(path):
+    d = _mpq_file(path, 'staredit\\scenario.chk'); S = {}; i = 0
     while i + 8 <= len(d):
         k = d[i:i+4].decode('latin1'); n = struct.unpack_from('<i', d, i+4)[0]
         if n < 0: break
         S[k] = S.get(k, b'') + d[i+8:i+8+n] if k in ('MTXM',) else d[i+8:i+8+n]; i += 8 + n
-    return S, q
+    return S
 
 def _strings(S):
     st = S.get('STR ', b'')
@@ -119,7 +124,7 @@ def run(path):
         except Exception as e:
             R.append(f'FAIL {label} check crashed: {type(e).__name__}: {e}'.rstrip()[:400])
     try:
-        S, mpq = _sections(path)
+        S = _sections(path)
     except Exception as e:
         return [f'FAIL story/briefing checks: cannot read the map: {type(e).__name__}: {e}']
     STR = _strings(S); TR = _trigs(S.get('TRIG', b'')); BR = _trigs(S.get('MBRF', b''))
@@ -130,7 +135,7 @@ def run(path):
     def wav_exists(sid):
         if sid in wav_ok: return wav_ok[sid]
         name = STR.get(sid, '')
-        try: ok = bool(name) and bytes(mpq.extract_file(name))[:4] == b'RIFF'
+        try: ok = bool(name) and _mpq_file(path, name)[:4] == b'RIFF'
         except Exception: ok = False
         wav_ok[sid] = ok; return ok
 

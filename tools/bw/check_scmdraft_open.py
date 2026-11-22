@@ -67,7 +67,10 @@ def run(path,force_real=False):
     R=static(path); h=harness()
     if h and (force_real or os.environ.get('SCMDRAFT_REAL','1')!='0'): R+=real(path,h)
     elif force_real: R.append('FAIL scmdraft_open: --real requested but no harness (see tools/bw/scmdraft_harness/README.md)')
-    else: R.append('OK   scmdraft_open (real run skipped: '+('SCMDRAFT_REAL=0' if h else 'no ScmDraft harness installed')+'; static result only)')
+    else:
+        why='SCMDRAFT_REAL=0' if h else ('the ScmDraft harness runs ScmDraft under wine and needs Linux or WSL; on Windows open the map in ScmDraft 2 yourself'
+                                         if os.name=='nt' else 'no ScmDraft harness installed')
+        R.append(f'OK   scmdraft_open (real run skipped: {why}; static result only)')
     return R
 if __name__=='__main__':
     a=sys.argv[1:]; fr='--real' in a; a=[x for x in a if x!='--real']; rc=0

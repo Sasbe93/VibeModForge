@@ -170,7 +170,9 @@ def _guard(R,label,fn,default=None):
     except Exception as e:
         R.append(f'FAIL {label} check crashed: {type(e).__name__}: {e}'[:400]); return default
 def run(path,R=None):
-    S=secs(path); M=mpqapi.MPQ.open(path); R=[] if R is None else R
+    # no MPQ handle is kept open here: on Windows an open handle locks the map, and every later open (other checks,
+    # eudplib.LoadMap, check subprocesses) fails with error 32. Open, read, release (tools/bw/sim_windows_locks.py).
+    S=secs(path); R=[] if R is None else R
     def res(ok,msg): R.append(('OK  ' if ok else 'FAIL')+' '+msg)
     STR=S['STR ']
     def st(j):
@@ -250,7 +252,7 @@ def run(path,R=None):
         if sid in cache: return cache[sid]
         f=f'{td}/{sid}.wav'
         try:
-            open(f,'wb').write(bytes(M.extract_file(st(sid))))
+            open(f,'wb').write(bytes(mpqapi.MPQ.open(path).extract_file(st(sid))))
             d=float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',f],capture_output=True,text=True).stdout)*1000
         except Exception as ex:   # unreadable/corrupt sound in the MPQ: report as finding, do not crash
             BADWAV.append(f'{st(sid)!r}: {type(ex).__name__} {ex}'[:160]); cache[sid]=(0.0,0.0,0.0); return cache[sid]
