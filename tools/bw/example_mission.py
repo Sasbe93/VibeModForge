@@ -2,8 +2,8 @@
 """EXAMPLE StarCraft: Brood War campaign mission, built end to end with sclib + missionkit.
 
 Run from the repository root:   python3 tools/bw/example_mission.py [--no-checks]
-Writes output/example_mission/Example_Mission.scx plus Design_Note_Example_Mission.md, Voice_Script_Example_Mission.md
-and a minimap PNG, then runs the delivery checks (predelivery_check.py incl. map design and cliff shape, placement
+Writes output/example_mission/Example_Mission.scx plus Design_Note_Example_Mission.md, Voice_Script_Example_Mission.md,
+a minimap PNG and a routes PNG, then runs the delivery checks (predelivery_check.py incl. map design and cliff shape, placement
 check, trigger simulation). The scenario is a neutral placeholder: copy this file as the base for a real mission and
 replace terrain, cast, story and objectives with your own (keep the structure and the checks).
 
@@ -117,6 +117,10 @@ RX, RY = 88, 82
 dep = K.put(m, g, SUPPLY, RX+3, RY-2, P8, 0, 4); bun = K.put(m, g, 125, RX-2, RY-3, P8, 0, 4)
 K.scatter(m, g, MARINE, 3, RX, RY+1, P8, 1.2); K.scatter(m, g, 32, 1, RX+1, RY+2, P8, 0.8); K.scatter(m, g, 34, 1, RX-1, RY+2, P8, 0.8)
 m.loc('Ravine Camp', RX-6, RY-6, RX+8, RY+6)
+# two brood scout packs on the southern track to the ravine, far from the camp (rescue-scene range is 8 tiles):
+# the optional reach has to be a real path, not an empty walk
+K.scatter(m, g, ZERGLING, 4, 46, 82, P2, 1.5)
+K.scatter(m, g, ZERGLING, 4, 66, 82, P2, 1.5)
 
 # ---------------- locations ----------------
 m.loc('Outpost', HX-4, HY-10, HX+24, HY+12)
@@ -205,6 +209,8 @@ shutil.copy(os.path.join(ROOT, 'templates', 'Design_Note_example_bw_mission.md')
 json.dump({'bases': [{'hall': [EX+1, EY+1], 'reason': 'story: the brood holds the ridge above the road; two normal ramps lead up'}]},
           open(os.path.splitext(MAP)[0] + '.highground_ok.json', 'w'), indent=1)
 render(MAP, os.path.join(OUT, NAME + '_minimap.png'), {}, 'EXAMPLE: Outpost Nine')
+import path_tool
+path_tool.analyze(MAP, os.path.join(OUT, NAME + '_routes.png'))
 print('wrote', MAP)
 
 # ---------------- delivery checks (deliver only on 0 FAIL) ----------------

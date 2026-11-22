@@ -86,6 +86,13 @@ Robustness: a crashing sub-check is a FAIL with its error and the remaining chec
 50 side_objective_variety (check_side_objective_variety.py): design note 'SIDE_OBJECTIVE: <name> :: <type> :: <reward>'
    for every optional objective; at most one destroy side objective per mission and never in two neighbouring
    missions, unless 'SIDE_OBJECTIVE_REPEAT_OK: <reason>' (the reward follows from the objective: REWARD_WHY, check 41)
+51 objective_paths (check_objective_paths.py, tools/bw/path_tool.py): every main and side objective is judged by its
+   real paths (start to each target, a rescue there and back, escort routes, scripted waves to the player base with
+   travel and arrival times, approach directions and chokes). Design note 'OBJECTIVE_PATHS: <objective> :: <path(s)
+   with length in tiles/travel time> :: <threats / waves and directions> :: <why it is a challenge>'. FAIL: a missing
+   line; a rescue or reach path with fewer than 2 threat encounters; a survive objective with fewer than 3 scripted
+   waves arriving within the timer, or all waves entering through one choke. Exemption 'OBJECTIVE_PATHS_EASY_OK: <reason>'
+   waives the difficulty rules (not a missing line). Escort length and reachability stay in check 46.
 """
 DBG=0
 import sys,os,struct,json,re,subprocess,tempfile
@@ -630,6 +637,8 @@ def run_safe(path):
     R+=_guard(R,'49 destroy target morph chain',lambda: check_morph_chain.run(path),[])
     import check_side_objective_variety
     R+=_guard(R,'50 side objective variety',lambda: check_side_objective_variety.run(path),[])
+    import check_objective_paths
+    R+=_guard(R,'51 objective paths',lambda: check_objective_paths.run(path),[])
     return R
 if __name__=='__main__':
     rc=0

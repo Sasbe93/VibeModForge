@@ -7,8 +7,9 @@ Escort detection: an Order action (46) for a computer player that is allied with
 Status Ally by a human-owned trigger, or an allied force with a human), whose destination location is used in a Bring
 condition for that player (the "reach the exit" objective), or any such order when the design note has an ESCORT_ROUTE
 line. Legs from a whole-map location (Anywhere) are stragglers and are not traced.
-Route: every leg is pathfound over walkable terrain (cv5/vf4 walk grid, neutral blockers applied) from the source
-location centre to the destination; the route length is the sum of the legs.
+Route: every leg is pathfound over walkable terrain by tools/bw/path_tool.py (cv5/vf4 walk grid, neutral blockers
+applied) from the source location centre to the destination; the route length is the sum of the legs. The same
+tool also judges rescue, reach and survive objectives (check_objective_paths, predelivery check 51).
 Rules (FAIL):
   1 route length >= map width / 3 tiles
   2 at least 2 threat encounters along the route. Threats: pre-placed armed units, towers and Bunkers of enemy players
@@ -25,7 +26,8 @@ import sys,os,re,struct,math,glob,json
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from check_ranked_bw import sections,walkgrid,apply_blockers,units,dij,near_walk
 from check_ally_vision import note_files
-THREAT_R=7; AMBUSH_R=3; GAP=10
+import path_tool as P
+THREAT_R=P.THREAT_R; AMBUSH_R=P.AMBUSH_R; GAP=P.GAP
 TOWERS={125,146,162}               # ground defence: Bunker, Sunken Colony, Photon Cannon (Missile Turret/Spore are anti-air)
 WORKERS={7,41,64}; SLOC=214
 DB=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..','data','bw','tech','bw_weapons.json')))
@@ -112,13 +114,9 @@ def run(path):
         for src,dst in L:
             a_,b_=ltile(src),ltile(dst)
             if not a_ or not b_: broken.append(f'{lname(src)}->{lname(dst)}'); continue
-            D=dij(W,H,wk,[b_])
-            if D[a_[1]][a_[0]]==math.inf: broken.append(f'{lname(src)}->{lname(dst)} (no ground path)'); continue
-            length+=D[a_[1]][a_[0]]; x,y=a_; seg=[(x,y)]
-            while (x,y)!=b_:
-                x,y=min(((x+dx,y+dy) for dx in (-1,0,1) for dy in (-1,0,1) if (dx or dy) and 0<=x+dx<W and 0<=y+dy<H),key=lambda q:D[q[1]][q[0]])
-                seg.append((x,y))
-            path_t+=seg
+            seg,L,_,_=P.pathfind(W,H,wk,a_,b_)
+            if L==math.inf or not seg: broken.append(f'{lname(src)}->{lname(dst)} (no ground path)'); continue
+            length+=L; path_t+=seg
         hits=[]
         for tx,ty,uid,kind in threats:
             d,i=min((math.hypot(tx-x,ty-y),i) for i,(x,y) in enumerate(path_t)) if path_t else (1e9,0)

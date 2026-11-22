@@ -35,11 +35,15 @@ SCENE_VIEW: Okafor's radio call :: Ravine Camp :: revealer
 SCENE_VIEW: the squad rejoins :: Ravine Camp :: own units present
 SCENE_VIEW: victory call :: Ridge Hall :: own units present
 
+## Objective paths
+OBJECTIVE_PATHS: Destroy the Hatchery on the ridge :: start to the ridge hatchery, 100 tiles / 33 s at Marine speed (Fastest) :: the ridge gate is held by Sunken Colonies, zerglings and hydralisks (one encounter at the top of the ramps); scripted waves leave Ridge Gate for Outpost Front every 160 s from t=240 s, first arrival about t=256 s, from the north-east :: the player has to push two ramps and the gate while the hatchery still feeds those waves
+OBJECTIVE_PATHS: Reach the survey squad in the eastern ravine :: start to Ravine Camp, 77 tiles / 26 s at Marine speed (Fastest) :: two zergling packs on the southern track (around 46,82 and 66,82), two threat encounters, well clear of the camp :: the player has to fight through both packs to reach the squad; the camp itself is not under fire
+
 ## Map
 - South-west: the player's outpost, mineral line backed by water, bunker toward the road.
 - North-east: the ridge (high dirt) with the Zerg main, two normal-size ramps toward the south-west.
 - East: a Zerg expansion on low ground (a second Zerg base that feeds the waves; not an objective).
-- South-east: the ravine camp of the survey squad (rescuable, far from enemy units).
+- South-east: the ravine camp of the survey squad (rescuable, far from enemy units). Two zergling scout packs sit on the southern track to the camp.
 - Centre: a pond, grass fields and rocky patches; the old road (mud) meanders from the outpost to the ridge.
 - Map edge: ragged dirt/high-dirt/water border; no straight frame.
 
