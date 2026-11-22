@@ -16,11 +16,12 @@ Needed per tileset (badlands, platform, install, ashworld, jungle, desert, ice, 
 Two ways:
   A) from a folder you exported yourself (CascView "Extract", or an old 1.16 install's unpacked tileset folder):
        python3 tools/bw/extract_tilesets.py --from-folder "<folder that contains badlands.cv5 ...>"
-  B) straight from a StarCraft Remastered install with CascLib (https://github.com/ladislav-zezula/CascLib;
-     build it and point --casclib at libcasc.so / CascLib.dll):
-       python3 tools/bw/extract_tilesets.py --casc "<StarCraft install folder>" --casclib /usr/local/lib/libcasc.so
-     NOTE: mode B is written against the public CascLib API but has NOT been tested on a real install here.
-     If it fails, use mode A with CascView (Windows) and report the error.
+  B) straight from a StarCraft Remastered install with CascLib (https://github.com/ladislav-zezula/CascLib). Build the
+     shared library with the isomtool build (-DISOMTOOL_CASCLIB_DLL=ON, docs/bw-terrain-setup.md); without
+     --casclib the script looks for build/isomtool/CascLib.dll or libcasc.so there, then on the system path:
+       python3 tools/bw/extract_tilesets.py --casc "<StarCraft install folder>" [--casclib <CascLib.dll | libcasc.so>]
+     Mode B has been used on Windows with a StarCraft Remastered install (all eight tilesets, MinGW build of
+     CascLib); on Linux it is untested. If it fails, use mode A with CascView and report the error.
 Both modes validate the file sizes and copy into tools/lib/bw/tileset/ (or --out).
 """
 import argparse, ctypes, os, shutil, struct, sys
@@ -77,8 +78,20 @@ def from_folder(folder):
         return open(p, 'rb').read() if p else None
     return get
 
+def _casclib(lib):
+    """--casclib, else the library the isomtool CMake build writes (-DISOMTOOL_CASCLIB_DLL=ON), else the system's"""
+    if lib: return lib
+    here = [os.path.join(ROOT, 'build', 'isomtool'), os.path.join(ROOT, 'tools', 'lib', 'bw')]
+    names = ['CascLib.dll', 'libCascLib.dll'] if os.name == 'nt' else ['libcasc.so', 'libcasc.dylib']
+    for d in here:
+        for n in names:
+            if os.path.exists(os.path.join(d, n)): return os.path.join(d, n)
+    return names[0]
+
 def from_casc(storage, lib):
-    L = ctypes.CDLL(lib)
+    lib = _casclib(lib)
+    # CascLib's API is WINAPI (stdcall on 32-bit Windows); its default ANSI build takes paths in the ANSI code page
+    L = ctypes.WinDLL(lib) if os.name == 'nt' else ctypes.CDLL(lib)
     H = ctypes.c_void_p
     L.CascOpenStorage.argtypes = [ctypes.c_char_p, ctypes.c_uint32, ctypes.POINTER(H)]; L.CascOpenStorage.restype = ctypes.c_bool
     L.CascOpenFile.argtypes = [H, ctypes.c_char_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(H)]; L.CascOpenFile.restype = ctypes.c_bool
@@ -86,7 +99,7 @@ def from_casc(storage, lib):
     L.CascReadFile.argtypes = [H, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]; L.CascReadFile.restype = ctypes.c_bool
     L.CascCloseFile.argtypes = [H]; L.CascCloseStorage.argtypes = [H]
     hs = H()
-    if not L.CascOpenStorage(storage.encode(), 0, ctypes.byref(hs)):
+    if not L.CascOpenStorage(storage.encode('mbcs' if os.name == 'nt' else 'utf-8'), 0, ctypes.byref(hs)):
         raise SystemExit(f'CascOpenStorage failed for {storage!r} (try the install folder that contains .build.info, '
                          'or append ":s1" for the StarCraft product)')
     def get(name, ext):
@@ -104,7 +117,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument('--from-folder'); g.add_argument('--casc')
-    ap.add_argument('--casclib', default='libcasc.so' if os.name != 'nt' else 'CascLib.dll')
+    ap.add_argument('--casclib', help='CascLib shared library (default: build/isomtool/CascLib.dll or libcasc.so, see docs/bw-terrain-setup.md)')
     ap.add_argument('--out', default=os.path.join(ROOT, 'tools', 'lib', 'bw', 'tileset'))
     a = ap.parse_args()
     sys.exit(install(from_folder(a.from_folder) if a.from_folder else from_casc(a.casc, a.casclib), a.out))
