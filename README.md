@@ -1,5 +1,11 @@
 # VibeModForge
 
+> **This repository has moved.** VibeModForge was split into two repositories, each with its full Git history:
+> - **[VibeWarForge](https://github.com/Sasbe93/VibeWarForge)** for Warcraft III: The Frozen Throne
+> - **[VibeBroodForge](https://github.com/Sasbe93/VibeBroodForge)** for StarCraft: Brood War
+>
+> This repository is no longer updated. Open issues and send changes to the new repositories.
+
 Guides, design rules, generators and checkers for making **StarCraft: Brood War** and **Warcraft III** content:
 campaign missions, ranked/melee maps, custom races and custom units.
 
